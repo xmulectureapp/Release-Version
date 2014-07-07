@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mainview"
+<RelativeLayout android:id="@+id/mainview"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="#eee" >  
+    android:background="#eee" xmlns:android="http://schemas.android.com/apk/res/android">  
 
     <RelativeLayout
         android:id="@+id/main_bottom"
@@ -46,12 +45,15 @@
         			android:scaleType="matrix"
         			android:clickable="true"
         			android:src="@drawable/subscribecenter_pressed" />
+
                 <TextView
-            		android:layout_width="wrap_content"
-            		android:layout_height="wrap_content"
-            		android:text="订阅"
-            		android:textColor="#fff"
-            		android:textSize="12sp" />                
+                	android:id="@+id/mText1"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:text="订阅"
+                	android:textColor="@color/main_menu_pressed"
+                	android:textSize="12sp" />
+                
         	 </LinearLayout>
         	 <LinearLayout
             	android:layout_width="wrap_content"
@@ -66,12 +68,15 @@
         			android:scaleType="matrix"
         			android:clickable="true"
         			android:src="@drawable/hotlecturecenter_normal" />
+
                 <TextView
-            		android:layout_width="wrap_content"
-            		android:layout_height="wrap_content"
-            		android:text="热门"
-            		android:textColor="#fff"
-            		android:textSize="12sp" />                
+                	android:id="@+id/mText2"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:text="热门"
+                	android:textColor="@color/main_menu_normal"
+                	android:textSize="12sp" />
+                
         	 </LinearLayout>
         	 <LinearLayout
             	android:layout_width="wrap_content"
@@ -86,12 +91,15 @@
         			android:scaleType="matrix"
         			android:clickable="true"
         			android:src="@drawable/noticecenter_normal" />
+
                 <TextView
-            		android:layout_width="wrap_content"
-            		android:layout_height="wrap_content"
-            		android:text="提醒"
-            		android:textColor="#fff"
-            		android:textSize="12sp" />                
+                	android:id="@+id/mText3"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:text="提醒"
+                	android:textColor="@color/main_menu_normal"
+                	android:textSize="12sp" />
+                
         	 </LinearLayout>
         	 
         	 <LinearLayout
@@ -107,12 +115,15 @@
         			android:scaleType="matrix"
         			android:clickable="true"
         			android:src="@drawable/submitcenter_normal" />
+
                 <TextView
-            		android:layout_width="wrap_content"
-            		android:layout_height="wrap_content"
-            		android:text="提交"
-            		android:textColor="#fff"
-            		android:textSize="12sp" />                
+                	android:id="@+id/mText4"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:text="提交"
+                	android:textColor="@color/main_menu_normal"
+                	android:textSize="12sp" />
+                
         	 </LinearLayout>
         	 
         	 <LinearLayout
@@ -128,12 +139,15 @@
         			android:scaleType="matrix"
         			android:clickable="true"
         			android:src="@drawable/mycenter_normal" />
+
                 <TextView
-            		android:layout_width="wrap_content"
-            		android:layout_height="wrap_content"
-            		android:text="我"
-            		android:textColor="#fff"
-            		android:textSize="12sp" />                
+                	android:id="@+id/mText5"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:text="我"
+                	android:textColor="@color/main_menu_normal"
+                	android:textSize="12sp" />
+                
         	 </LinearLayout>
           
         </LinearLayout>     

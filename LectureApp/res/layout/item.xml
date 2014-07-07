@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:layout_margin="10dp" 
+    >
+
+
+         <TextView
+             android:id="@+id/lecture_name"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="5dp"
+             android:layout_marginRight="5dp"
+             android:layout_marginTop="5dp"
+             android:text="讲座名称"
+             android:textSize="25dip" 
+             />
+          <ImageView
+              android:id="@+id/line_1"
+              android:background="#123"
+              android:layout_below="@+id/lecture_name"
+              android:layout_width="fill_parent"
+              android:layout_height="1dp"
+              />
+          <TextView
+              android:id="@+id/lecture_addr"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/lecture_time"
+              android:layout_alignParentLeft="true"
+              android:layout_margin="5dp"
+              android:layout_marginTop="30dp"
+              android:text="地点："
+              android:textSize="15dip"
+               />
+
+          <TextView
+              android:id="@+id/lecture_time"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_below="@+id/line_1"
+              android:layout_margin="5dp"
+              android:layout_marginTop="30dp"
+              android:text="时间："
+              android:textSize="15dip"
+               />
+
+          <TextView
+              android:id="@+id/lecture_speaker"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_below="@+id/lecture_addr"
+              android:layout_margin="5dp"
+              android:layout_marginTop="30dp"
+              android:text="主讲："
+              android:textSize="15dip" 
+              />
+          <ImageView
+              android:id="@+id/line_2"
+              android:background="#123"
+              android:layout_below="@+id/lecture_speaker"
+              android:layout_width="fill_parent"
+              android:layout_height="1dp"
+              />
+          
+          <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line_2"
+            android:paddingBottom="2dp"
+            android:gravity="center_horizontal"            
+        	>
+
+              <ImageView
+              android:id="@+id/share_icon"
+              android:background="#0096e3"
+              android:layout_margin="5dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:gravity="center_horizontal"
+              android:layout_width="52dp"
+              android:layout_height="20dp"
+
+              />
+              <ImageView
+              android:id="@+id/line_3"
+              android:background="#123"
+              android:layout_width="1dp"
+              android:layout_height="20dp"
+              android:gravity="center_horizontal"
+              android:layout_margin="5dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              
+              />
+              <ImageView
+              android:id="@+id/comment_icon"
+              android:background="#0096e3"
+              android:layout_margin="5dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:gravity="center_horizontal"
+              android:layout_width="52dp"
+              android:layout_height="20dp"
+              
+              />
+              <ImageView
+              android:id="@+id/line_4"
+              android:background="#123"
+              android:layout_width="1dp"
+              android:layout_height="20dp"
+              android:gravity="center_horizontal"
+              android:layout_margin="5dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              />
+              <ImageView
+              android:id="@+id/like_icon"
+              android:background="#0096e3"
+              android:layout_margin="5dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:gravity="center_horizontal"
+              android:layout_width="52dp"
+              android:layout_height="20dp"
+              
+              />
+              <ImageView
+              android:id="@+id/line_5"
+              android:background="#123"
+              android:layout_width="1dp"
+              android:layout_height="20dp"
+              android:gravity="center_horizontal"
+              android:layout_margin="5dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              />
+              <ImageView
+              android:id="@+id/remind_icon"
+              android:background="#0096e3"
+              android:layout_margin="5dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:gravity="center_horizontal"
+              android:layout_width="52dp"
+              android:layout_height="20dp"
+              
+              />
+             
+          </LinearLayout>
+</RelativeLayout>
