@@ -18,12 +18,15 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainView extends Activity 
 {
@@ -165,22 +168,52 @@ public class MainView extends Activity
 		mTabPager.setAdapter(mPagerAdapter);
 		
 		//来自Yao的更改 2014年7月7号
+		final String[] LTitle = { "An introduction to nonparametric regression", 
+				"台湾土壤与地下水污染及整治技术现况",
+				"中国证监会对股市改革政策的创新与发展",
+				"戏剧与哲学",
+				"哈佛诗生活"};  
+	    String[] LTime = { "2014年07月08日（星期二）14点30分", 
+	    		"2014年07月08日（星期二）14点30分", 
+	    			"2014年07月08日（星期二）16点30分",
+	    			"2014年07月08日（星期二）19点00分",
+	    			"2014年07月08日（星期二）19点00分" };  
+	    String[] LAddr = { "【思明校区】经济楼N301",
+	    		"【翔安校区】环境与生态学院A201",
+	    		"【漳州校区】人文大楼B#301",
+	    		"【思明校区】南光一214", 
+	    		"【思明校区】外文学院三楼会议室" }; 
+	    String[] LSpeaker = { "Daniel Henderson 副教授", 
+	    		"林财富教授",
+	    		"王春源", 
+	    		"方旭东 教授", 
+	    		"李美华" };
 		ArrayList<HashMap<String,Object>> listItem = new ArrayList<HashMap<String,Object>>();
-	    for(int i=0;i<10;i++)
+	    for(int i=0;i<5;i++)
 	    {
 	    	HashMap<String,Object> map = new HashMap<String,Object>();
-	    	map.put("lecture_name","讲座名称");
-	    	map.put("lecture_time","时间：");
-	    	map.put("lecture_addr","地点：");
-	    	map.put("lecture_speaker","主讲：");
+	    	map.put("lecture_name",LTitle[i]);
+	    	map.put("lecture_time","时间: "+LTime[i]);
+	    	map.put("lecture_addr","地点: "+LAddr[i]);
+	    	map.put("lecture_speaker","主讲: "+LSpeaker[i]);
 	    	listItem.add(map);
 		}
 	    //构造适配器
 	    SimpleAdapter listItemAdapter = new SimpleAdapter(this,listItem,R.layout.item,
 	    		new String[]{"lecture_name","lecture_time","lecture_addr","lecture_speaker"},
-	    		new int[]{R.id.lecture_name,R.id.lecture_time,R.id.lecture_addr,R.id.lecture_speaker});
-	    
+	    		new int[]{R.id.lecture_name,R.id.lecture_time,R.id.lecture_addr,R.id.lecture_speaker
+	    		});
 	    list.setAdapter(listItemAdapter);
+	    list.setOnItemClickListener(new OnItemClickListener() {  
+	        
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				 Toast.makeText(MainView.this,"您选择了讲座：" 
+				+ LTitle[arg2],Toast.LENGTH_LONG ).show();  
+			}  
+	    });  
 	}
 	
 	/**

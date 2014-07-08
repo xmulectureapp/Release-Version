@@ -22,7 +22,7 @@ public class Appstart extends Activity
 		new Handler().postDelayed(new Runnable(){
 			@Override
 			public void run(){
-				Intent intent = new Intent (Appstart.this,MainView.class);			
+				Intent intent = new Intent (Appstart.this,Guide.class);			
 				startActivity(intent);	
 				overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
 				Appstart.this.finish();

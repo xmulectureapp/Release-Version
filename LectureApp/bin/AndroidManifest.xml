@@ -24,6 +24,8 @@
         </activity>
         <activity
             android:name="com.example.lectureapp.MainView"/>
+        <activity
+            android:name="com.example.lectureapp.Guide"/>
     </application>
 
 </manifest>
