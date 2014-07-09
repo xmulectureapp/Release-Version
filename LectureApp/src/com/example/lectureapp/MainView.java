@@ -57,7 +57,7 @@ public class MainView extends Activity
 	private TextView mText3;
 	private TextView mText4;
 	private TextView mText5;
-	
+	private Myadapter myadapter;
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -124,6 +124,10 @@ public class MainView extends Activity
         
         View view5 = mLi.inflate(R.layout.mycenter, null);
         ListView list = (ListView) view2.findViewById(R.id.hot_ListView);//把hot_ListView转成引用
+       //下面上对item的默认点击显示颜色进行改变, 把默认点击效果取消
+        list.setSelector(getResources().getDrawable(R.drawable.item_none_selector));
+        
+        
       //每个页面的view数据
         final ArrayList<View> views = new ArrayList<View>();
         views.add(view1);
@@ -168,7 +172,22 @@ public class MainView extends Activity
 		mTabPager.setAdapter(mPagerAdapter);
 		
 		//来自Yao的更改 2014年7月7号
-		final String[] LTitle = { "An introduction to nonparametric regression", 
+		myadapter = new Myadapter(this);
+		list.setAdapter(myadapter);
+		// ListView 中某项被选中后的逻辑  
+		 list.setOnItemClickListener(new OnItemClickListener() {  
+		        
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+						long arg3) {
+					// TODO Auto-generated method stub
+					Toast.makeText(MainView.this,"您选择了讲座：" 
+					+ myadapter.LTitle[arg2],Toast.LENGTH_LONG ).show(); 
+					 
+				}  
+		    });
+		
+		/*final String[] LTitle = { "An introduction to nonparametric regression", 
 				"台湾土壤与地下水污染及整治技术现况",
 				"中国证监会对股市改革政策的创新与发展",
 				"戏剧与哲学",
@@ -203,7 +222,7 @@ public class MainView extends Activity
 	    		new String[]{"lecture_name","lecture_time","lecture_addr","lecture_speaker"},
 	    		new int[]{R.id.lecture_name,R.id.lecture_time,R.id.lecture_addr,R.id.lecture_speaker
 	    		});
-	    list.setAdapter(listItemAdapter);
+	   // list.setAdapter(listItemAdapter);
 	    list.setOnItemClickListener(new OnItemClickListener() {  
 	        
 			@Override
@@ -213,7 +232,7 @@ public class MainView extends Activity
 				 Toast.makeText(MainView.this,"您选择了讲座：" 
 				+ LTitle[arg2],Toast.LENGTH_LONG ).show();  
 			}  
-	    });  
+	    });*/  
 	}
 	
 	/**
