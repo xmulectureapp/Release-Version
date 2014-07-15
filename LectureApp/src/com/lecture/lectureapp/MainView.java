@@ -66,7 +66,7 @@ public class MainView extends Activity
 	private List<Map<String, Object>> mData;
 	
 	private ViewPager mTabPager;	
-	private ImageView mTabImg;// 动画图片
+	//private ImageView mTabImg;// 动画图片
 	private ImageView mTab1,mTab2,mTab3,mTab4;
 	private int zero = 0;// 动画图片偏移量
 	private int currIndex = 0;// 当前页卡编号
@@ -140,9 +140,29 @@ public class MainView extends Activity
 							public void onRefresh() {
 								
 								try {
-					
-									Thread.sleep(3000);
-								} catch (InterruptedException e) {
+									
+									//getActionBar()
+									//list.setClickable(false);
+									//list.setFocusable(false);
+									//list.setPressed(false);
+									//list.setFocusableInTouchMode(false);
+									
+									refresh();
+									Log.i("MESSAGE_XML_TO_LISTDB_SUCCESS", "光标Cursor准备就绪！");
+									
+									Cursor cursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null, null);
+									//startManagingCursor(cursor);
+									Log.i("SELECT", "Cursor游标采取数据开始！");
+
+									List<Map<String, Object>> result = DBCenter
+											.L_converCursorToList(cursor);
+									mData = result;
+									Log.i("下拉刷新","开始myadapter.notifyDataSetChanged()");
+									myadapter.notifyDataSetChanged();
+									Log.i("下拉刷新","开始list.refreshDrawableState()");
+									
+									//Thread.sleep(3000);
+								} catch (Exception e) {
 									e.printStackTrace();
 								}
 								
@@ -249,7 +269,7 @@ public class MainView extends Activity
         
         mTab5 = (ImageView) findViewById(R.id.img_mycenter);
         
-        mTabImg = (ImageView) findViewById(R.id.img_tab_now);
+       // mTabImg = (ImageView) findViewById(R.id.img_tab_now);
         mTab1.setOnClickListener(new MyOnClickListener(0));
         mTab2.setOnClickListener(new MyOnClickListener(1));
         
@@ -305,10 +325,14 @@ public class MainView extends Activity
         View view4 = mLi.inflate(R.layout.submitcenter, null);
         View view5 = mLi.inflate(R.layout.mycenter, null);
         
-        View  view6= mLi.inflate(R.layout.head_view, null);
+        View viewHeader = mLi.inflate(R.layout.head_view, null);
+        View viewFooter = mLi.inflate(R.layout.foot_view, null);
+        
         list = (ListView) view2.findViewById(R.id.list_view);//把hot_ListView转成引用
         
-        list.addHeaderView(view6);
+        list.addHeaderView(viewHeader);
+        list.addFooterView(viewFooter);
+        
         refreshableView = (RefreshableView)view2.findViewById(R.id.refreshable_view);
         
         //每个页面的view数据
@@ -495,7 +519,7 @@ public class MainView extends Activity
 			currIndex = arg0;
 			animation.setFillAfter(true);// True:图片停在动画结束位置
 			animation.setDuration(150);
-			mTabImg.startAnimation(animation);
+			//mTabImg.startAnimation(animation);
 		}
 		
 		@Override

@@ -33,6 +33,7 @@ public final class R {
         public static final int main_menu_background=0x7f050007;
         public static final int main_menu_normal=0x7f050000;
         public static final int main_menu_pressed=0x7f050001;
+        public static final int menu_background_color=0x7f050008;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -79,21 +80,20 @@ public final class R {
         public static final int wizard_3=0x7f02001e;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a0034;
-        public static final int arrow=0x7f0a0030;
+        public static final int action_settings=0x7f0a0033;
+        public static final int arrow=0x7f0a002f;
         public static final int comment_icon=0x7f0a0014;
         public static final int comment_text=0x7f0a0015;
         public static final int container=0x7f0a0000;
-        public static final int description=0x7f0a0032;
-        public static final int filterTextView=0x7f0a0003;
-        public static final int guidePages=0x7f0a0001;
-        public static final int head_textView=0x7f0a0005;
-        public static final int img_hotlecturecenter=0x7f0a0023;
-        public static final int img_mycenter=0x7f0a0029;
-        public static final int img_noticecenter=0x7f0a0025;
-        public static final int img_submitcenter=0x7f0a0027;
-        public static final int img_subscribecenter=0x7f0a0021;
-        public static final int img_tab_now=0x7f0a0020;
+        public static final int description=0x7f0a0031;
+        public static final int filterTextView=0x7f0a0004;
+        public static final int guidePages=0x7f0a0002;
+        public static final int head_textView=0x7f0a0001;
+        public static final int img_hotlecturecenter=0x7f0a0025;
+        public static final int img_mycenter=0x7f0a002b;
+        public static final int img_noticecenter=0x7f0a0027;
+        public static final int img_submitcenter=0x7f0a0029;
+        public static final int img_subscribecenter=0x7f0a0023;
         public static final int lecture_addr=0x7f0a000b;
         public static final int lecture_name=0x7f0a0009;
         public static final int lecture_speaker=0x7f0a000d;
@@ -110,47 +110,48 @@ public final class R {
         public static final int linearlayout_remind=0x7f0a001b;
         public static final int linearlayout_share=0x7f0a000f;
         public static final int list_view=0x7f0a0007;
-        public static final int mText1=0x7f0a0022;
-        public static final int mText2=0x7f0a0024;
-        public static final int mText3=0x7f0a0026;
-        public static final int mText4=0x7f0a0028;
-        public static final int mText5=0x7f0a002a;
-        public static final int main_bottom=0x7f0a001f;
-        public static final int main_top=0x7f0a002d;
+        public static final int mText1=0x7f0a0024;
+        public static final int mText2=0x7f0a0026;
+        public static final int mText3=0x7f0a0028;
+        public static final int mText4=0x7f0a002a;
+        public static final int mText5=0x7f0a002c;
+        public static final int main_bottom=0x7f0a0022;
+        public static final int main_top=0x7f0a0021;
         public static final int mainview=0x7f0a001e;
-        public static final int mainview_middle=0x7f0a002b;
-        public static final int progress_bar=0x7f0a0031;
-        public static final int pull_to_refresh_head=0x7f0a002f;
+        public static final int mainview_middle=0x7f0a001f;
+        public static final int progress_bar=0x7f0a0030;
+        public static final int pull_to_refresh_head=0x7f0a002e;
         public static final int refreshable_view=0x7f0a0006;
         public static final int relativeLayout1=0x7f0a0008;
         public static final int remind_icon=0x7f0a001c;
         public static final int remind_text=0x7f0a001d;
         public static final int share_icon=0x7f0a0010;
         public static final int share_text=0x7f0a0011;
-        public static final int spinner1=0x7f0a002e;
-        public static final int startBtn=0x7f0a0004;
-        public static final int tabpager=0x7f0a002c;
-        public static final int updated_at=0x7f0a0033;
-        public static final int viewGroup=0x7f0a0002;
+        public static final int spinner1=0x7f0a002d;
+        public static final int startBtn=0x7f0a0005;
+        public static final int tabpager=0x7f0a0020;
+        public static final int updated_at=0x7f0a0032;
+        public static final int viewGroup=0x7f0a0003;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int appstart=0x7f030001;
-        public static final int fragment_main=0x7f030002;
-        public static final int guide=0x7f030003;
-        public static final int guide_item0=0x7f030004;
-        public static final int guide_item1=0x7f030005;
-        public static final int guide_item2=0x7f030006;
-        public static final int head_view=0x7f030007;
-        public static final int hotlecturecenter=0x7f030008;
-        public static final int item=0x7f030009;
-        public static final int mainview=0x7f03000a;
-        public static final int mainview_top=0x7f03000b;
-        public static final int mycenter=0x7f03000c;
-        public static final int noticecenter=0x7f03000d;
-        public static final int pull_to_refresh=0x7f03000e;
-        public static final int submitcenter=0x7f03000f;
-        public static final int subscribecenter=0x7f030010;
+        public static final int foot_view=0x7f030002;
+        public static final int fragment_main=0x7f030003;
+        public static final int guide=0x7f030004;
+        public static final int guide_item0=0x7f030005;
+        public static final int guide_item1=0x7f030006;
+        public static final int guide_item2=0x7f030007;
+        public static final int head_view=0x7f030008;
+        public static final int hotlecturecenter=0x7f030009;
+        public static final int item=0x7f03000a;
+        public static final int mainview=0x7f03000b;
+        public static final int mainview_top=0x7f03000c;
+        public static final int mycenter=0x7f03000d;
+        public static final int noticecenter=0x7f03000e;
+        public static final int pull_to_refresh=0x7f03000f;
+        public static final int submitcenter=0x7f030010;
+        public static final int subscribecenter=0x7f030011;
     }
     public static final class menu {
         public static final int main=0x7f090000;
