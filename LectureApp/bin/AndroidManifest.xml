@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.lectureapp"
+    package="com.lecture.lectureapp"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="19" />
+    
+     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
+    
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo_launcher"
         android:label="@string/app_name" android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <activity
-            android:name="com.example.lectureapp.Appstart"
+            android:name="com.lecture.lectureapp.Appstart"
             android:label="@string/app_name" >
             
             <intent-filter>
@@ -23,9 +32,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.lectureapp.MainView"/>
+            android:name="com.lecture.lectureapp.MainView"/>
         <activity
-            android:name="com.example.lectureapp.Guide"/>
+            android:name="com.lecture.lectureapp.Guide"/>
+        <activity
+            android:name="com.lecture.lectureapp.RefreshCenter"/>
     </application>
 
 </manifest>

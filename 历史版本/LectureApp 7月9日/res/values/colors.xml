@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="main_menu_normal">#8899a6</color>
+	<color name="main_menu_pressed">#fc6345</color>	
+	<color name="item_content">#abaeb7</color>	
+	<color name="item_line">#32abaeb7</color>
+	<color name="item_button_pressed">#32ffffff</color>
+	<color name="item_background">#80000000</color>
+	<color name="item_transparent">#00000000</color>
+	<color name="main_menu_background">#32000000</color>
+</resources>
