@@ -88,7 +88,7 @@ public class DBCenter extends SQLiteOpenHelper {
 			String[] selectString = new String[]{time, place, subject};
 			//Cursor selectResult = db.rawQuery("select * from LectureTable where sub like ?",new String[] { "%"+SUBJECT+"%"});
 			
-			Cursor selectResult = db.rawQuery("select * from LectureTable where 1 ",new String[]{});
+			Cursor selectResult = db.rawQuery("select * from " + LECTURE_TABLE + " where 1 ",new String[]{});
 			Log.i("SELECT", "Select查找结束");
 			
 			return selectResult;
@@ -113,9 +113,38 @@ public class DBCenter extends SQLiteOpenHelper {
 			return result;
 		
 		}
+		
+		public static List<Event> L_convertCursorToListEvent(Cursor cursor){
+			
+			ArrayList<Event> result = new ArrayList<Event>();
+			
+			while(cursor.moveToNext()){
+				Event event = new Event();
+				event.setUid(cursor.getString(1));
+				event.setTitle(cursor.getString(2));
+				event.setTime(cursor.getString(3));
+				event.setAddress(cursor.getString(4));
+				event.setSpeaker(cursor.getString(5));
+				event.setLink(cursor.getString(6));	
+				result.add(event);
+			}
+			
+			return result;
+		}
 
 		// --------将数据库查询LECTURETABLE结果CURSOR转化为List 读取4 5 10 7 12列结束-------//
 		
+		//------下面用于清除数据库所有数据
+		public static void clearAllData(SQLiteDatabase dbToClear, String tableName){
+			
+			Log.i("删除 LectureTable", "开始尝试 删除");
+			
+			dbToClear.execSQL(
+					"DELETE FROM " + LECTURE_TABLE + " WHERE 1 ", null);
+			Log.i("删除 LectureTable", "删除 LectureTable结束！");
+			
+		}
+		//=-------- 数据清除结束
 		
 	public DBCenter(Context context, String name, CursorFactory factory,
 			int version) {

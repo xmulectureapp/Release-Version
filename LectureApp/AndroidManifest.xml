@@ -37,6 +37,8 @@
             android:name="com.lecture.lectureapp.Guide"/>
         <activity
             android:name="com.lecture.lectureapp.RefreshCenter"/>
+        <activity
+            android:name="com.lecture.lectureapp.LectureDetail"/>
     </application>
 
 </manifest>

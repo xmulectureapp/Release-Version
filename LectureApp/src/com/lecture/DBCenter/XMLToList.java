@@ -30,6 +30,7 @@ public class XMLToList {
 				//Event tmp = null;
 				try {
 					//开始存入数据库
+					listToDB.clearAllData(listToDB.getReadableDatabase(), tableName);
 					listToDB.insertInto(listToDB.getReadableDatabase(), tableName, event);
 				} catch (Exception e) {
 					continue;

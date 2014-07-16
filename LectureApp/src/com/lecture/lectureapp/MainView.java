@@ -15,6 +15,7 @@ import com.lecture.lectureapp.R;
 
 
 
+import com.lecture.localdata.Event;
 import com.lecture.pulltorefresh.RefreshableView;
 import com.lecture.pulltorefresh.RefreshableView.PullToRefreshListener;
 import com.lecture.util.GetEventsHttpUtil;
@@ -63,7 +64,8 @@ public class MainView extends Activity
 	//数据库
 	public static final String DB_NAME = "LectureDB";
 	private DBCenter dbCenter = new DBCenter(this, DB_NAME, 1);
-	private List<Map<String, Object>> mData;
+	//private List<Map<String, Object>> mData;
+	private List<Event> mData;
 	
 	private ViewPager mTabPager;	
 	//private ImageView mTabImg;// 动画图片
@@ -125,8 +127,8 @@ public class MainView extends Activity
 						//startManagingCursor(cursor);
 						Log.i("SELECT", "Cursor游标采取数据开始！");
 
-						List<Map<String, Object>> result = DBCenter
-								.L_converCursorToList(cursor);
+						List<Event> result = DBCenter
+								.L_convertCursorToListEvent(cursor);
 						mData = result;
 						//来自Yao的更改 2014年7月7号
 						myadapter = new Myadapter(MainView.this, mData);
@@ -148,18 +150,16 @@ public class MainView extends Activity
 									//list.setFocusableInTouchMode(false);
 									
 									refresh();
+									
 									Log.i("MESSAGE_XML_TO_LISTDB_SUCCESS", "光标Cursor准备就绪！");
 									
 									Cursor cursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null, null);
 									//startManagingCursor(cursor);
 									Log.i("SELECT", "Cursor游标采取数据开始！");
 
-									List<Map<String, Object>> result = DBCenter
-											.L_converCursorToList(cursor);
+									List<Event> result = DBCenter
+											.L_convertCursorToListEvent(cursor);
 									mData = result;
-									Log.i("下拉刷新","开始myadapter.notifyDataSetChanged()");
-									myadapter.notifyDataSetChanged();
-									Log.i("下拉刷新","开始list.refreshDrawableState()");
 									
 									//Thread.sleep(3000);
 								} catch (Exception e) {
@@ -167,7 +167,7 @@ public class MainView extends Activity
 								}
 								
 								//Toast.makeText(MainView.this, "正在刷新……", Toast.LENGTH_LONG).show();
-								refreshableView.finishRefreshing();
+								refreshableView.finishRefreshing(myadapter);
 							}
 						}, 0);
 						//下面上对item的默认点击显示颜色进行改变, 把默认点击效果取消
@@ -218,6 +218,7 @@ public class MainView extends Activity
 						public void onEnd() {
 							
 							//XML TO List, then to db
+							
 							XMLToList xmlToList = new XMLToList();
 							xmlToList.insertListToDB(MainView.this, dbCenter, "LectureTable");
 							

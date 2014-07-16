@@ -8,6 +8,7 @@ import java.util.Map;
 import com.lecture.DBCenter.DBCenter;
 import com.lecture.lectureapp.R;
 import com.lecture.lectureapp.Myadapter.ViewHolder;
+import com.lecture.localdata.Event;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,32 +30,15 @@ public class Myadapter extends BaseAdapter
 {
 	  private LayoutInflater mInflater;  
 	  private Context mContext;
+	  private Event event;
 	  
 	 // private DBCenter dbCenter = new DBCenter(null, MainView.DB_NAME, 1);
 	  
 	  private Cursor cursor;
-	  
-	private List<Map<String, Object>> mData; 
-	final String[] LTitle = { "An introduction to nonparametric regression", 
-			"台湾土壤与地下水污染及整治技术现况",
-			"中国证监会对股市改革政策的创新与发展",
-			"戏剧与哲学",
-			"哈佛诗生活"};  
-    String[] LTime = { "2014年07月08日（星期二）14点30分", 
-    		"2014年07月08日（星期二）14点30分", 
-    			"2014年07月08日（星期二）16点30分",
-    			"2014年07月08日（星期二）19点00分",
-    			"2014年07月08日（星期二）19点00分" };  
-    String[] LAddr = { "【思明校区】经济楼N301",
-    		"【翔安校区】环境与生态学院A201",
-    		"【漳州校区】人文大楼B#301",
-    		"【思明校区】南光一214", 
-    		"【思明校区】外文学院三楼会议室" }; 
-    String[] LSpeaker = { "Daniel Henderson 副教授", 
-    		"林财富教授",
-    		"王春源", 
-    		"方旭东 教授", 
-    		"李美华" };
+
+		//private List<Map<String, Object>> mData; 
+		private List<Event> mData; 
+	
 
 	private List<Map<String, Object>> getData(String time, String place, String subject) 
 	{  
@@ -169,10 +153,20 @@ public class Myadapter extends BaseAdapter
 
 		this.mContext=context;
 		this.mInflater = LayoutInflater.from(context);  
-		mData=getData(null, null, null);
+		//mData=getData(null, null, null);
 		this.cursor = null;
-	}    
+	}  
+	/*
 	public Myadapter(Context context, List<Map<String, Object>> list)
+	{  
+
+		this.mContext=context;
+		this.mInflater = LayoutInflater.from(context);  
+		//mData = list;
+		this.cursor = null;
+	} 
+	*/     
+	public Myadapter(Context context, List<Event> list)
 	{  
 
 		this.mContext=context;
@@ -185,7 +179,7 @@ public class Myadapter extends BaseAdapter
 
 		this.mContext=context;
 		this.mInflater = LayoutInflater.from(context);  
-		mData=getData(null, null, null);
+		//mData=getData(null, null, null);
 		this.cursor = cursor;
 		
 	}
@@ -239,10 +233,14 @@ public class Myadapter extends BaseAdapter
 			{
 				holder = (ViewHolder)convertView.getTag(); 
 			}
-			  holder.lectureName.setText((String)mData.get(position).get("lecture_name"));  
-			   holder.lectureTime.setText((String)mData.get(position).get("lecture_time")); 
-			 holder.lectureAddr.setText((String)mData.get(position).get("lecture_addr"));  
-			  holder.lectureSpeaker.setText((String)mData.get(position).get("lecture_speaker")); 
+			  holder.lectureName.setText(mData.get(position).getTitle());  
+			  holder.lectureTime.setText(mData.get(position).getTime()); 
+			  holder.lectureAddr.setText(mData.get(position).getAddress());  
+			  holder.lectureSpeaker.setText(mData.get(position).getSpeaker()); 
+			  final ImageView likeIcon_change = holder.likeIcon;
+			  final TextView likeText_change = holder.likeText;
+			  event = mData.get(position);
+			  
 			 holder.linearlayoutShare.setOnClickListener(new View.OnClickListener() {  
 				    public void onClick(View v) {  
 				     showInfo1();       
@@ -255,7 +253,19 @@ public class Myadapter extends BaseAdapter
 				   });
 			 holder.linearlayoutLike.setOnClickListener(new View.OnClickListener() {  
 				    public void onClick(View v) {  
-				     showInfo3();       
+				    // showInfo3();      
+				    	
+				    	event.setLove(!event.isLove());
+				    	if (event.isLove())
+				    	{
+				    		likeIcon_change.setImageDrawable(v.getResources().getDrawable(R.drawable.like_red));
+				    		likeText_change.setTextColor(v.getResources().getColor(R.color.main_menu_pressed));
+				    	}
+						else
+						{
+							likeIcon_change.setImageDrawable(v.getResources().getDrawable(R.drawable.like));
+							likeText_change.setTextColor(v.getResources().getColor(R.color.main_menu_normal));
+						}
 				    }  
 				   });
 			 holder.linearlayoutRemind.setOnClickListener(new View.OnClickListener() {  
