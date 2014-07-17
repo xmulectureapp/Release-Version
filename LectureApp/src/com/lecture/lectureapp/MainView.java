@@ -50,6 +50,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +67,9 @@ public class MainView extends Activity
 	private DBCenter dbCenter = new DBCenter(this, DB_NAME, 1);
 	//private List<Map<String, Object>> mData;
 	private List<Event> mData;
+	private List<Event> mDataNotice;
+	private List<Event> mDataSubscribe;
+
 	
 	private ViewPager mTabPager;	
 	//private ImageView mTabImg;// 动画图片
@@ -93,7 +97,12 @@ public class MainView extends Activity
 	private TextView mText4;
 	private TextView mText5;
 	private Myadapter myadapter;
-	public ListView list;
+	private MyadapterNotice myadapterNotice;
+	private MyadapterSubscribe myadapterSubscribe;
+	public ListView hotList;
+	public ListView remindList;
+	public ListView subscribeList;
+
 	private RefreshableView refreshableView;
 	
 	
@@ -136,11 +145,19 @@ public class MainView extends Activity
 						List<Event> result = DBCenter
 								.L_convertCursorToListEvent(cursor);
 						mData = result;
+						mDataNotice = null;
+						mDataSubscribe = result;
 						//来自Yao的更改 2014年7月7号
 						myadapter = new Myadapter(MainView.this, mData);
+						myadapter.setDBCenter(dbCenter);
+						myadapterNotice = new MyadapterNotice(MainView.this, mDataNotice);
+						myadapterSubscribe= new MyadapterSubscribe(MainView.this, mDataSubscribe);
 						Log.i("Myadapter", "适配器构建成功！");
 					    
-						list.setAdapter(myadapter);
+						hotList.setAdapter(myadapter);
+						remindList.setAdapter(myadapterNotice);
+						subscribeList.setAdapter(myadapterSubscribe);
+						
 						
 						//下拉刷新执行部分
 						refreshableView.setOnRefreshListener(new PullToRefreshListener() {
@@ -148,13 +165,13 @@ public class MainView extends Activity
 							public void onRefresh() {
 								
 								try {
-									
-									//getActionBar()
-									//list.setClickable(false);
-									//list.setFocusable(false);
-									//list.setPressed(false);
-									//list.setFocusableInTouchMode(false);
-									
+									/*
+									View view = hotList.getFocusedChild();
+									if(view == null)
+										Log.i("onRefresh", "view is null");
+									( (RelativeLayout)view.findViewById(R.id.itemAll) )
+									.setBackground(getResources().getDrawable(R.color.item_background));
+									*/
 									pullRefresh();
 									
 									
@@ -169,10 +186,10 @@ public class MainView extends Activity
 							}
 						}, 0);
 						//下面上对item的默认点击显示颜色进行改变, 把默认点击效果取消
-						list.setSelector(getResources().getDrawable(R.drawable.item_none_selector));
+						hotList.setSelector(getResources().getDrawable(R.drawable.item_none_selector));
 							
 						// ListView 中某项被选中后的逻辑  
-						list.setOnItemClickListener(new OnItemClickListener() {  
+						hotList.setOnItemClickListener(new OnItemClickListener() {  
 						        
 								@Override
 								public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -260,7 +277,14 @@ public class MainView extends Activity
 							//DBCenter.clearAllData(dbCenter.getReadableDatabase(), DBCenter.LECTURE_TABLE);
 							xmlToList.insertListToDB(MainView.this, dbCenter, DBCenter.LECTURE_TABLE);
 							
-							Log.i("在RefreshCenter进行的操作", "XMLToList已经将数据存入数据库！");
+							Log.i("onEnd", "XMLToList已经将数据存入数据库！");
+							
+							Log.i("onEnd", "开始refresh like 和 收藏");
+							
+							DBCenter.refreshLike(dbCenter.getReadableDatabase());
+							DBCenter.refreshCollection(dbCenter.getReadableDatabase());
+							
+							
 							Message msg = new Message();
 							msg.what = MESSAGE_REFRESH_END;
 							refreshHandler.sendMessage(msg);
@@ -400,10 +424,17 @@ public class MainView extends Activity
         View viewHeader = mLi.inflate(R.layout.head_view, null);
         View viewFooter = mLi.inflate(R.layout.foot_view, null);
         
-        list = (ListView) view2.findViewById(R.id.list_view);//把hot_ListView转成引用
-        
-        list.addHeaderView(viewHeader);
-        list.addFooterView(viewFooter);
+        hotList = (ListView) view2.findViewById(R.id.list_view);//把hot_ListView转成引用
+        remindList = (ListView)view3.findViewById(R.id.list_view_notice);
+        subscribeList = (ListView)view1.findViewById(R.id.list_view_subscribe);
+
+        hotList.addHeaderView(viewHeader);
+        hotList.addFooterView(viewFooter);
+        remindList.addHeaderView(viewHeader);
+        remindList.addHeaderView(viewFooter);
+        subscribeList.addHeaderView(viewHeader);
+        subscribeList.addHeaderView(viewFooter);
+
         
         refreshableView = (RefreshableView)view2.findViewById(R.id.refreshable_view);
         

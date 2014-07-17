@@ -5,18 +5,21 @@
 	android:layout_gravity="right|center"
 	android:background="@drawable/item_selector"
 	android:orientation="vertical"
-	android:textAlignment="center" >
+	android:textAlignment="center"
+	android:id="@+id/itemAll"
+	 >
 
     <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:orientation="vertical" >
+    	android:id="@+id/relativeLayout1"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentLeft="true"
+    	android:layout_marginBottom="1dp"
+    	android:layout_marginLeft="10dp"
+    	android:layout_marginRight="10dp"
+    	android:layout_marginTop="5dp"
+    	android:longClickable="false"
+    	android:orientation="vertical" >
 
         <TextView
             android:id="@+id/lecture_name"

@@ -41,6 +41,7 @@
             android:name="com.lecture.lectureapp.LectureDetail"/>
         <activity
             android:name="com.lecture.lectureapp.Comment"/>
+        
     </application>
 
 </manifest>
