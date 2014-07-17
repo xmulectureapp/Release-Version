@@ -302,7 +302,7 @@ public class RefreshableView extends LinearLayout implements OnTouchListener {
 		new HideHeaderTask().execute();
 		
 		Log.i("下拉刷新","开始myadapter.notifyDataSetChanged()");
-		myadapter.notifyDataSetChanged();
+		
 	}
 
 	/**

@@ -34,17 +34,6 @@
          	android:layout_height="match_parent"
          	android:layout_alignParentBottom="false"
          	android:paddingBottom="2dp" >
-
-             <TextView
-             	android:id="@+id/filterTextView"
-             	android:layout_width="match_parent"
-             	android:layout_height="match_parent"
-             	android:gravity="center"
-             	android:text="筛选讲座"
-             	android:textAlignment="center"
-             	android:textColor="#e0ffffff"
-             	android:textColorHint="@color/item_button_pressed"
-             	android:textSize="17sp" />
           
         </LinearLayout>     
        

@@ -96,15 +96,20 @@ public class MainView extends Activity
 	public ListView list;
 	private RefreshableView refreshableView;
 	
-	//mainview top button
-	private TextView topTextView;
+	
 	
 	
 	
 	//——————————————————————下面是用于handler的消息标记
-		private static final int MESSAGE_REFRESH_START = 1;//刷新开始
-		private static final int MESSAGE_REFRESH_END = 2;//刷新结束
-		private static final int MESSAGE_REFRESH_FAILED = 3;//刷新失败
+	private static final int MESSAGE_REFRESH_START = 1;//刷新开始
+	private static final int MESSAGE_REFRESH_END = 2;//刷新结束
+	private static final int MESSAGE_REFRESH_FAILED = 3;//刷新失败
+	private static final int MESSAGE_PULL_REFRESH_START = 4;//pull刷新开始
+	private static final int MESSAGE_PULL_REFRESH_END = 5;//pull刷新结束
+	private static final int MESSAGE_PULL_REFRESH_FAILED = 6;//pull刷新失败
+	private static final int MESSAGE_PULL_REFRESH_LISTVIEW = 7;//pull成功，listView开始更新
+	
+	
 		private ProgressDialog mProgressDialog;
 		
 		//第二个handler
@@ -112,6 +117,7 @@ public class MainView extends Activity
 			@Override
 			public void handleMessage(Message message) {
 				final String msg = (String) message.obj;
+				Message msgRepost = Message.obtain();
 				if (message.what == MESSAGE_REFRESH_START) {
 					mProgressDialog = ProgressDialog.show(MainView.this,
 							"请稍后", msg, true, false);
@@ -149,25 +155,17 @@ public class MainView extends Activity
 									//list.setPressed(false);
 									//list.setFocusableInTouchMode(false);
 									
-									refresh();
+									pullRefresh();
 									
-									Log.i("MESSAGE_XML_TO_LISTDB_SUCCESS", "光标Cursor准备就绪！");
 									
-									Cursor cursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null, null);
-									//startManagingCursor(cursor);
-									Log.i("SELECT", "Cursor游标采取数据开始！");
-
-									List<Event> result = DBCenter
-											.L_convertCursorToListEvent(cursor);
-									mData = result;
-									
+									Thread.sleep(3000);
 									//Thread.sleep(3000);
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
 								
 								//Toast.makeText(MainView.this, "正在刷新……", Toast.LENGTH_LONG).show();
-								refreshableView.finishRefreshing(myadapter);
+								//refreshableView.finishRefreshing(myadapter);
 							}
 						}, 0);
 						//下面上对item的默认点击显示颜色进行改变, 把默认点击效果取消
@@ -180,10 +178,19 @@ public class MainView extends Activity
 								public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 										long arg3) {
 									// TODO Auto-generated method stub
-									//Toast.makeText(MainView.this,"您选择了讲座：" + myadapter.LTitle[arg2],Toast.LENGTH_LONG ).show(); 
 									 
-									Toast.makeText(MainView.this,"您选择了讲座：" 
-											+ ((TextView)arg1.findViewById(R.id.lecture_name)).getText(),Toast.LENGTH_LONG ).show(); 
+									Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
+									
+									//下面代码来自 KunCheng，用于显示详细信息
+									Bundle detail_bundle = new Bundle();
+									for (Event event : mData) {
+										if(event.getUid() == ((TextView)arg1.findViewById(R.id.lecture_id)).getText() )
+										detail_bundle.putSerializable("LectureDetail", event);
+									}
+									
+									Intent intent = new  Intent(MainView.this, LectureDetail.class);	
+									intent.putExtras(detail_bundle);
+									startActivity(intent);
 								}  
 						    });
 					
@@ -194,6 +201,36 @@ public class MainView extends Activity
 					mProgressDialog = null;
 					Toast.makeText(MainView.this, msg, Toast.LENGTH_SHORT)
 							.show();
+				}
+				else if(message.what == MESSAGE_PULL_REFRESH_START){
+					
+				}
+				else if(message.what == MESSAGE_PULL_REFRESH_END){
+					msgRepost = Message.obtain();
+					msgRepost.what = MESSAGE_PULL_REFRESH_LISTVIEW;
+					msgRepost.obj = "下拉刷新成功，下一步开始更新 ListView";
+					refreshHandler.sendMessage(msgRepost);
+					
+				}
+				else if(message.what == MESSAGE_PULL_REFRESH_FAILED){
+					
+				}
+				else if(message.what == MESSAGE_PULL_REFRESH_LISTVIEW){
+					Log.i("MESSAGE_XML_TO_LISTDB_SUCCESS", "光标Cursor准备就绪！");
+					
+					Cursor cursor = dbCenter.select(dbCenter.getReadableDatabase(), "NOT NULL", null, null);
+					//startManagingCursor(cursor);
+					Log.i("SELECT", "Cursor游标采取数据开始！");
+
+					List<Event> result = DBCenter
+							.L_convertCursorToListEvent(cursor);
+					mData = result;
+					myadapter.setMData(mData);
+					myadapter.notifyDataSetChanged();
+					
+					refreshableView.finishRefreshing(myadapter);
+					//myadapter.notifyDataSetInvalidated();
+					Log.i("ListView刷新", "刷新ListView成功！");
 				}
 
 			}
@@ -220,7 +257,8 @@ public class MainView extends Activity
 							//XML TO List, then to db
 							
 							XMLToList xmlToList = new XMLToList();
-							xmlToList.insertListToDB(MainView.this, dbCenter, "LectureTable");
+							//DBCenter.clearAllData(dbCenter.getReadableDatabase(), DBCenter.LECTURE_TABLE);
+							xmlToList.insertListToDB(MainView.this, dbCenter, DBCenter.LECTURE_TABLE);
 							
 							Log.i("在RefreshCenter进行的操作", "XMLToList已经将数据存入数据库！");
 							Message msg = new Message();
@@ -244,6 +282,55 @@ public class MainView extends Activity
 			
 		}
 		//--------------refresh() 结束
+		
+		
+		//-------------------pull refresh--------------------------
+		
+		public void pullRefresh() {
+			GetEventsHttpUtil getEventsUtil = GetEventsHttpUtil
+					.getInstance(new GetEventsCallback() {
+
+						@Override
+						public void onStart() {
+							Message msg = new Message();
+							msg.what = MESSAGE_PULL_REFRESH_START;
+							msg.obj = "正在更新...";
+							refreshHandler.sendMessage(msg);
+						}
+
+						@Override
+						public void onEnd() {
+							
+							//XML TO List, then to db
+							
+							XMLToList xmlToList = new XMLToList();
+							
+							//删除数据库
+							DBCenter.clearAllData(dbCenter.getReadableDatabase(), DBCenter.LECTURE_TABLE);
+							xmlToList.insertListToDB(MainView.this, dbCenter, DBCenter.LECTURE_TABLE);
+							
+							Log.i("在RefreshCenter进行的操作", "XMLToList已经将数据存入数据库！");
+							Message msg = new Message();
+							msg.what = MESSAGE_PULL_REFRESH_END;
+							refreshHandler.sendMessage(msg);
+							
+							
+							
+						}
+
+						@Override
+						public void onNoInternet() {
+							Message msg = new Message();
+							msg.what = MESSAGE_PULL_REFRESH_FAILED;
+							msg.obj = "无法连接到网络...";
+							refreshHandler.sendMessage(msg);
+						}
+					});
+			getEventsUtil.getInfo(this);
+			
+		}
+		
+		//-------------------pull refresh end--------------------------
 
 
 	
@@ -287,22 +374,6 @@ public class MainView extends Activity
         mText5 = (TextView)findViewById(R.id.mText5);
     
         
-        //下面获取mianview上面的筛选讲座按钮的句柄
-        topTextView = (TextView)findViewById(R.id.filterTextView);
-        OnClickListener listener = 
-                
-                new OnClickListener() {
-        			
-        			@Override
-        			public void onClick(View arg0) {
-        				
-        				
-        		//用于测试的top button
-        				
-        			}
-        		};
-        topTextView.setOnClickListener(listener);
-        //--------------------------------------------------
        
         
         

@@ -36,7 +36,7 @@ public class DBCenter extends SQLiteOpenHelper {
 		private static String LINK = "link";// 讲座链接
 		
 		
-		private static final String LECTURE_TABLE = "LectureTable";// 讲座信息表名
+		public static final String LECTURE_TABLE = "LectureTable";// 讲座信息表名
 		
 		
 		
@@ -87,8 +87,11 @@ public class DBCenter extends SQLiteOpenHelper {
 			Log.i("SELECT", "开始查找数据分类");
 			String[] selectString = new String[]{time, place, subject};
 			//Cursor selectResult = db.rawQuery("select * from LectureTable where sub like ?",new String[] { "%"+SUBJECT+"%"});
-			
-			Cursor selectResult = db.rawQuery("select * from " + LECTURE_TABLE + " where 1 ",new String[]{});
+			Cursor selectResult;
+			//if(time == null)
+				selectResult = db.rawQuery("select * from " + LECTURE_TABLE + " where 1",new String[]{});
+			//else
+				//selectResult = db.rawQuery("select * from " + LECTURE_TABLE + " where 1 LIMIT 0,4",new String[]{});
 			Log.i("SELECT", "Select查找结束");
 			
 			return selectResult;
@@ -140,7 +143,8 @@ public class DBCenter extends SQLiteOpenHelper {
 			Log.i("删除 LectureTable", "开始尝试 删除");
 			
 			dbToClear.execSQL(
-					"DELETE FROM " + LECTURE_TABLE + " WHERE 1 ", null);
+					"DELETE FROM " + LECTURE_TABLE + " WHERE Lid IS NOT NULL ", new String[]{});
+			Log.i("删除 LectureTable", "删除 LectureTable结束！");
 			Log.i("删除 LectureTable", "删除 LectureTable结束！");
 			
 		}

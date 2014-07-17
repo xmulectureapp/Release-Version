@@ -25,12 +25,14 @@ public class XMLToList {
 			events = XmlUtil.readXml(
 					GetEventsHttpUtil.getEventsPath(context).getPath(),
 					context);
+			//删除旧的数据表
+			//listToDB.clearAllData(listToDB.getReadableDatabase(), tableName);
 			// TODO 从本地获取其他信息
 			for (Event event : events) {
 				//Event tmp = null;
 				try {
 					//开始存入数据库
-					listToDB.clearAllData(listToDB.getReadableDatabase(), tableName);
+					
 					listToDB.insertInto(listToDB.getReadableDatabase(), tableName, event);
 				} catch (Exception e) {
 					continue;

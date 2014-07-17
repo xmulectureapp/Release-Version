@@ -38,6 +38,18 @@
             android:background="@color/item_line" />
 
         <TextView
+            android:id="@+id/lecture_time"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/line_1"
+            android:layout_margin="5dp"
+            android:layout_marginTop="30dp"
+            android:text="时间："
+            android:textColor="@color/item_content"
+            android:textSize="15dip" />
+        
+        <TextView
             android:id="@+id/lecture_addr"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -49,21 +61,17 @@
             android:textColor="@color/item_content"
             android:textSize="15dip" />
 
-        <TextView
-            android:id="@+id/lecture_time"
+        
+        <LinearLayout 
+            android:id ="@+id/linearlayout_id"
+            android:orientation="horizontal" 
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/line_1"
-            android:layout_margin="5dp"
-            android:layout_marginTop="30dp"
-            android:text="时间："
-            android:textColor="@color/item_content"
-            android:textSize="15dip" />
+    		android:layout_height="wrap_content"
+    		android:layout_below="@+id/lecture_addr">
 
         <TextView
             android:id="@+id/lecture_speaker"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/lecture_addr"
@@ -73,11 +81,22 @@
             android:textColor="@color/item_content"
             android:textSize="15dip" />
 
+        <TextView
+            android:id="@+id/lecture_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginTop="30dp"
+            android:text="id : "
+            android:textColor="@color/item_transparent"
+            android:textSize="15dip" />
+
+        </LinearLayout>
         <ImageView
             android:id="@+id/line_2"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/lecture_speaker"
+            android:layout_below="@+id/linearlayout_id"
             android:background="@color/item_line" />
     </RelativeLayout>
 

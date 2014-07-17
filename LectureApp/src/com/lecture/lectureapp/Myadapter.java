@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,17 +75,8 @@ public class Myadapter extends BaseAdapter
 	  */
 	}  
 	public void showInfo1(){
-		
-	
-	  new AlertDialog.Builder(mContext)  
-	  .setTitle("我的listview")  
-	  .setMessage("分享")  
-	  .setPositiveButton("确定", new DialogInterface.OnClickListener() {  
-	   @Override  
-	   public void onClick(DialogInterface dialog, int which) {  
-	   }  
-	  })  
-	  .show();  
+
+		run_share();
 	    
 	}
 	public void showInfo2(){  
@@ -130,6 +122,8 @@ public class Myadapter extends BaseAdapter
 		  public TextView lectureAddr;  
 		  public TextView lectureTime; 
 		  public TextView lectureSpeaker; 
+		  public LinearLayout linearlayoutid;
+		  public TextView lectureId;
 		  public ImageView line2;  
 		  public ImageView shareIcon; 
 		  public TextView shareText; 
@@ -147,7 +141,23 @@ public class Myadapter extends BaseAdapter
 		  public LinearLayout linearlayoutLike;
 		  public LinearLayout linearlayoutRemind;
 		  
-	}  
+	}
+	//用于更新ListView时
+	public void setMData(List<Event> list){
+		
+		mData = list;
+		
+	}
+	
+	public void run_share()
+	{
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+		sendIntent.setType("text/plain");
+		mContext.startActivity(sendIntent);
+	}
+	
 	public Myadapter(Context context)
 	{  
 
@@ -199,18 +209,20 @@ public class Myadapter extends BaseAdapter
 			return 0;
 		}
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) 
+		public View getView(final int position, View convertView, ViewGroup parent) 
 		{
 			ViewHolder holder = null;
-			if (convertView == null)
-			{
+			//if (convertView == null)
+			//{
 				holder=new ViewHolder(); 
 				convertView = mInflater.inflate(R.layout.item, null);
 				holder.lectureName = (TextView)convertView.findViewById(R.id.lecture_name); 
 				holder.line1 = (ImageView)convertView.findViewById(R.id.line_1);
 				holder.lectureTime = (TextView)convertView.findViewById(R.id.lecture_time);
 				holder.lectureAddr = (TextView)convertView.findViewById(R.id.lecture_addr); 
+				holder.linearlayoutid = (LinearLayout)convertView.findViewById(R.id.linearlayout_id);
 				holder.lectureSpeaker = (TextView)convertView.findViewById(R.id.lecture_speaker);
+				holder.lectureId = (TextView)convertView.findViewById(R.id.lecture_id); 
 				holder.line2 = (ImageView)convertView.findViewById(R.id.line_2);
 				holder.shareIcon = (ImageView)convertView.findViewById(R.id.share_icon);
 				holder.shareText = (TextView)convertView.findViewById(R.id.share_text);
@@ -228,18 +240,21 @@ public class Myadapter extends BaseAdapter
 				holder.linearlayoutLike = (LinearLayout)convertView.findViewById(R.id.linearlayout_like);
 				holder.linearlayoutRemind = (LinearLayout)convertView.findViewById(R.id.linearlayout_remind);
 				convertView.setTag(holder); 
-			}
-			else
-			{
+			//}
+			//else
+			//{
 				holder = (ViewHolder)convertView.getTag(); 
-			}
+			//}
 			  holder.lectureName.setText(mData.get(position).getTitle());  
-			  holder.lectureTime.setText(mData.get(position).getTime()); 
-			  holder.lectureAddr.setText(mData.get(position).getAddress());  
-			  holder.lectureSpeaker.setText(mData.get(position).getSpeaker()); 
+			  holder.lectureTime.setText("时间: " + mData.get(position).getTime()); 
+			  holder.lectureAddr.setText("地点: " + mData.get(position).getAddress());  
+			  holder.lectureSpeaker.setText("主讲: " + mData.get(position).getSpeaker()); 
+			  holder.lectureId.setText(mData.get(position).getUid());
 			  final ImageView likeIcon_change = holder.likeIcon;
 			  final TextView likeText_change = holder.likeText;
-			  event = mData.get(position);
+			  final ImageView remindIcon_change = holder.remindIcon;
+			  final TextView remindText_change = holder.remindText;
+			  
 			  
 			 holder.linearlayoutShare.setOnClickListener(new View.OnClickListener() {  
 				    public void onClick(View v) {  
@@ -248,15 +263,25 @@ public class Myadapter extends BaseAdapter
 				   });  
 			 holder.linearlayoutComment.setOnClickListener(new View.OnClickListener() {  
 				    public void onClick(View v) {  
-				     showInfo2();       
+				  //   showInfo2();
+				    	event = mData.get(position);
+						//把该则讲座对应的event传入Bundle，来自KunCheng
+						Bundle detail_bundle = new Bundle();
+						detail_bundle.putSerializable("LectureComment", event);
+						Intent intent = new Intent(mContext, Comment.class);
+						intent.putExtras(detail_bundle);
+						mContext.startActivity(intent);
+				    	
+				    	
 				    }  
 				   });
 			 holder.linearlayoutLike.setOnClickListener(new View.OnClickListener() {  
 				    public void onClick(View v) {  
 				    // showInfo3();      
-				    	
-				    	event.setLove(!event.isLove());
-				    	if (event.isLove())
+				    	 event = mData.get(position);
+						 
+				    	event.setLike(!event.isLike());
+				    	if (event.isLike())
 				    	{
 				    		likeIcon_change.setImageDrawable(v.getResources().getDrawable(R.drawable.like_red));
 				    		likeText_change.setTextColor(v.getResources().getColor(R.color.main_menu_pressed));
@@ -270,7 +295,18 @@ public class Myadapter extends BaseAdapter
 				   });
 			 holder.linearlayoutRemind.setOnClickListener(new View.OnClickListener() {  
 				    public void onClick(View v) {  
-				     showInfo4();       
+				     //showInfo4();    
+				    	event.setReminded(!event.isReminded());
+				    	if (event.isReminded())
+				    	{
+				    		remindIcon_change.setImageDrawable(v.getResources().getDrawable(R.drawable.remind_red));
+				    		remindText_change.setTextColor(v.getResources().getColor(R.color.main_menu_pressed));
+				    	}
+				    	else
+				    	{
+				    		remindIcon_change.setImageDrawable(v.getResources().getDrawable(R.drawable.remind));
+				    		remindText_change.setTextColor(v.getResources().getColor(R.color.main_menu_normal));
+				    	}	
 				    }  
 				   });
 			return convertView;

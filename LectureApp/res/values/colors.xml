@@ -9,4 +9,5 @@
 	<color name="item_transparent">#00000000</color>
 	<color name="main_menu_background">#32000000</color>
 	<color name="menu_background_color">#9e000000</color>
+	<color name="menu_twiter_color">#eeebe8eb</color>
 </resources>
