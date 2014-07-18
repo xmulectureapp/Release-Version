@@ -66,8 +66,8 @@ public class MainView extends Activity
 	public static final String DB_NAME = "LectureDB";
 	private DBCenter dbCenter = new DBCenter(this, DB_NAME, 1);
 	//private List<Map<String, Object>> mData;
-	private List<Event> mData;
-	private List<Event> mDataNotice;
+	private List<Event> mDataHot;
+	private List<Event> mDataRemind;
 	private List<Event> mDataSubscribe;
 
 	
@@ -96,14 +96,24 @@ public class MainView extends Activity
 	private TextView mText3;
 	private TextView mText4;
 	private TextView mText5;
-	private Myadapter myadapter;
-	private MyadapterNotice myadapterNotice;
-	private MyadapterSubscribe myadapterSubscribe;
+	private HotMyadapter myadapter;
+	private RemindMyadapter myadapterRemind;
+	private SubscribeMyadapter myadapterSubscribe;
 	public ListView hotList;
 	public ListView remindList;
 	public ListView subscribeList;
 
 	private RefreshableView refreshableView;
+
+	private View viewHeader;
+	private View viewFooter;
+	
+	//下面的变量用于获取主菜单的按钮的layout句柄
+	private LinearLayout lBtn1;
+	private LinearLayout lBtn2;
+	private LinearLayout lBtn3;
+	private LinearLayout lBtn4;
+	private LinearLayout lBtn5;
 	
 	
 	
@@ -138,24 +148,34 @@ public class MainView extends Activity
 						
 						Log.i("MESSAGE_XML_TO_LISTDB_SUCCESS", "光标Cursor准备就绪！");
 						
-						Cursor cursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null, null);
+						Cursor hotCursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null, null);
+						Cursor subscribeCursor = dbCenter.likeSelect(dbCenter.getReadableDatabase());
+						Cursor remindCursor = dbCenter.collectionSelect(dbCenter.getReadableDatabase());
 						//startManagingCursor(cursor);
 						Log.i("SELECT", "Cursor游标采取数据开始！");
 
-						List<Event> result = DBCenter
-								.L_convertCursorToListEvent(cursor);
-						mData = result;
-						mDataNotice = null;
-						mDataSubscribe = result;
+						List<Event> hotResult = DBCenter.L_convertCursorToListEvent(hotCursor);
+						List<Event> subscribeResult = DBCenter.L_convertCursorToListEvent(subscribeCursor);
+						List<Event> remindResult = DBCenter.L_convertCursorToListEvent(remindCursor);
+						
+						mDataHot = hotResult;
+						mDataRemind = remindResult;
+						mDataSubscribe = subscribeResult;
+						
 						//来自Yao的更改 2014年7月7号
-						myadapter = new Myadapter(MainView.this, mData);
+						myadapter = new HotMyadapter(MainView.this, mDataHot);
 						myadapter.setDBCenter(dbCenter);
-						myadapterNotice = new MyadapterNotice(MainView.this, mDataNotice);
-						myadapterSubscribe= new MyadapterSubscribe(MainView.this, mDataSubscribe);
+						
+						myadapterRemind = new RemindMyadapter(MainView.this, mDataRemind);
+						myadapterRemind.setDBCenter(dbCenter);
+						
+						myadapterSubscribe= new SubscribeMyadapter(MainView.this, mDataSubscribe);
+						myadapterSubscribe.setDBCenter(dbCenter);
+						
 						Log.i("Myadapter", "适配器构建成功！");
 					    
 						hotList.setAdapter(myadapter);
-						remindList.setAdapter(myadapterNotice);
+						remindList.setAdapter(myadapterRemind);
 						subscribeList.setAdapter(myadapterSubscribe);
 						
 						
@@ -190,26 +210,70 @@ public class MainView extends Activity
 							
 						// ListView 中某项被选中后的逻辑  
 						hotList.setOnItemClickListener(new OnItemClickListener() {  
-						        
-								@Override
-								public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-										long arg3) {
-									// TODO Auto-generated method stub
-									 
-									Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
-									
-									//下面代码来自 KunCheng，用于显示详细信息
-									Bundle detail_bundle = new Bundle();
-									for (Event event : mData) {
-										if(event.getUid() == ((TextView)arg1.findViewById(R.id.lecture_id)).getText() )
-										detail_bundle.putSerializable("LectureDetail", event);
-									}
-									
-									Intent intent = new  Intent(MainView.this, LectureDetail.class);	
-									intent.putExtras(detail_bundle);
-									startActivity(intent);
-								}  
-						    });
+					        
+							@Override
+							public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+									long arg3) {
+								// TODO Auto-generated method stub
+								 
+								Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
+								
+								//下面代码来自 KunCheng，用于显示详细信息
+								Bundle detail_bundle = new Bundle();
+								for (Event event : mDataHot) {
+									if(event.getUid() == ((TextView)arg1.findViewById(R.id.lecture_id)).getText() )
+									detail_bundle.putSerializable("LectureDetail", event);
+								}
+								
+								Intent intent = new  Intent(MainView.this, LectureDetail.class);	
+								intent.putExtras(detail_bundle);
+								startActivity(intent);
+							}  
+					    });
+						//remind
+						remindList.setOnItemClickListener(new OnItemClickListener() {  
+					        
+							@Override
+							public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+									long arg3) {
+								// TODO Auto-generated method stub
+								 
+								Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
+								
+								//下面代码来自 KunCheng，用于显示详细信息
+								Bundle detail_bundle = new Bundle();
+								for (Event event : mDataRemind) {
+									if(event.getUid() == ((TextView)arg1.findViewById(R.id.lecture_id)).getText() )
+									detail_bundle.putSerializable("LectureDetail", event);
+								}
+								
+								Intent intent = new  Intent(MainView.this, LectureDetail.class);	
+								intent.putExtras(detail_bundle);
+								startActivity(intent);
+							}  
+					    });
+						//subscribe
+						subscribeList.setOnItemClickListener(new OnItemClickListener() {  
+					        
+							@Override
+							public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+									long arg3) {
+								// TODO Auto-generated method stub
+								 
+								Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
+								
+								//下面代码来自 KunCheng，用于显示详细信息
+								Bundle detail_bundle = new Bundle();
+								for (Event event : mDataSubscribe) {
+									if(event.getUid() == ((TextView)arg1.findViewById(R.id.lecture_id)).getText() )
+									detail_bundle.putSerializable("LectureDetail", event);
+								}
+								
+								Intent intent = new  Intent(MainView.this, LectureDetail.class);	
+								intent.putExtras(detail_bundle);
+								startActivity(intent);
+							}  
+					    });
 					
 					}
 				} else if (message.what == MESSAGE_REFRESH_FAILED) {
@@ -233,17 +297,35 @@ public class MainView extends Activity
 					
 				}
 				else if(message.what == MESSAGE_PULL_REFRESH_LISTVIEW){
+					
+					Log.i("PULL REFRESH ", "刷新like和collection！");
+					
+					DBCenter.refreshLike(dbCenter.getReadableDatabase());
+					DBCenter.refreshCollection(dbCenter.getReadableDatabase());
+					
 					Log.i("MESSAGE_XML_TO_LISTDB_SUCCESS", "光标Cursor准备就绪！");
 					
-					Cursor cursor = dbCenter.select(dbCenter.getReadableDatabase(), "NOT NULL", null, null);
+					
+					Cursor hotCursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null, null);
+					Cursor subscribeCursor = dbCenter.likeSelect(dbCenter.getReadableDatabase());
+					Log.i("subscribeCursor 记录数：", String.format("%d", subscribeCursor.getColumnCount()));
+					Cursor remindCursor = dbCenter.collectionSelect(dbCenter.getReadableDatabase());
 					//startManagingCursor(cursor);
 					Log.i("SELECT", "Cursor游标采取数据开始！");
 
-					List<Event> result = DBCenter
-							.L_convertCursorToListEvent(cursor);
-					mData = result;
-					myadapter.setMData(mData);
+					List<Event> hotResult = DBCenter.L_convertCursorToListEvent(hotCursor);
+					List<Event> subscribeResult = DBCenter.L_convertCursorToListEvent(subscribeCursor);
+					List<Event> remindResult = DBCenter.L_convertCursorToListEvent(remindCursor);
+					mDataHot = hotResult;
+					myadapter.setMData(mDataHot);
 					myadapter.notifyDataSetChanged();
+					
+					mDataSubscribe = subscribeResult;
+					myadapterSubscribe.setMData(mDataSubscribe);
+					myadapterSubscribe.notifyDataSetChanged();
+					
+					
+					
 					
 					refreshableView.finishRefreshing(myadapter);
 					//myadapter.notifyDataSetInvalidated();
@@ -373,22 +455,21 @@ public class MainView extends Activity
         
         mTabPager = (ViewPager)findViewById(R.id.tabpager);
         mTabPager.setOnPageChangeListener(new MyOnPageChangeListener());
-        
+       
         mTab1 = (ImageView) findViewById(R.id.img_subscribecenter);
         mTab2 = (ImageView) findViewById(R.id.img_hotlecturecenter);
-        mTab3 = (ImageView) findViewById(R.id.img_noticecenter);
-        mTab4 = (ImageView) findViewById(R.id.img_submitcenter);
-        
+        mTab3 = (ImageView) findViewById(R.id.img_remindcenter);
+        mTab4 = (ImageView) findViewById(R.id.img_submitcenter);  
         mTab5 = (ImageView) findViewById(R.id.img_mycenter);
-        
+       
        // mTabImg = (ImageView) findViewById(R.id.img_tab_now);
+        /*
         mTab1.setOnClickListener(new MyOnClickListener(0));
-        mTab2.setOnClickListener(new MyOnClickListener(1));
-        
+        mTab2.setOnClickListener(new MyOnClickListener(1));      
         mTab3.setOnClickListener(new MyOnClickListener(2));
-        mTab4.setOnClickListener(new MyOnClickListener(3));
-        
+        mTab4.setOnClickListener(new MyOnClickListener(3));      
         mTab5.setOnClickListener(new MyOnClickListener(4));
+        */
         
         //获取菜单文字句柄
         mText1 = (TextView)findViewById(R.id.mText1);
@@ -396,7 +477,20 @@ public class MainView extends Activity
         mText3 = (TextView)findViewById(R.id.mText3);
         mText4 = (TextView)findViewById(R.id.mText4);
         mText5 = (TextView)findViewById(R.id.mText5);
-    
+        
+        
+        //获取菜单句柄，用于解决灵敏度问题
+        lBtn1 = (LinearLayout)findViewById(R.id.subscribe_button_layout);
+        lBtn2 = (LinearLayout)findViewById(R.id.hot_button_layout);
+        lBtn3 = (LinearLayout)findViewById(R.id.remind_button_layout);
+        lBtn4 = (LinearLayout)findViewById(R.id.submit_button_layout);
+        lBtn5 = (LinearLayout)findViewById(R.id.my_button_layout);
+        
+        lBtn1.setOnClickListener(new LayoutOnClickListener(0));
+        lBtn2.setOnClickListener(new LayoutOnClickListener(1));
+        lBtn3.setOnClickListener(new LayoutOnClickListener(2));
+        lBtn4.setOnClickListener(new LayoutOnClickListener(3));
+        lBtn5.setOnClickListener(new LayoutOnClickListener(4));
         
        
         
@@ -421,19 +515,21 @@ public class MainView extends Activity
         View view4 = mLi.inflate(R.layout.submitcenter, null);
         View view5 = mLi.inflate(R.layout.mycenter, null);
         
-        View viewHeader = mLi.inflate(R.layout.head_view, null);
-        View viewFooter = mLi.inflate(R.layout.foot_view, null);
-        
+        viewHeader = mLi.inflate(R.layout.head_view, null);
+        viewFooter = mLi.inflate(R.layout.foot_view, null);
+
+        subscribeList = (ListView)view1.findViewById(R.id.list_view_subscribe);
         hotList = (ListView) view2.findViewById(R.id.list_view);//把hot_ListView转成引用
         remindList = (ListView)view3.findViewById(R.id.list_view_notice);
-        subscribeList = (ListView)view1.findViewById(R.id.list_view_subscribe);
 
+        subscribeList.addHeaderView(viewHeader);
+        //subscribeList.addHeaderView(viewFooter);
+        
         hotList.addHeaderView(viewHeader);
         hotList.addFooterView(viewFooter);
+        
         remindList.addHeaderView(viewHeader);
-        remindList.addHeaderView(viewFooter);
-        subscribeList.addHeaderView(viewHeader);
-        subscribeList.addHeaderView(viewFooter);
+        //remindList.addHeaderView(viewFooter);
 
         
         refreshableView = (RefreshableView)view2.findViewById(R.id.refreshable_view);
@@ -488,10 +584,24 @@ public class MainView extends Activity
 	/**
 	 * 头标点击监听
 	 */
+	/*
 	public class MyOnClickListener implements View.OnClickListener {
 		private int index = 0;
 
 		public MyOnClickListener(int i) {
+			index = i;
+		}
+		@Override
+		public void onClick(View v) {
+			mTabPager.setCurrentItem(index);
+		}
+	};
+	*/
+	// 下面解决主菜单点击灵敏度问题
+	public class LayoutOnClickListener implements View.OnClickListener {
+		private int index = 0;
+
+		public LayoutOnClickListener(int i) {
 			index = i;
 		}
 		@Override
@@ -508,6 +618,7 @@ public class MainView extends Activity
 			Animation animation = null;
 			switch (arg0) {
 			case 0:
+				
 				mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_pressed));
 				mText1.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				if (currIndex == 1) {
@@ -530,6 +641,7 @@ public class MainView extends Activity
 				}
 				break;
 			case 1:
+				
 				mTab2.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_pressed));
 				mText2.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				if (currIndex == 0) {

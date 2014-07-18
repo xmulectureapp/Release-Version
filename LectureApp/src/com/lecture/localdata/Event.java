@@ -50,6 +50,10 @@ public class Event implements Serializable {
 	}
 
 	public void setUid(String uid) {
+		
+		this.uid = uid;
+	}
+	public String trimUid(String uid) {
 		uid=uid.trim();  
 		String uid1="";  
 		if(uid != null && !"".equals(uid))
@@ -62,7 +66,7 @@ public class Event implements Serializable {
 				}
 			}
 		}
-		this.uid = uid1;
+		return uid1;
 	}
 
 	public String getTitle() {

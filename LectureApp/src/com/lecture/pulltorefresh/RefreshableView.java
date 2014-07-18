@@ -1,7 +1,7 @@
 package com.lecture.pulltorefresh;
 
 
-import com.lecture.lectureapp.Myadapter;
+import com.lecture.lectureapp.HotMyadapter;
 import com.lecture.lectureapp.R;
 
 import android.content.Context;
@@ -314,7 +314,7 @@ public class RefreshableView extends LinearLayout implements OnTouchListener {
 		preferences.edit().putLong(UPDATED_AT + mId, System.currentTimeMillis()).commit();
 		new HideHeaderTask().execute();
 	}
-	public void finishRefreshing(Myadapter myadapter) {
+	public void finishRefreshing(HotMyadapter myadapter) {
 		currentStatus = STATUS_REFRESH_FINISHED;
 		preferences.edit().putLong(UPDATED_AT + mId, System.currentTimeMillis()).commit();
 		new HideHeaderTask().execute();
