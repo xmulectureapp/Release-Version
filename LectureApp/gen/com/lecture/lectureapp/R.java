@@ -33,8 +33,11 @@ public final class R {
         public static final int main_menu_background=0x7f050007;
         public static final int main_menu_normal=0x7f050000;
         public static final int main_menu_pressed=0x7f050001;
+        public static final int main_top_background_color=0x7f05000c;
         public static final int menu_background_color=0x7f050008;
         public static final int menu_twiter_color=0x7f050009;
+        public static final int submit_center_edit_color=0x7f05000b;
+        public static final int submit_center_text_color=0x7f05000a;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -46,6 +49,9 @@ public final class R {
          */
         public static final int activity_horizontal_margin=0x7f060000;
         public static final int activity_vertical_margin=0x7f060001;
+        public static final int submit_center_edit_height=0x7f060002;
+        public static final int submit_center_edit_padding=0x7f060003;
+        public static final int submit_center_text_margin=0x7f060004;
     }
     public static final class drawable {
         public static final int app_start=0x7f020000;
@@ -86,9 +92,10 @@ public final class R {
     }
     public static final class id {
         public static final int about_speaker=0x7f0a002c;
-        public static final int action_settings=0x7f0a005c;
+        public static final int action_settings=0x7f0a0066;
         public static final int arrow=0x7f0a0057;
         public static final int blank=0x7f0a0031;
+        public static final int btn_submit=0x7f0a0064;
         public static final int comment_icon=0x7f0a0019;
         public static final int comment_text=0x7f0a001a;
         public static final int container=0x7f0a0000;
@@ -150,7 +157,7 @@ public final class R {
         public static final int linearlayout_share=0x7f0a0014;
         public static final int list_view=0x7f0a000a;
         public static final int list_view_notice=0x7f0a0055;
-        public static final int list_view_subscribe=0x7f0a005b;
+        public static final int list_view_subscribe=0x7f0a0065;
         public static final int mText1=0x7f0a0048;
         public static final int mText2=0x7f0a004b;
         public static final int mText3=0x7f0a004e;
@@ -173,9 +180,18 @@ public final class R {
         public static final int share_text=0x7f0a0016;
         public static final int startBtn=0x7f0a0008;
         public static final int string_Comment=0x7f0a0001;
+        public static final int string_address=0x7f0a0060;
+        public static final int string_campus=0x7f0a005f;
+        public static final int string_information_source=0x7f0a0063;
+        public static final int string_more_information=0x7f0a0062;
+        public static final int string_speaker=0x7f0a005d;
+        public static final int string_speaker_information=0x7f0a0061;
+        public static final int string_time=0x7f0a005e;
+        public static final int string_title=0x7f0a005c;
         public static final int submit_button_layout=0x7f0a004f;
         public static final int subscribe_button_layout=0x7f0a0046;
         public static final int tabpager=0x7f0a0043;
+        public static final int txtName=0x7f0a005b;
         public static final int updated_at=0x7f0a005a;
         public static final int viewGroup=0x7f0a0006;
     }
@@ -197,8 +213,9 @@ public final class R {
         public static final int mycenter=0x7f03000e;
         public static final int noticecenter=0x7f03000f;
         public static final int pull_to_refresh=0x7f030010;
-        public static final int submitcenter=0x7f030011;
-        public static final int subscribecenter=0x7f030012;
+        public static final int spinner_item=0x7f030011;
+        public static final int submitcenter=0x7f030012;
+        public static final int subscribecenter=0x7f030013;
     }
     public static final class menu {
         public static final int main=0x7f090000;

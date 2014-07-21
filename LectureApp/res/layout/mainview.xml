@@ -24,8 +24,8 @@
 <RelativeLayout
 	android:id="@+id/main_top"
 	android:layout_width="match_parent"
-	android:layout_height="47dp"
-	android:background="@color/menu_background_color"
+	android:layout_height="10dp"
+	android:background="@color/main_top_background_color"
 	android:orientation="vertical" >
       
          <LinearLayout
@@ -43,7 +43,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="55dp"
 		android:layout_alignParentBottom="true"
-		android:background="#000000"
+		android:background="@color/main_menu_background"
 		android:orientation="vertical" >
 
       <!-- 

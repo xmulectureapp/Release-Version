@@ -1,5 +1,6 @@
 package com.lecture.lectureapp;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 
 import com.lecture.DBCenter.DBCenter;
 import com.lecture.DBCenter.XMLToList;
+import com.lecture.SettingAndSubmit.SQLMaker;
 import com.lecture.lectureapp.R;
 
 
@@ -26,6 +28,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.LocalActivityManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -102,6 +105,12 @@ public class MainView extends Activity
 	public ListView hotList;
 	public ListView remindList;
 	public ListView subscribeList;
+	public List<Event> hotResult;
+	public List<Event> subscribeResult;
+	public List<Event> remindResult; 
+	public Cursor hotCursor;
+	public Cursor subscribeCursor;
+	public Cursor remindCursor;
 
 	private RefreshableView refreshableView;
 
@@ -114,6 +123,10 @@ public class MainView extends Activity
 	private LinearLayout lBtn3;
 	private LinearLayout lBtn4;
 	private LinearLayout lBtn5;
+	
+	
+	//代码来自Yang
+	LocalActivityManager manager = null;
 	
 	
 	
@@ -146,30 +159,23 @@ public class MainView extends Activity
 						mProgressDialog = null;
 						
 						
-						Log.i("MESSAGE_XML_TO_LISTDB_SUCCESS", "光标Cursor准备就绪！");
-						
-						Cursor hotCursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null, null);
-						Cursor subscribeCursor = dbCenter.likeSelect(dbCenter.getReadableDatabase());
-						Cursor remindCursor = dbCenter.collectionSelect(dbCenter.getReadableDatabase());
-						//startManagingCursor(cursor);
 						Log.i("SELECT", "Cursor游标采取数据开始！");
 
-						List<Event> hotResult = DBCenter.L_convertCursorToListEvent(hotCursor);
-						List<Event> subscribeResult = DBCenter.L_convertCursorToListEvent(subscribeCursor);
-						List<Event> remindResult = DBCenter.L_convertCursorToListEvent(remindCursor);
 						
-						mDataHot = hotResult;
-						mDataRemind = remindResult;
-						mDataSubscribe = subscribeResult;
+						initHot();
+						initLikeCollection();
 						
-						//来自Yao的更改 2014年7月7号
+
+						//下面用于测试subStrign函数
+						Log.i("subString", mDataHot.get(1).getAddress().substring(0, 1));
+					
+						
 						myadapter = new HotMyadapter(MainView.this, mDataHot);
-						myadapter.setDBCenter(dbCenter);
-						
 						myadapterRemind = new RemindMyadapter(MainView.this, mDataRemind);
-						myadapterRemind.setDBCenter(dbCenter);
-						
 						myadapterSubscribe= new SubscribeMyadapter(MainView.this, mDataSubscribe);
+					
+						myadapter.setDBCenter(dbCenter);
+						myadapterRemind.setDBCenter(dbCenter);
 						myadapterSubscribe.setDBCenter(dbCenter);
 						
 						Log.i("Myadapter", "适配器构建成功！");
@@ -178,6 +184,8 @@ public class MainView extends Activity
 						remindList.setAdapter(myadapterRemind);
 						subscribeList.setAdapter(myadapterSubscribe);
 						
+						refreshHot();
+						refreshLikeCollection();
 						
 						//下拉刷新执行部分
 						refreshableView.setOnRefreshListener(new PullToRefreshListener() {
@@ -306,29 +314,14 @@ public class MainView extends Activity
 					Log.i("MESSAGE_XML_TO_LISTDB_SUCCESS", "光标Cursor准备就绪！");
 					
 					
-					Cursor hotCursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null, null);
-					Cursor subscribeCursor = dbCenter.likeSelect(dbCenter.getReadableDatabase());
-					Log.i("subscribeCursor 记录数：", String.format("%d", subscribeCursor.getColumnCount()));
-					Cursor remindCursor = dbCenter.collectionSelect(dbCenter.getReadableDatabase());
-					//startManagingCursor(cursor);
-					Log.i("SELECT", "Cursor游标采取数据开始！");
-
-					List<Event> hotResult = DBCenter.L_convertCursorToListEvent(hotCursor);
-					List<Event> subscribeResult = DBCenter.L_convertCursorToListEvent(subscribeCursor);
-					List<Event> remindResult = DBCenter.L_convertCursorToListEvent(remindCursor);
-					mDataHot = hotResult;
-					myadapter.setMData(mDataHot);
-					myadapter.notifyDataSetChanged();
+					initHot();
+					refreshHot();
 					
-					mDataSubscribe = subscribeResult;
-					myadapterSubscribe.setMData(mDataSubscribe);
-					myadapterSubscribe.notifyDataSetChanged();
-					
-					
-					
+					initLikeCollection();
+					refreshLikeCollection();
 					
 					refreshableView.finishRefreshing(myadapter);
-					//myadapter.notifyDataSetInvalidated();
+					
 					Log.i("ListView刷新", "刷新ListView成功！");
 				}
 
@@ -439,7 +432,10 @@ public class MainView extends Activity
 		//-------------------pull refresh end--------------------------
 
 
-	
+/*
+ * onCreate	(non-Javadoc)
+ * @see android.app.Activity#onCreate(android.os.Bundle)
+ */
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -471,6 +467,9 @@ public class MainView extends Activity
         mTab5.setOnClickListener(new MyOnClickListener(4));
         */
         
+        //下面用于测试时间
+        SQLMaker sqlMaker = new SQLMaker();
+        SQLMaker.stringToTime("2014-7-18 20:20");
         //获取菜单文字句柄
         mText1 = (TextView)findViewById(R.id.mText1);
         mText2 = (TextView)findViewById(R.id.mText2);
@@ -542,6 +541,14 @@ public class MainView extends Activity
         views.add(view4);
         views.add(view5);
         
+        //code来自Yang
+        manager = new LocalActivityManager(this , true);
+        manager.dispatchCreate(savedInstanceState);
+        Intent intent = new Intent(MainView.this, SubmitCenter.class);
+        views.add(getView("SubmitCenter", intent));
+        
+       
+        
         //填充ViewPager的数据适配器
         PagerAdapter mPagerAdapter = new PagerAdapter() {
 			
@@ -581,6 +588,52 @@ public class MainView extends Activity
 		
 	}    // end function onCreate()
 	
+	
+	//code来自Yang
+	private View getView(String id, Intent intent) {
+        return manager.startActivity(id, intent).getDecorView();
+    }
+	//初始化like和收藏数据
+	public void initLikeCollection(){
+		
+		Log.i("initLikeCollection", "开始");
+		subscribeCursor = dbCenter.likeSelect(dbCenter.getReadableDatabase());
+		remindCursor = dbCenter.collectionSelect(dbCenter.getReadableDatabase());
+		
+		
+		subscribeResult = DBCenter.L_convertCursorToListEvent(subscribeCursor);
+		remindResult = DBCenter.L_convertCursorToListEvent(remindCursor);
+		
+		mDataRemind = remindResult;
+		mDataSubscribe = subscribeResult;
+		
+		
+	}
+	//刷新Like和收藏界面
+	public void refreshLikeCollection(){
+		
+		Log.i("refreshLikeCollection", "开始");
+		
+		myadapterRemind.setMData(mDataRemind);
+		myadapterSubscribe.setMData(mDataSubscribe);
+		
+		myadapterRemind.notifyDataSetChanged();
+		myadapterSubscribe.notifyDataSetChanged();
+	}
+	public void initHot(){
+
+		hotCursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null, null);
+		hotResult = DBCenter.L_convertCursorToListEvent(hotCursor);
+		mDataHot = hotResult;
+		
+		
+	}
+	public void refreshHot(){
+		myadapter.setMData(mDataHot);
+		myadapter.notifyDataSetChanged();
+		
+	}
+	
 	/**
 	 * 头标点击监听
 	 */
@@ -618,9 +671,11 @@ public class MainView extends Activity
 			Animation animation = null;
 			switch (arg0) {
 			case 0:
-				
 				mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_pressed));
 				mText1.setTextColor(getResources().getColor(R.color.main_menu_pressed));
+
+				initLikeCollection();
+				refreshLikeCollection();
 				if (currIndex == 1) {
 					animation = new TranslateAnimation(one, 0, 0, 0);
 					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
@@ -639,11 +694,14 @@ public class MainView extends Activity
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
+				
 				break;
 			case 1:
 				
 				mTab2.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_pressed));
 				mText2.setTextColor(getResources().getColor(R.color.main_menu_pressed));
+				initHot();
+				refreshHot();
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, one, 0, 0);
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
@@ -666,6 +724,10 @@ public class MainView extends Activity
 			case 2:
 				mTab3.setImageDrawable(getResources().getDrawable(R.drawable.noticecenter_pressed));
 				mText3.setTextColor(getResources().getColor(R.color.main_menu_pressed));
+				
+				initLikeCollection();
+				refreshLikeCollection();
+				
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, two, 0, 0);
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
@@ -684,6 +746,7 @@ public class MainView extends Activity
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
+				
 				break;
 			case 3:
 				mTab4.setImageDrawable(getResources().getDrawable(R.drawable.submitcenter_pressed));
@@ -707,6 +770,7 @@ public class MainView extends Activity
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
+
 				break;
 			case 4:
 				mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_pressed));
