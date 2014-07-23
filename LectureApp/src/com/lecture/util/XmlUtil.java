@@ -51,6 +51,8 @@ public class XmlUtil {
 							event.setSpeaker(mParser.nextText());
 						} else if (tagName.equals("link")) {
 							event.setLink(mParser.nextText());
+						} else if (tagName.equals("likecount")) {
+							event.setLikeCount(mParser.nextText());
 						}
 					}
 					break;

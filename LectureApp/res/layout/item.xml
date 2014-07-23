@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:layout_gravity="right|center"
-	android:background="@drawable/item_selector"
-	android:orientation="vertical"
-	android:textAlignment="center"
-	android:id="@+id/itemAll"
-	 >
+    android:id="@+id/itemAll"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="right|center"
+    android:background="@color/item_background"
+    android:orientation="vertical"
+    android:textAlignment="center" >
 
     <RelativeLayout
     	android:id="@+id/relativeLayout1"

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/item_view_background"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="#主题"
+                android:textColor="@color/submit_center_text_color"
+                android:textSize="25sp" 
+                android:layout_margin="@dimen/submit_center_text_margin"/>
+
+            <EditText
+                android:id="@+id/string_title"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/submit_center_edit_height"
+                android:background="@color/submit_center_edit_color"
+                android:hint="请输入主题"
+                android:singleLine="true"
+                android:textColor="#ff8c00"
+                android:textSize="25sp" 
+                android:padding="@dimen/submit_center_edit_padding">
+            </EditText>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="主讲"
+                android:textColor="@color/submit_center_text_color"
+                android:textSize="25sp" 
+                android:layout_margin="@dimen/submit_center_text_margin"/>
+
+            <EditText
+                android:id="@+id/string_speaker"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/submit_center_edit_height"
+                android:background="@color/submit_center_edit_color"
+                android:gravity="left"
+                android:hint="请输入主讲人"
+                android:singleLine="true"
+                android:textColor="#ff8c00"
+                android:textSize="25sp" 
+                android:padding="@dimen/submit_center_edit_padding">
+            </EditText>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="#时间"
+                android:textColor="@color/submit_center_text_color"
+                android:textSize="25sp" 
+                android:layout_margin="@dimen/submit_center_text_margin"/>
+
+            <TextView
+                android:id="@+id/string_time"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/submit_center_edit_height"
+                android:background="@color/submit_center_edit_color"
+                android:gravity="left"
+                android:hint="点击选取时间"
+                android:singleLine="false"
+                android:textColor="#ff8c00"
+                android:textSize="25sp" 
+                android:padding="@dimen/submit_center_edit_padding">
+            </TextView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" 
+                android:gravity="left">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/submit_center_edit_height"
+                    android:gravity="center"
+                    android:text="#校区"
+                    android:textColor="@color/submit_center_text_color"
+                    android:textSize="25sp" 
+                    android:layout_margin="@dimen/submit_center_text_margin"/>
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="     "
+                    android:textSize="25sp" 
+                    android:layout_margin="@dimen/submit_center_text_margin"/>
+
+                <Spinner
+                    android:id="@+id/string_campus"
+                    android:layout_width="140dp"
+                    android:layout_height="@dimen/submit_center_edit_height"
+                    android:spinnerMode="dropdown"
+                    android:layout_margin="@dimen/submit_center_text_margin"
+                    android:background="@color/submit_center_edit_color"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="#详细地点"
+                android:textColor="@color/submit_center_text_color"
+                android:textSize="25sp" 
+                android:layout_margin="@dimen/submit_center_text_margin"/>
+
+            <EditText
+                android:id="@+id/string_address"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/submit_center_edit_height"
+                android:background="@color/submit_center_edit_color"
+                android:gravity="left"
+                android:hint="请输入详细地点"
+                android:singleLine="true"
+                android:textColor="#ff8c00"
+                android:textSize="25sp" 
+                android:padding="@dimen/submit_center_edit_padding">
+            </EditText>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="主讲人信息"
+                android:textColor="@color/submit_center_text_color"
+                android:textSize="25sp" 
+                android:layout_margin="@dimen/submit_center_text_margin"/>
+
+            <EditText
+                android:id="@+id/string_speaker_information"
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:background="@color/submit_center_edit_color"
+                android:gravity="left"
+                android:hint="请输入主讲人信息"
+                android:singleLine="true"
+                android:textColor="#ff8c00"
+                android:textSize="25sp" 
+                android:padding="@dimen/submit_center_edit_padding">
+            </EditText>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="背景资料或更多信息"
+                android:textColor="@color/submit_center_text_color"
+                android:textSize="25sp" 
+                android:layout_margin="@dimen/submit_center_text_margin"/>
+
+            <EditText
+                android:id="@+id/string_more_information"
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:background="@color/submit_center_edit_color"
+                android:gravity="left"
+                android:hint="请输入背景资料或更多信息"
+                android:singleLine="true"
+                android:textColor="#ff8c00"
+                android:textSize="25sp" 
+                android:padding="@dimen/submit_center_edit_padding">
+            </EditText>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="背景资料或更多信息"
+                android:textColor="@color/submit_center_text_color"
+                android:textSize="25sp" 
+                android:layout_margin="@dimen/submit_center_text_margin"/>
+
+            <EditText
+                android:id="@+id/string_information_source"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/submit_center_edit_height"
+                android:background="@color/submit_center_edit_color"
+                android:gravity="left"
+                android:hint="请输入信息来源"
+                android:singleLine="true"
+                android:textColor="#ff8c00"
+                android:textSize="25sp" 
+                android:padding="@dimen/submit_center_edit_padding">
+            </EditText>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="108dp"
+                android:background="#00000000"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/btn_submit"
+                    android:layout_width="200dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:background="#804f3e62"
+                    android:gravity="center"
+                    android:text="提交讲座"
+                    android:textSize="30sp" >
+                </Button>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                >
+            </TextView>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

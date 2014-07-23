@@ -1,6 +1,8 @@
 package com.lecture.lectureapp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,14 +11,22 @@ import com.lecture.DBCenter.DBCenter;
 import com.lecture.lectureapp.R;
 import com.lecture.lectureapp.HotMyadapter.ViewHolder;
 import com.lecture.localdata.Event;
+import com.lecture.localdata.ReminderInfo;
+import com.lecture.util.LikeInterface;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract.Events;
+import android.provider.CalendarContract.Reminders;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -160,14 +170,21 @@ public class HotMyadapter extends BaseAdapter
 			  //下面的代码用于实现点赞后消失的BUG,Yao,  尼玛，看来你还是不行呀！还是放弃吧！^ ^
 			  if(mData.get(position).isLike()){
 				  holder.likeIcon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.like_red));
+				  holder.likeText.setTextColor(convertView.getResources().getColor(R.color.main_menu_pressed));
 				  
 			  }
 			  else {
 				  holder.likeIcon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.like));
+				  holder.likeText.setTextColor(convertView.getResources().getColor(R.color.item_content));
 				  
 			  }
 			  //按赞BUG以解决，You still have a long way to go, no a lot BUGs to go! ahahaha!
-			 
+			 if(mData.get(position).getLikeCount() > 0){
+				 holder.likeText.setText( String.format("%d", mData.get(position).getLikeCount()) );
+				 
+		    		 
+			 }
+				//holder.likeText.setText(mData.get(position).getLikeCount()); //No package identifier when getting value for resource  
 			  //下面的代码使用于 收藏按钮
 			  if(mData.get(position).isReminded()){
 				  holder.remindIcon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.remind_red));
@@ -230,6 +247,12 @@ public class HotMyadapter extends BaseAdapter
 				    		likeText_change.setTextColor(v.getResources().getColor(R.color.main_menu_pressed));
 				    		//喜欢的话，进行数据表LikeTable更新
 				    		DBCenter.setLike(dbCenter.getReadableDatabase(), event.getUid(), true);
+				    		event.updateLikeCount(1);//1 表示＋1
+				    		LikeInterface.LikeGo(event.getUid(), "1");
+				    		DBCenter.likeDBSync(dbCenter.getReadableDatabase(), event.getUid(), "1");
+				    		//下面一句解决马上变Like数字
+				    		likeText_change.setText( String.format("%d", mData.get(position).getLikeCount()) );
+				    		
 				    	}
 						else
 						{
@@ -237,6 +260,13 @@ public class HotMyadapter extends BaseAdapter
 							likeText_change.setTextColor(v.getResources().getColor(R.color.main_menu_normal));
 							//喜欢的话，进行数据表LikeTable更新
 				    		DBCenter.setLike(dbCenter.getReadableDatabase(), event.getUid(), false);
+				    		event.updateLikeCount(-1);//-1 表示＋ (-1)
+				    		LikeInterface.LikeGo(event.getUid(), "0");
+				    		DBCenter.likeDBSync(dbCenter.getReadableDatabase(), event.getUid(), "0");
+				    		//下面一句解决马上变Like数字
+				    		likeText_change.setText( String.format("%d", mData.get(position).getLikeCount()) );
+				    		
+				    		
 						}
 				    }  
 				   });
@@ -251,6 +281,8 @@ public class HotMyadapter extends BaseAdapter
 				    		remindText_change.setTextColor(v.getResources().getColor(R.color.main_menu_pressed));
 				    		//收藏的话，进行数据表CollectionTable更新
 				    		DBCenter.setRemind(dbCenter.getReadableDatabase(), event.getUid(), true);
+				    		//添加到日历
+				    		insertIntoCalender();
 				    	}
 				    	else
 				    	{
@@ -258,11 +290,78 @@ public class HotMyadapter extends BaseAdapter
 				    		remindText_change.setTextColor(v.getResources().getColor(R.color.main_menu_normal));
 				    		//收藏的话，进行数据表CollectionTable更新
 				    		DBCenter.setRemind(dbCenter.getReadableDatabase(), event.getUid(), false);
+				    		//从日历删除
+				    		deleteFromCalender();
 				    	}	
 				    }  
 				   });
 			return convertView;
 		}
-	}
+		
+		public void insertIntoCalender() {
+			long calId = 1;
+
+			GregorianCalendar startDate = event.getTimeCalendar();
+			GregorianCalendar endDate = event.getTimeCalendar();
+			
+			startDate.set(Calendar.HOUR_OF_DAY, 8);
+			startDate.set(Calendar.MINUTE, 0);
+
+			ContentResolver cr1 = mContext.getContentResolver(); // 添加新event，步骤是固定的
+			ContentValues values = new ContentValues();
+			values.put(Events.DTSTART, startDate.getTime().getTime()); // 添加提醒时间，即讲座的日期
+			values.put(Events.DTEND, endDate.getTime().getTime());
+			values.put(Events.TITLE, event.getTitle());
+			values.put(Events.DESCRIPTION, event.getSpeaker());
+			values.put(Events.EVENT_LOCATION, event.getAddress());
+			values.put(Events.CALENDAR_ID, calId);
+			values.put(Events.EVENT_TIMEZONE, "GMT+8");
+			Uri uri = cr1.insert(Events.CONTENT_URI, values);
+			Long eventId = Long.parseLong(uri.getLastPathSegment()); // 获取刚才添加的event的Id
+
+			ContentResolver cr2 = mContext.getContentResolver(); // 为刚才新添加的event添加reminder
+			ContentValues values1 = new ContentValues();
+			values1.put(Reminders.MINUTES, 10); // 设置提前几分钟提醒
+			values1.put(Reminders.EVENT_ID, eventId);
+			values1.put(Reminders.METHOD, Reminders.METHOD_ALERT);  //设置该事件为提醒
+			Uri newReminder = cr2.insert(Reminders.CONTENT_URI, values1); // 调用这个方法返回值是一个Uri
+			long reminderId = Long.parseLong(newReminder.getLastPathSegment());
+
+			// 记录数据
+			event.setReminderInfo(new ReminderInfo(eventId, reminderId));
+
+			// setAlarmDeal(startMillis); //
+			// 设置reminder开始的时候，启动另一个activity
+			// // 设置全局定时器
+			// Intent intent = new Intent(this,
+			// AlarmActivity.class);
+			// PendingIntent pi =
+			// PendingIntent.getActivity(this, 0, intent, 0);
+			// AlarmManager aManager = (AlarmManager)
+			// getSystemService(Service.ALARM_SERVICE);
+			// aManager.set(AlarmManager.RTC_WAKEUP, time, pi);
+			// //
+			// 当系统调用System.currentTimeMillis()方法返回值与time相同时启动pi对应的组件
+
+			Toast.makeText(mContext, "添加到 收藏页面&日历 成功", Toast.LENGTH_SHORT).show();
+		}
+
+		public void deleteFromCalender() {
+			Uri deleteReminderUri = null;
+			Uri deleteEventUri = null;
+			deleteReminderUri = ContentUris.withAppendedId(Reminders.CONTENT_URI,
+					event.getReminderInfo().getReminderId());
+			deleteEventUri = ContentUris.withAppendedId(Events.CONTENT_URI, event
+					.getReminderInfo().getEventId());
+			int rowR = mContext.getContentResolver().delete(deleteReminderUri,
+					null, null);
+			int rowE = mContext.getContentResolver().delete(deleteEventUri, null,
+					null);
+			if (rowE > 0 && rowR > 0) {
+				Toast.makeText(mContext, "从 收藏页面&日历 删除成功", Toast.LENGTH_SHORT).show();
+			} else
+				Toast.makeText(mContext, "从 收藏页面&日历 删除失败", Toast.LENGTH_SHORT).show();
+		}
+}
 
 

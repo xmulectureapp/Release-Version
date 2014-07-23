@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/wizard_3"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/filterTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="35dp"
+        android:gravity="center"
+        android:text=" \n \n讲座，让心灵不再迷茫"
+        android:textColor="#fff"
+        android:textSize="22sp" />
+
+    <Button
+    	android:id="@+id/startBtn"
+    	android:layout_width="120dp"
+    	android:layout_height="wrap_content"
+    	android:layout_below="@+id/filterTextView"
+    	android:layout_centerHorizontal="true"
+    	android:layout_marginTop="82dp"
+    	android:background="#32ffffff"
+    	android:onClick="startbutton"
+    	android:text="开始"
+    	android:textColor="#fff"
+    	android:textSize="18sp" />
+
+</RelativeLayout>

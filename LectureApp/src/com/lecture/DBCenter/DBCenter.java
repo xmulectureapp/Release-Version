@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.lecture.SettingAndSubmit.SettingsCenter;
 import com.lecture.lectureapp.HotMyadapter;
 import com.lecture.localdata.Event;
 
@@ -19,9 +20,12 @@ import android.util.Log;
 
 public class DBCenter extends SQLiteOpenHelper {
 	
+	
 	public static final String LECTURE_TABLE = "LectureTable";// 讲座信息表名
 	public static final String COLLECTION_TABLE = "CollectionTable"; //收藏数据表
 	public static final String LIKE_TABLE = "LikeTable"; //Like数据表
+	
+	
 	
 	
 		//--------------------LECTURE_TABLE---------------------------
@@ -35,6 +39,7 @@ public class DBCenter extends SQLiteOpenHelper {
 		private static String LECTURE_LINK = "link";// 讲座链接
 		private static String LECTURE_LIKE = "Llike";// 是否喜欢，从LIKE_TABLE中获取，默认不喜欢
 		private static String LECTURE_REMIND = "Lisremind";// 是否收藏，从COLLECTION_TABLE中获取，默认不收藏
+		private static String LECTURE_LIKECOUNT = "Likecount";// like 点赞数量
 		//--------------------LECTURE_TABLE---------------------------
 		
 		//--------------------CollectionTable---------------------------
@@ -83,10 +88,21 @@ public class DBCenter extends SQLiteOpenHelper {
 				+ "(" + LECTURE_ID + " integer primary key autoincrement,"
 				+ LECTURE_UID + " varchar(64) UNIQUE," + LECTURE_TITLE + " varchar(64)," 
 				+ LECTURE_DATE + " varchar(64)," + LECTURE_ADDRESS + " varchar(64)," + LECTURE_SPEAKER + " varchar(64),"
-				+ LECTURE_LINK + " varchar(64),"+ LECTURE_LIKE + " integer," + LECTURE_REMIND + " integer"
-				+ ")";
+				+ LECTURE_LINK + " varchar(64),"+ LECTURE_LIKE + " integer," + LECTURE_REMIND + " integer,"
+				+ LECTURE_LIKECOUNT +" integer" + ")";
 		//------------------------------创建 LectureTable-------------------
 		
+		
+		public static void likeDBSync(SQLiteDatabase db, String id, String isLiked){
+			// 本地上可能会产生Like为负值的情况，造成的原因可能是用户的疯狂点赞！服务器上面已经解决这个问题！
+			if(isLiked.equals("1"))
+				db.execSQL(
+						"UPDATE " + DBCenter.LECTURE_TABLE + " SET " + LECTURE_LIKECOUNT + "=" + LECTURE_LIKECOUNT + "+1" + " WHERE Luid=?", new String[]{ id });
+			else 
+				db.execSQL(
+						"UPDATE " + DBCenter.LECTURE_TABLE + " SET " + LECTURE_LIKECOUNT + "=" + LECTURE_LIKECOUNT + "-1" + " WHERE Luid=?", new String[]{ id });
+				
+		}
 		//like func like select
 		public Cursor likeSelect(SQLiteDatabase db){
 			
@@ -199,9 +215,9 @@ public class DBCenter extends SQLiteOpenHelper {
 			else
 				isReminded = 0;
 			
-			db.execSQL("insert OR IGNORE into " + tableName + " values(null , ? , ? , ? , ? , ?, ?, ?, ?)",
+			db.execSQL("insert OR IGNORE into " + tableName + " values(null , ? , ? , ? , ? , ?, ?, ?, ?, ?)",
 					new String[] { event.getUid(), event.getTitle(),event.getTime(), event.getAddress(),
-					event.getSpeaker(), event.getLink(), String.format("%d", isLike), String.format("%d", isReminded) });
+					event.getSpeaker(), event.getLink(), String.format("%d", isLike), String.format("%d", isReminded), String.format("%d", event.getLikeCount()) });
 			Log.i("insert into LectureTable", "插入数据库结束！");
 			
 		}
@@ -269,6 +285,8 @@ public class DBCenter extends SQLiteOpenHelper {
 					event.setReminded(true);
 				else
 					event.setReminded(false);
+				//可能出错
+				event.setLikeCount(cursor.getString(9));
 				
 				result.add(event);  //加入到 result
 			}
@@ -276,7 +294,43 @@ public class DBCenter extends SQLiteOpenHelper {
 			return result;
 		}
 		//--------将数据库查询LECTURETABLE结果CURSOR转化为List<Event>-----------------------------------
-	
+		public static List<Event> L_convertCursorToListEventSubscribe(Cursor cursor,Context context){
+			
+			ArrayList<Event> result = new ArrayList<Event>();
+			SettingsCenter settingsCenter = new SettingsCenter(context);
+			
+			while(cursor.moveToNext()){
+				Event event = new Event();
+				
+				event.setTime(cursor.getString(3));
+				event.setAddress(cursor.getString(4));
+				
+				if(SettingsCenter.isNeededLecture(event)){
+					
+					event.setUid(cursor.getString(1));
+					event.setTitle(cursor.getString(2));
+					event.setSpeaker(cursor.getString(5));
+					event.setLink(cursor.getString(6));
+					if(cursor.getString(7).equals("1") )  //设置是否喜欢
+						event.setLike(true);
+					else
+						event.setLike(false);
+					
+					if(cursor.getString(8).equals("1"))  //设置是否收藏
+						event.setReminded(true);
+					else
+						event.setReminded(false);
+					//可能出错
+					event.setLikeCount(cursor.getString(9));
+					
+					result.add(event);  //加入到 result
+					
+				} // end if
+						
+			}
+			
+			return result;
+		}
 		//------下面用于清除数据库LectureTable所有数据-----------------------------------------
 		public static void clearAllData(SQLiteDatabase dbToClear, String tableName){
 			

@@ -9,10 +9,12 @@ import java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.lecture.DBCenter.DBCenter;
 import com.lecture.DBCenter.XMLToList;
-import com.lecture.SettingAndSubmit.SQLMaker;
+import com.lecture.SettingAndSubmit.SettingsCenter;
 import com.lecture.lectureapp.R;
 
 
@@ -30,7 +32,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LocalActivityManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -49,6 +54,9 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -124,6 +132,21 @@ public class MainView extends Activity
 	private LinearLayout lBtn4;
 	private LinearLayout lBtn5;
 	
+	
+		// 个人中心 from Kun
+		private EditText ETusername;// 用户名
+		private EditText ETemail;// 邮箱
+		private CheckBox siming;
+		private CheckBox xiangan;
+		private CheckBox zhangzhou;
+		private CheckBox xiamen;
+		private CheckBox mon;
+		private CheckBox tue;
+		private CheckBox wed;
+		private CheckBox thu;
+		private CheckBox fri;
+		private CheckBox sat;
+		private CheckBox sun;
 	
 	//代码来自Yang
 	LocalActivityManager manager = null;
@@ -215,7 +238,7 @@ public class MainView extends Activity
 						}, 0);
 						//下面上对item的默认点击显示颜色进行改变, 把默认点击效果取消
 						hotList.setSelector(getResources().getDrawable(R.drawable.item_none_selector));
-							
+						hotList.setSelected(false);	
 						// ListView 中某项被选中后的逻辑  
 						hotList.setOnItemClickListener(new OnItemClickListener() {  
 					        
@@ -223,7 +246,7 @@ public class MainView extends Activity
 							public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 									long arg3) {
 								// TODO Auto-generated method stub
-								 
+								
 								Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
 								
 								//下面代码来自 KunCheng，用于显示详细信息
@@ -468,8 +491,8 @@ public class MainView extends Activity
         */
         
         //下面用于测试时间
-        SQLMaker sqlMaker = new SQLMaker();
-        SQLMaker.stringToTime("2014-7-18 20:20");
+        SettingsCenter sqlMaker = new SettingsCenter(MainView.this);
+        SettingsCenter.stringToTime("2014-7-18 20:20");
         //获取菜单文字句柄
         mText1 = (TextView)findViewById(R.id.mText1);
         mText2 = (TextView)findViewById(R.id.mText2);
@@ -535,17 +558,19 @@ public class MainView extends Activity
         
         //每个页面的view数据
         final ArrayList<View> views = new ArrayList<View>();
-        views.add(view1);
         views.add(view2);
+        views.add(view1);
         views.add(view3);
-        views.add(view4);
-        views.add(view5);
-        
+       // views.add(view4);
         //code来自Yang
         manager = new LocalActivityManager(this , true);
         manager.dispatchCreate(savedInstanceState);
         Intent intent = new Intent(MainView.this, SubmitCenter.class);
         views.add(getView("SubmitCenter", intent));
+        
+        views.add(view5);
+        
+     
         
        
         
@@ -586,6 +611,170 @@ public class MainView extends Activity
 		//refresh()用于刷新XML文件，下载成功后并把XML转存到数据库，然后用于适配器使用
 		refresh();
 		
+		
+		// 个人中心 from Kun
+		ETusername = (EditText) view5.findViewById(R.id.username);
+		ETemail = (EditText) view5.findViewById(R.id.email);
+		siming = (CheckBox) view5.findViewById(R.id.siming);
+		xiangan = (CheckBox) view5.findViewById(R.id.xiangan);
+		zhangzhou = (CheckBox) view5.findViewById(R.id.zhangzhou);
+		xiamen = (CheckBox) view5.findViewById(R.id.xiamen);
+		mon = (CheckBox) view5.findViewById(R.id.Monday);
+		tue = (CheckBox) view5.findViewById(R.id.Tuesday);
+		wed = (CheckBox) view5.findViewById(R.id.Wednesday);
+		thu = (CheckBox) view5.findViewById(R.id.Thursday);
+		fri = (CheckBox) view5.findViewById(R.id.Friday);
+		sat = (CheckBox) view5.findViewById(R.id.Saturday);
+		sun = (CheckBox) view5.findViewById(R.id.Sunday);
+
+		// 只能输入邮箱格式
+		/*
+		 * ETemail.addTextChangedListener(new TextWatcher() { public void
+		 * afterTextChanged(Editable s) { if
+		 * (ETemail.getText().toString().matches
+		 * ("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+") && s.length() > 0) {
+		 * Toast.makeText(MainView.this, "有效的邮箱地址", Toast.LENGTH_LONG).show(); }
+		 * else { Toast.makeText(MainView.this, "无效的邮箱地址",
+		 * Toast.LENGTH_LONG).show(); ETemail.requestFocus(); } } public void
+		 * beforeTextChanged(CharSequence s, int start, int count, int after) {}
+		 * public void onTextChanged(CharSequence s, int start, int before, int
+		 * count) {} });
+		 */
+
+		siming.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					saveCampusAndTime(MainView.this, "siming", "思");
+				} else {
+					deleteCampusAndTime(MainView.this, "siming");
+				}
+			}
+		});
+		xiangan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					saveCampusAndTime(MainView.this, "xiangan","翔");
+				} else {
+					deleteCampusAndTime(MainView.this, "xiangan");
+				}
+			}
+		});
+		xiamen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					saveCampusAndTime(MainView.this, "xiamen", "厦");
+				} else {
+					deleteCampusAndTime(MainView.this, "xiamen");
+				}
+			}
+		});
+		zhangzhou
+				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						// TODO Auto-generated method stub
+						if (isChecked) {
+							saveCampusAndTime(MainView.this, "zhangzhou", "漳");
+						} else {
+							deleteCampusAndTime(MainView.this, "zhangzhou");
+						}
+					}
+				});
+		mon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					saveCampusAndTime(MainView.this, "mon", "1");
+				} else {
+					deleteCampusAndTime(MainView.this, "mon");
+				}
+			}
+		});
+		tue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					saveCampusAndTime(MainView.this, "tue", "2");
+				} else {
+					deleteCampusAndTime(MainView.this, "tue");
+				}
+			}
+		});
+		wed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					saveCampusAndTime(MainView.this, "wed", "3");
+				} else {
+					deleteCampusAndTime(MainView.this, "wed");
+				}
+			}
+		});
+		thu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					saveCampusAndTime(MainView.this, "thu", "4");
+				} else {
+					deleteCampusAndTime(MainView.this, "thu");
+				}
+			}
+		});
+		fri.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					saveCampusAndTime(MainView.this, "fri", "5");
+				} else {
+					deleteCampusAndTime(MainView.this, "fri");
+				}
+			}
+		});
+		sat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					saveCampusAndTime(MainView.this, "sat", "6");
+				} else {
+					deleteCampusAndTime(MainView.this, "sat");
+				}
+			}
+		});
+		sun.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					saveCampusAndTime(MainView.this, "sun", "7");
+				} else {
+					deleteCampusAndTime(MainView.this, "sun");
+				}
+			}
+		});
+		
 	}    // end function onCreate()
 	
 	
@@ -600,8 +789,8 @@ public class MainView extends Activity
 		subscribeCursor = dbCenter.likeSelect(dbCenter.getReadableDatabase());
 		remindCursor = dbCenter.collectionSelect(dbCenter.getReadableDatabase());
 		
-		
-		subscribeResult = DBCenter.L_convertCursorToListEvent(subscribeCursor);
+		//实现订阅  2014年 7月23 Typhoon today
+		subscribeResult = DBCenter.L_convertCursorToListEventSubscribe(subscribeCursor,MainView.this);
 		remindResult = DBCenter.L_convertCursorToListEvent(remindCursor);
 		
 		mDataRemind = remindResult;
@@ -632,6 +821,55 @@ public class MainView extends Activity
 		myadapter.setMData(mDataHot);
 		myadapter.notifyDataSetChanged();
 		
+	}
+	
+	/**
+	 * 使用SharedPreferences保存用户登录信息
+	 * 
+	 * @param context
+	 * @param username
+	 * @param password
+	 */
+	public static void saveLoginInfo(Context context, String username,
+			String email) {
+		// 获取SharedPreferences对象
+		SharedPreferences sharedPre = context.getSharedPreferences("config",
+				context.MODE_PRIVATE);
+		// 获取Editor对象
+		Editor editor = sharedPre.edit();
+		// 设置用户名和邮箱
+		editor.putString("username", username);
+		editor.putString("email", email);
+		// 提交
+		editor.commit();
+	}
+
+	// 个人中心--保存选中的校区和时间
+	public static void saveCampusAndTime(Context context, String key, String value) {
+		// 获取SharedPreferences对象
+		SharedPreferences sharedPre = context.getSharedPreferences("config",
+				context.MODE_PRIVATE);
+		// 获取Editor对象
+		Editor editor = sharedPre.edit();
+		// 设置校区或时间
+		editor.putString(key, value);
+		// 提交
+		editor.commit();
+	}
+
+	// 个人中心--删除取消选择的校区和时间
+	public static void deleteCampusAndTime(Context context, String str) {
+		// 获取SharedPreferences对象
+		SharedPreferences sharedPre = context.getSharedPreferences("config",
+				context.MODE_PRIVATE);
+		if (sharedPre.contains(str)) {
+			// 获取Editor对象
+			Editor editor = sharedPre.edit();
+			// 删除校区或时间
+			editor.remove(str);
+			// 提交
+			editor.commit();
+		}
 	}
 	
 	/**
@@ -673,9 +911,9 @@ public class MainView extends Activity
 			case 0:
 				mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_pressed));
 				mText1.setTextColor(getResources().getColor(R.color.main_menu_pressed));
+				initHot();
+				refreshHot();
 
-				initLikeCollection();
-				refreshLikeCollection();
 				if (currIndex == 1) {
 					animation = new TranslateAnimation(one, 0, 0, 0);
 					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
@@ -700,8 +938,9 @@ public class MainView extends Activity
 				
 				mTab2.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_pressed));
 				mText2.setTextColor(getResources().getColor(R.color.main_menu_pressed));
-				initHot();
-				refreshHot();
+				
+				initLikeCollection();
+				refreshLikeCollection();
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, one, 0, 0);
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
@@ -793,6 +1032,38 @@ public class MainView extends Activity
 					mTab4.setImageDrawable(getResources().getDrawable(R.drawable.submitcenter_normal));
 					mText4.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
+				//显示个人中心用户的设置 form Kun
+				SharedPreferences sharedPre = getSharedPreferences("config",
+						MODE_PRIVATE);
+
+				String username = sharedPre.getString("username", "");
+				ETusername.setText(username);
+				String email = sharedPre.getString("email", "");
+				ETemail.setText(email);
+
+				if (sharedPre.contains("siming"))
+					siming.setChecked(true);
+				if (sharedPre.contains("xiangan"))
+					xiangan.setChecked(true);
+				if (sharedPre.contains("xiamen"))
+					xiamen.setChecked(true);
+				if (sharedPre.contains("zhangzhou"))
+					zhangzhou.setChecked(true);
+				if (sharedPre.contains("mon"))
+					mon.setChecked(true);
+				if (sharedPre.contains("tue"))
+					tue.setChecked(true);
+				if (sharedPre.contains("wed"))
+					wed.setChecked(true);
+				if (sharedPre.contains("thu"))
+					thu.setChecked(true);
+				if (sharedPre.contains("fri"))
+					fri.setChecked(true);
+				if (sharedPre.contains("sat"))
+					sat.setChecked(true);
+				if (sharedPre.contains("sun"))
+					sun.setChecked(true);
+				
 				break;
 			}
 			currIndex = arg0;
@@ -810,6 +1081,37 @@ public class MainView extends Activity
 		}
 	}
 	
+	
+	// 个人中心的保存设置按钮
+		public void save(View view) {
+
+			String u = ETusername.getText().toString();
+			String e = ETemail.getText().toString().trim();
+			
+			if (isEmail(e) || e.equals("") || e.isEmpty()) {
+				saveLoginInfo(MainView.this, u, e);
+			}
+			else {
+				Toast.makeText(MainView.this, "无效的邮箱地址", Toast.LENGTH_LONG).show();
+				ETemail.requestFocus();
+			}
+		}
+
+		// 邮箱判断正则表达式
+		public static boolean isEmail(String email) {
+			//String emailPattern = "[a-zA-Z0-9][a-zA-Z0-9._-]{2,16}[a-zA-Z0-9]@[a-zA-Z0-9]+.[a-zA-Z0-9]+";
+			//boolean result = Pattern.matches(emailPattern, email);
+			//return result;
+			Pattern pattern = Pattern.compile(".+@.+\\.[a-z]+");
+	        Matcher matcher = pattern.matcher(email);
+
+	        if(matcher.matches()) {
+	        	return true;
+	        }else {
+	        	return false;
+	        }
+		}
+
 	
 	//下面的代码先做保留，用于处理android的 三颗 虚拟按键
 	

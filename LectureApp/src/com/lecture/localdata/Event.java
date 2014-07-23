@@ -3,6 +3,8 @@ package com.lecture.localdata;
 import java.io.Serializable;
 import java.util.GregorianCalendar;
 
+import android.R.integer;
+
 
 public class Event implements Serializable {
 
@@ -18,6 +20,9 @@ public class Event implements Serializable {
 	private boolean isReminded;
 	private DetailInfo detailInfo;
 	private ReminderInfo reminderInfo;
+	
+	//new interface
+	private int likeCount;
 
 	public Event() {
 		uid = "";
@@ -30,12 +35,26 @@ public class Event implements Serializable {
 		isReminded = false;
 		detailInfo = new DetailInfo();
 		reminderInfo = new ReminderInfo(0, 0);
+		likeCount = 0;
 	}
-
+	
 	public Event(String id) {
 		this();
 		uid = id;
 	}
+	
+	public int getLikeCount(){
+		return likeCount;
+	}
+
+	public void updateLikeCount(int newValue){
+		likeCount += newValue;
+	}
+	public void setLikeCount(String newValue){
+		
+		likeCount = Integer.parseInt(newValue);
+	}
+	
 
 	public String getSpeaker() {
 		return speaker;
