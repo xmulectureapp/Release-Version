@@ -6,32 +6,48 @@ import java.util.List;
 
 public class DetailInfo implements Serializable {
 
-	private String info;
-	private String background;
+	private String uid;
+	private String lec_aboutSpeaker;
+	private String lec_about;
 	private List<String> kinds;
 	private List<String> keyWords;
 
 	public DetailInfo() {
-		info = "";
-		background = "";
+		uid = "";
+		lec_aboutSpeaker = "";
+		lec_about = "";
+		kinds = new ArrayList<String>();
+		keyWords = new ArrayList<String>();
+	}
+	public DetailInfo(String uid) {
+		this.uid = uid;
+		lec_aboutSpeaker = "";
+		lec_about = "";
 		kinds = new ArrayList<String>();
 		keyWords = new ArrayList<String>();
 	}
 
-	public String getInfo() {
-		return info;
+	public String getLec_aboutSpeaker() {
+		return lec_aboutSpeaker;
 	}
 
-	public void setInfo(String info) {
-		this.info = info;
+	public void setLec_aboutSpeaker(String aboutSpeaker) {
+		if(aboutSpeaker == null || aboutSpeaker.equals(""))
+			aboutSpeaker = "没有更多讲者信息！";
+		
+		this.lec_aboutSpeaker = aboutSpeaker;
 	}
 
-	public String getBackground() {
-		return background;
+	public String getLec_about() {
+		return lec_about;
 	}
 
-	public void setBackground(String background) {
-		this.background = background;
+	public void setLec_about(String about) {
+		
+		if(about == null || about.equals(""))
+			about = "没有更多讲座相关消息！";
+		
+		this.lec_about = about;
 	}
 
 	public List<String> getKinds() {

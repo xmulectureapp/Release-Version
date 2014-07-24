@@ -305,7 +305,7 @@ public class DBCenter extends SQLiteOpenHelper {
 				event.setTime(cursor.getString(3));
 				event.setAddress(cursor.getString(4));
 				
-				if(SettingsCenter.isNeededLecture(event)){
+				if(settingsCenter.isNeededLecture(event)){
 					
 					event.setUid(cursor.getString(1));
 					event.setTitle(cursor.getString(2));

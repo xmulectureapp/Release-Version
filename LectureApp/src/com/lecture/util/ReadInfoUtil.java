@@ -19,8 +19,8 @@ public class ReadInfoUtil {
 			Elements infos = doc.getElementsByTag("p");
 			// Elements
 			// Elements
-			detailInfo.setInfo("        " + infos.get(0).text());
-			detailInfo.setBackground("        " + infos.get(1).text());
+			detailInfo.setLec_aboutSpeaker("        " + infos.get(0).text());
+			detailInfo.setLec_about("        " + infos.get(1).text());
 		} catch (Exception e) {
 			throw e;
 		}

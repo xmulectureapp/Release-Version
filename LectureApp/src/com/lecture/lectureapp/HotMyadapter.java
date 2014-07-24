@@ -180,7 +180,7 @@ public class HotMyadapter extends BaseAdapter
 			  }
 			  //按赞BUG以解决，You still have a long way to go, no a lot BUGs to go! ahahaha!
 			 if(mData.get(position).getLikeCount() > 0){
-				 holder.likeText.setText( String.format("%d", mData.get(position).getLikeCount()) );
+				 holder.likeText.setText( adaptPlace( String.format("%d", mData.get(position).getLikeCount()) ) );
 				 
 		    		 
 			 }
@@ -251,7 +251,7 @@ public class HotMyadapter extends BaseAdapter
 				    		LikeInterface.LikeGo(event.getUid(), "1");
 				    		DBCenter.likeDBSync(dbCenter.getReadableDatabase(), event.getUid(), "1");
 				    		//下面一句解决马上变Like数字
-				    		likeText_change.setText( String.format("%d", mData.get(position).getLikeCount()) );
+				    		likeText_change.setText( adaptPlace( String.format("%d", mData.get(position).getLikeCount()) ) );
 				    		
 				    	}
 						else
@@ -264,7 +264,7 @@ public class HotMyadapter extends BaseAdapter
 				    		LikeInterface.LikeGo(event.getUid(), "0");
 				    		DBCenter.likeDBSync(dbCenter.getReadableDatabase(), event.getUid(), "0");
 				    		//下面一句解决马上变Like数字
-				    		likeText_change.setText( String.format("%d", mData.get(position).getLikeCount()) );
+				    		likeText_change.setText( adaptPlace( String.format("%d", mData.get(position).getLikeCount()) ) );
 				    		
 				    		
 						}
@@ -296,6 +296,18 @@ public class HotMyadapter extends BaseAdapter
 				    }  
 				   });
 			return convertView;
+		}
+		//下面用于给按赞添加一个空格如果只有个位数的话
+		public String adaptPlace(String s){
+			
+			if(s.length() == 1)
+				return " " + s + "  ";
+			else if(s.length() == 2)
+				return " " + s + " ";
+			else
+				return s;
+			
+			
 		}
 		
 		public void insertIntoCalender() {

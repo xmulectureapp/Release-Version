@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/personal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="个人信息"
+        android:textColor="#FF0033"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_margin="3dp"
+        android:background="@color/item_line" />
+
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:maxLength="8"
+        android:text="用户名:"
+        android:textColor="#FFFFCC"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint=""
+        android:maxLength="8"
+        >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="邮箱(用于评论):"
+        android:textColor="#FFFFCC"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint=""
+        android:inputType="textEmailAddress" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@color/item_line" />
+
+    <TextView
+        android:id="@+id/subscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="讲座订阅"
+        android:textColor="#FF0033"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_campus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="校区(可复选):"
+        android:textColor="#FFFFCC"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/siming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="思明校区"
+            android:textColor="#FFFFCC"
+            android:textSize="15dp"
+            android:button="@layout/checkbox"/>
+
+        <CheckBox
+            android:id="@+id/xiangan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="翔安校区"
+            android:textColor="#FFFFCC"
+            android:textSize="15dp"
+            android:button="@layout/checkbox"/>
+
+        <CheckBox
+            android:id="@+id/zhangzhou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="漳州校区"
+            android:textColor="#FFFFCC"
+            android:textSize="15dp"
+            android:button="@layout/checkbox"/>
+
+        <CheckBox
+            android:id="@+id/xiamen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="厦门市区"
+            android:textColor="#FFFFCC"
+            android:textSize="15dp"
+            android:button="@layout/checkbox"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_chooseday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="时间(可复选):"
+        android:textColor="#FFFFCC"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/Monday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Mon"
+                android:textColor="#FFFFCC"
+                android:button="@layout/checkbox"
+                 />
+
+            <CheckBox
+                android:id="@+id/Tuesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Tue"
+                android:textColor="#FFFFCC"
+                android:button="@layout/checkbox"
+                 />
+
+            <CheckBox
+                android:id="@+id/Wednesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Wed"
+                android:textColor="#FFFFCC"
+                android:button="@layout/checkbox"
+                 />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" 
+            android:layout_marginTop="7dp">
+
+            <CheckBox
+                android:id="@+id/Thursday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Thu"
+                android:textColor="#FFFFCC"
+                android:button="@layout/checkbox"
+                 />
+
+            <CheckBox
+                android:id="@+id/Friday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Fri"
+                android:textColor="#FFFFCC"
+                android:button="@layout/checkbox"
+                 />
+            <CheckBox
+                android:id="@+id/Saturday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Sat"
+                android:textColor="#FFFFCC"
+                android:button="@layout/checkbox"
+                 />
+            <CheckBox
+                android:id="@+id/Sunday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Sun"
+                android:textColor="#FFFFCC"
+                android:button="@layout/checkbox"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/save_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:onClick="save"
+        android:text="保存设置" />
+
+</LinearLayout>

@@ -28,6 +28,7 @@ import com.lecture.util.GetEventsHttpUtil.GetEventsCallback;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LocalActivityManager;
@@ -40,6 +41,7 @@ import android.database.Cursor;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -180,7 +182,7 @@ public class MainView extends Activity
 					if (mProgressDialog != null) {
 						mProgressDialog.dismiss();
 						mProgressDialog = null;
-						
+					}	
 						
 						Log.i("SELECT", "Cursor游标采取数据开始！");
 
@@ -305,14 +307,28 @@ public class MainView extends Activity
 								startActivity(intent);
 							}  
 					    });
-					
+				/*	// 这里是为了解决没有网络数据时的显示
 					}
+					else{
+						
+						
+					}  // end else in MESSAGE_REFRESH_END
+					*/
 				} else if (message.what == MESSAGE_REFRESH_FAILED) {
 					if (mProgressDialog != null)
 						mProgressDialog.dismiss();
-					mProgressDialog = null;
-					Toast.makeText(MainView.this, msg, Toast.LENGTH_SHORT)
+					//mProgressDialog = null;
+					//mProgressDialog = ProgressDialog.show(MainView.this,"加载上次数据数据", "", true, false);
+					Toast.makeText(MainView.this, msg, Toast.LENGTH_LONG)
 							.show();
+					//无法连接到网络，所以下面直接从原本数据库调用已有数据进行适配器的初始化
+					Log.i("无法连接到网络", "直接用已有数据进行初始化！");
+					
+					msgRepost.what = MESSAGE_REFRESH_END;
+					msgRepost.obj = "无法连接数据库直接从已有数据初始化...";
+					refreshHandler.sendMessage(msgRepost);
+					
+					
 				}
 				else if(message.what == MESSAGE_PULL_REFRESH_START){
 					
@@ -326,6 +342,10 @@ public class MainView extends Activity
 				}
 				else if(message.what == MESSAGE_PULL_REFRESH_FAILED){
 					
+					Toast.makeText(MainView.this, "无法连接到网络，请检查您的网络设置！", Toast.LENGTH_LONG)
+					.show();
+					
+			
 				}
 				else if(message.what == MESSAGE_PULL_REFRESH_LISTVIEW){
 					
@@ -362,7 +382,7 @@ public class MainView extends Activity
 						public void onStart() {
 							Message msg = new Message();
 							msg.what = MESSAGE_REFRESH_START;
-							msg.obj = "正在更新...";
+							msg.obj = "正在同步...";
 							refreshHandler.sendMessage(msg);
 						}
 
@@ -416,7 +436,7 @@ public class MainView extends Activity
 						public void onStart() {
 							Message msg = new Message();
 							msg.what = MESSAGE_PULL_REFRESH_START;
-							msg.obj = "正在更新...";
+							msg.obj = "正在刷新...";
 							refreshHandler.sendMessage(msg);
 						}
 
@@ -475,11 +495,11 @@ public class MainView extends Activity
         mTabPager = (ViewPager)findViewById(R.id.tabpager);
         mTabPager.setOnPageChangeListener(new MyOnPageChangeListener());
        
-        mTab1 = (ImageView) findViewById(R.id.img_subscribecenter);
-        mTab2 = (ImageView) findViewById(R.id.img_hotlecturecenter);
-        mTab3 = (ImageView) findViewById(R.id.img_remindcenter);
-        mTab4 = (ImageView) findViewById(R.id.img_submitcenter);  
-        mTab5 = (ImageView) findViewById(R.id.img_mycenter);
+        mTab1 = (ImageView) findViewById(R.id.img_hot_center);
+        mTab2 = (ImageView) findViewById(R.id.img_subscribe_center);
+        mTab3 = (ImageView) findViewById(R.id.img_remind_center);
+        mTab4 = (ImageView) findViewById(R.id.img_submit_center);  
+        mTab5 = (ImageView) findViewById(R.id.img_my_center);
        
        // mTabImg = (ImageView) findViewById(R.id.img_tab_now);
         /*
@@ -491,8 +511,21 @@ public class MainView extends Activity
         */
         
         //下面用于测试时间
-        SettingsCenter sqlMaker = new SettingsCenter(MainView.this);
-        SettingsCenter.stringToTime("2014-7-18 20:20");
+        SettingsCenter testSetting = new SettingsCenter(MainView.this);
+        int weekday = testSetting.stringToTime("2014-6-24 20:20").weekDay;
+        Time time = testSetting.time;
+        Log.i("最后测试", String.format("%d", time.weekDay));
+        
+        Log.i("WEEKDAY", String.format("%d", weekday));
+        String week = testSetting.weekdaySettings;
+        String place = testSetting.placeSettings;
+        
+        Time t = new Time();
+        Log.i("系统时间", String.format("%d", t.weekDay));
+        t.setToNow();
+        Log.i("系统时间", t.toString());
+        Log.i("系统时间", String.format("%d", t.weekDay));
+        
         //获取菜单文字句柄
         mText1 = (TextView)findViewById(R.id.mText1);
         mText2 = (TextView)findViewById(R.id.mText2);
@@ -502,11 +535,11 @@ public class MainView extends Activity
         
         
         //获取菜单句柄，用于解决灵敏度问题
-        lBtn1 = (LinearLayout)findViewById(R.id.subscribe_button_layout);
-        lBtn2 = (LinearLayout)findViewById(R.id.hot_button_layout);
-        lBtn3 = (LinearLayout)findViewById(R.id.remind_button_layout);
-        lBtn4 = (LinearLayout)findViewById(R.id.submit_button_layout);
-        lBtn5 = (LinearLayout)findViewById(R.id.my_button_layout);
+        lBtn1 = (LinearLayout)findViewById(R.id.hot_btn_layout);
+        lBtn2 = (LinearLayout)findViewById(R.id.subscribe_btn_layout);
+        lBtn3 = (LinearLayout)findViewById(R.id.remind_btn_layout);
+        lBtn4 = (LinearLayout)findViewById(R.id.submit_btn_layout);
+        lBtn5 = (LinearLayout)findViewById(R.id.my_btn_layout);
         
         lBtn1.setOnClickListener(new LayoutOnClickListener(0));
         lBtn2.setOnClickListener(new LayoutOnClickListener(1));
@@ -786,7 +819,7 @@ public class MainView extends Activity
 	public void initLikeCollection(){
 		
 		Log.i("initLikeCollection", "开始");
-		subscribeCursor = dbCenter.likeSelect(dbCenter.getReadableDatabase());
+		subscribeCursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null,null);//使用全部的讲座建立光标，然后再筛选
 		remindCursor = dbCenter.collectionSelect(dbCenter.getReadableDatabase());
 		
 		//实现订阅  2014年 7月23 Typhoon today
@@ -909,14 +942,14 @@ public class MainView extends Activity
 			Animation animation = null;
 			switch (arg0) {
 			case 0:
-				mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_pressed));
+				mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_pressed));
 				mText1.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				initHot();
 				refreshHot();
 
 				if (currIndex == 1) {
 					animation = new TranslateAnimation(one, 0, 0, 0);
-					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
+					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
 					mText2.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 2) {
 					animation = new TranslateAnimation(two, 0, 0, 0);
@@ -936,14 +969,14 @@ public class MainView extends Activity
 				break;
 			case 1:
 				
-				mTab2.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_pressed));
+				mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_pressed));
 				mText2.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				
 				initLikeCollection();
 				refreshLikeCollection();
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, one, 0, 0);
-					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
+					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
 					mText1.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 2) {
 					animation = new TranslateAnimation(two, one, 0, 0);
@@ -969,11 +1002,11 @@ public class MainView extends Activity
 				
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, two, 0, 0);
-					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
+					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
 					mText1.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 1) {
 					animation = new TranslateAnimation(one, two, 0, 0);
-					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
+					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
 					mText2.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 3) {
@@ -992,11 +1025,11 @@ public class MainView extends Activity
 				mText4.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, three, 0, 0);
-					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
+					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
 					mText1.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 1) {
 					animation = new TranslateAnimation(one, three, 0, 0);
-					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
+					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
 					mText2.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 2) {
@@ -1016,11 +1049,11 @@ public class MainView extends Activity
 				mText5.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, four, 0, 0);
-					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
+					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
 					mText1.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 1) {
 					animation = new TranslateAnimation(one, four, 0, 0);
-					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
+					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
 					mText2.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 2) {
@@ -1083,34 +1116,45 @@ public class MainView extends Activity
 	
 	
 	// 个人中心的保存设置按钮
-		public void save(View view) {
+			public void save(View view) {
 
-			String u = ETusername.getText().toString();
-			String e = ETemail.getText().toString().trim();
-			
-			if (isEmail(e) || e.equals("") || e.isEmpty()) {
-				saveLoginInfo(MainView.this, u, e);
+				String u = ETusername.getText().toString();
+				String e = ETemail.getText().toString().trim();
+				
+				if(u.equals("") || u.isEmpty())
+				{
+					Toast.makeText(MainView.this, "用户名不能为空", Toast.LENGTH_LONG).show();
+					ETusername.requestFocus();
+				}
+				
+				else if (isEmail(e) || e.equals("") || e.isEmpty()) 
+				{
+					Toast.makeText(MainView.this, "保存成功", Toast.LENGTH_LONG).show();
+					saveLoginInfo(MainView.this, u, e);
+				}
+				else
+				{
+					Toast.makeText(MainView.this, "无效的邮箱地址", Toast.LENGTH_LONG).show();
+					ETemail.requestFocus();
+				}
+				
 			}
-			else {
-				Toast.makeText(MainView.this, "无效的邮箱地址", Toast.LENGTH_LONG).show();
-				ETemail.requestFocus();
+
+			// 邮箱判断正则表达式
+			public static boolean isEmail(String email) {
+				//String emailPattern = "[a-zA-Z0-9][a-zA-Z0-9._-]{2,16}[a-zA-Z0-9]@[a-zA-Z0-9]+.[a-zA-Z0-9]+";
+				//boolean result = Pattern.matches(emailPattern, email);
+				//return result;
+				Pattern pattern = Pattern.compile(".+@.+\\.[a-z]+");
+		        Matcher matcher = pattern.matcher(email);
+
+		        if(matcher.matches()) {
+		        	return true;
+		        }else {
+		        	return false;
+		        }
 			}
-		}
 
-		// 邮箱判断正则表达式
-		public static boolean isEmail(String email) {
-			//String emailPattern = "[a-zA-Z0-9][a-zA-Z0-9._-]{2,16}[a-zA-Z0-9]@[a-zA-Z0-9]+.[a-zA-Z0-9]+";
-			//boolean result = Pattern.matches(emailPattern, email);
-			//return result;
-			Pattern pattern = Pattern.compile(".+@.+\\.[a-z]+");
-	        Matcher matcher = pattern.matcher(email);
-
-	        if(matcher.matches()) {
-	        	return true;
-	        }else {
-	        	return false;
-	        }
-		}
 
 	
 	//下面的代码先做保留，用于处理android的 三颗 虚拟按键

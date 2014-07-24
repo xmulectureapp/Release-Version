@@ -221,6 +221,8 @@ public class SubmitCenter extends Activity {
 				}
 
 				if (isOK) {
+					//开始提交
+					
 					Toast.makeText(getApplicationContext(), "提交完成",
 							Toast.LENGTH_SHORT).show();
 				}

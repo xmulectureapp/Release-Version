@@ -10,7 +10,7 @@
 	<color name="main_menu_background">#d2000000</color>
 	<color name="menu_background_color">#9e000000</color>
 	<color name="menu_twiter_color">#eeebe8eb</color>
-	<color name="submit_center_text_color">#40abaeb7</color>
-	<color name="submit_center_edit_color">#404d2a6e</color>
-	<color name="main_top_background_color">#d2000000</color>	
+	<color name="submit_center_text_color">#fc6345</color>
+	<color name="submit_center_edit_color">#80000000</color>
+	<color name="main_top_background_color">#d2000000</color>		
 </resources>
