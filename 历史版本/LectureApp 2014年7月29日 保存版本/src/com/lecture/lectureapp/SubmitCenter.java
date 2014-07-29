@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,8 +43,6 @@ public class SubmitCenter extends Activity {
 	int one = 0;
 	
 	private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
-	
-	Time mTime;  //用于转换Long型时间
 
 	
 	//——————————————————————下面是用于handler的消息标记
@@ -105,9 +102,6 @@ public class SubmitCenter extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.submitcenter);
 
-		
-		mTime = new Time();
-		
 		// 绑定控件
 		string_title = (EditText) findViewById(R.id.string_title);
 		string_speaker = (EditText) findViewById(R.id.string_speaker);
@@ -243,12 +237,6 @@ public class SubmitCenter extends Activity {
 
 				if (!TextUtils.isEmpty(string_time.getText())) {
 					sl.setTime(string_time.getText().toString());
-					
-					//这是转换时间用的
-					mTime.set(0, minute, hourOfDay, dayOfMonth, monthOfYear, year);
-					long a= mTime.toMillis(true);
-					
-					
 				} else {
 					Toast.makeText(getApplicationContext(), "时间不能为空",
 							Toast.LENGTH_SHORT).show();
