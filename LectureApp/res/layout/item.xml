@@ -84,14 +84,14 @@
             android:textSize="15dip" />
 
         <TextView
-            android:id="@+id/lecture_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_marginTop="30dp"
-            android:text="id : "
-            android:textColor="@color/item_transparent"
-            android:textSize="15dip" />
+        	android:id="@+id/lecture_id"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_margin="5dp"
+        	android:layout_marginTop="30dp"
+        	android:text="id"
+        	android:textColor="@color/item_transparent"
+        	android:textSize="1sp" />
 
         </LinearLayout>
         <ImageView

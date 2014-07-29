@@ -2,6 +2,7 @@ package com.lecture.util;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +26,7 @@ public class GetDetailUtil {
 	
 
 
-	private static final String fileName = "eventsInfo.xml";
+	private static final String fileName = "eventsdetail.xml";
 
 	private static GetDetailUtil singleEventsUtil;
 
@@ -67,18 +68,38 @@ public class GetDetailUtil {
 				DetailInfo detailInfo;
 				
 				HttpURLConnection connection = null;
+				FileOutputStream out = null;
 				InputStream in = null;
+				InputStream fileIn = null;
+				
+			
 				try {
 					Log.i("详细信息","开始下载详细信息!");
 					URL url = new URL("http://lecture.xmu.edu.cn/lecture_detail.php?id=" + id);
 					connection = (HttpURLConnection) url.openConnection();
 					in = new BufferedInputStream(connection.getInputStream());
+					File outFile = new File(context.getCacheDir()
+							.getAbsolutePath() + "/info", fileName);
+					if (!outFile.exists()) {
+						if (!outFile.getParentFile().exists())
+							outFile.getParentFile().mkdirs();
+						outFile.createNewFile();
+					}
+					out = new FileOutputStream(outFile);
+					byte[] buffer = new byte[256];
+					int length = 0;
+					while ((length = in.read(buffer)) != -1) {
+						out.write(buffer, 0, length);
+						// System.out.write(buffer, 0, length);
+					}
+				
 					//下载成功
 					//下面开始读取文件
+					fileIn = new FileInputStream( GetDetailUtil.getDetailPath(context).getPath() );
 					detailInfo = new DetailInfo();
 					XmlPullParser mParser = null;
 					mParser = XmlPullParserFactory.newInstance().newPullParser();
-					mParser.setInput(in, "UTF-8");
+					mParser.setInput(fileIn, "UTF-8");
 					int code = mParser.getEventType();
 					while (code != XmlPullParser.END_DOCUMENT) {
 						switch (code) {
@@ -138,7 +159,7 @@ public class GetDetailUtil {
 		}).start();
 	}
 
-	public static File getEventsPath(Context context) {
+	public static File getDetailPath(Context context) {
 		return new File(context.getCacheDir().getAbsolutePath() + "/info",
 				fileName);
 	}

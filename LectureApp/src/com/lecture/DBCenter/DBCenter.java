@@ -93,6 +93,14 @@ public class DBCenter extends SQLiteOpenHelper {
 		//------------------------------创建 LectureTable-------------------
 		
 		
+		
+		public static DBCenter getStaticDBCenter(Context context){
+			
+			return new DBCenter(context, "LectureDB", 1);
+			
+		}
+		
+		
 		public static void likeDBSync(SQLiteDatabase db, String id, String isLiked){
 			// 本地上可能会产生Like为负值的情况，造成的原因可能是用户的疯狂点赞！服务器上面已经解决这个问题！
 			if(isLiked.equals("1"))
@@ -132,6 +140,7 @@ public class DBCenter extends SQLiteOpenHelper {
 			
 			return selectResult;
 		}
+		
 		
 		
 		//like table func refresh

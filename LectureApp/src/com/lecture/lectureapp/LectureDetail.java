@@ -1,20 +1,35 @@
 package com.lecture.lectureapp;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import com.lecture.DBCenter.DBCenter;
 import com.lecture.DBCenter.XMLToList;
 import com.lecture.localdata.DetailInfo;
 import com.lecture.localdata.Event;
+import com.lecture.localdata.ReminderInfo;
 import com.lecture.util.GetDetailUtil;
+import com.lecture.util.LikeInterface;
 import com.lecture.util.GetDetailUtil.GetDetailCallback;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.CalendarContract.Events;
+import android.provider.CalendarContract.Reminders;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LectureDetail extends Activity {
 
@@ -28,11 +43,22 @@ public class LectureDetail extends Activity {
 	private ImageView iv1;
 	
 	private Event detail_lectureEvent; 
+
+	private LinearLayout linearBtnShare;
+	private LinearLayout linearBtnComment;
+	private LinearLayout linearBtnLike;
+	private LinearLayout linearBtnRemind;
+
+	private ImageView imageViewLike;
+	private ImageView imageViewRemind;
+
+	private TextView textViewLike;
+	private TextView textViewRemind;
 	
-	//¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ªÏÂÃæÊÇÓÃÓÚhandlerµÄÏûÏ¢±ê¼Ç
-	private static final int MESSAGE_DOWNLOAD_START = 1;//Ë¢ĞÂ¿ªÊ¼
-	private static final int MESSAGE_DOWNLOAD_END = 2;//Ë¢ĞÂ½áÊø
-	private static final int MESSAGE_DOWNLOAD_FAILED = 3;//Ë¢ĞÂÊ§°Ü
+	//â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”ä¸‹é¢æ˜¯ç”¨äºhandlerçš„æ¶ˆæ¯æ ‡è®°
+	private static final int MESSAGE_DOWNLOAD_START = 1;//åˆ·æ–°å¼€å§‹
+	private static final int MESSAGE_DOWNLOAD_END = 2;//åˆ·æ–°ç»“æŸ
+	private static final int MESSAGE_DOWNLOAD_FAILED = 3;//åˆ·æ–°å¤±è´¥
 	
 	
 	private ProgressDialog mProgressDialog;
@@ -41,7 +67,7 @@ public class LectureDetail extends Activity {
 		
 		@Override
 		public void handleMessage(Message message){
-			final String msg = (String) message.obj;
+			//final String msg = (String) message.obj;
 			Message msgRepost = Message.obtain();
 			
 			if(message.what == MESSAGE_DOWNLOAD_START){
@@ -88,23 +114,182 @@ public class LectureDetail extends Activity {
 		
 		detail_lectureEvent = (Event)getIntent().getSerializableExtra("LectureDetail");
 		
-		tvname.setText(detail_lectureEvent.getTitle());
-		tvtime.setText(detail_lectureEvent.getTime());
-		tvaddr.setText(detail_lectureEvent.getAddress());
-		tvspeaker.setText(detail_lectureEvent.getSpeaker());
-		tvlabel.setText("±êÇ©»¹ÔÚ¿ª·¢ÖĞ£¬¾´ÇëÆÚ´ı£¡");
-		//tvaboutspeaker.setText("³£Ò«ĞÅ£¬²©Ê¿£¬½ÌÊÚ£¬²©Ê¿Éúµ¼Ê¦£¬ÏÖÈÎ½ÌÓÚÄÏ¿ª´óÑ§¼°ÃÀ¹ú¹Øµº´óÑ§£¬ÑĞ¾¿·½ÏòÎªÓ¢ÃÀÎÄÑ§¡£1965Äê±ÏÒµÓÚÄÏ¿ª´óÑ§Ó¢ÎÄÏµ£¬Í¬Äê¸°Ó¢¹úÂ×¶Ø¡¢½£ÇÅ½øĞŞ¡£1984ÄêÔÚÃÀ¹úÌ¹ÆÕ¶û´óÑ§Ó¢ÎÄÏµ»ñ²©Ê¿Ñ§Î»¡£×Ô1986ÄêÆğÎªÃÀ¹ú¡¶ÎÄ»¯¡·(Paideuma)ÔÓÖ¾ÌØÑû±à¼­¡£1988ÄêÈëÑ¡Ó¢¹ú¹ú¼Ê´«¼ÇÖĞĞÄ±à×ëµÄ¡¶Ô¶¶«¼°Ì«Æ½ÑóÃûÈËÂ¼¡·£¬¶à´ÎÈëÑ¡¡¶ÃÀ¹úÃûÊ¦Â¼¡·¡£ÖøÓĞ¡¶ÃÀ¹úÎÄÑ§¼òÊ·¡·¡¢¡¶Ó¢ÎÄÑ§¼òÊ·¡·¡¢¡¶ÃÀ¹úÎÄÑ§Ê·¡·¡¢¡¶Ï£À°ÂŞÂíÉñ»°¡·¡¢¡¶Âş»°Ó¢ÃÀÎÄÑ§¡·¼°¡¶ÑĞ¾¿ÓëĞ´×÷¡·µÈ£»Ö÷±àÓĞ¡¶ÃÀ¹úÎÄÑ§Ñ¡¶Á¼°¡¶Ó¢¹úÎÄÑ§Í¨Ê·¡·µÈ¡£ÔÚ¹úÄÚÍâ¿¯ÎïÉÏ·¢±í¹ı¶àÆªÂÛÎÄ¡£");
-		//tvmore.setText("ÈËÎÄÑ§¿ÆµÄÑĞ¾¿·½·¨ÏµÁĞ½²×ùµÚ17ÆÚ");
-		tvaboutspeaker.setText("Ö÷½²ĞÅÏ¢¼ÓÔØÖĞ...");
-		tvmore.setText("½²×ùÏêÇé¼ÓÔØÖĞ...");
+		tvname.setText("ä¸»é¢˜ï¼š" + detail_lectureEvent.getTitle());
+		tvtime.setText("æ—¶é—´ï¼š" + detail_lectureEvent.getTime());
+		tvaddr.setText("åœ°ç‚¹ï¼š" + detail_lectureEvent.getAddress());
+		tvspeaker.setText("ä¸»è®²ï¼š" + detail_lectureEvent.getSpeaker());
+		tvlabel.setText("æ ‡ç­¾ï¼š" + "æ ‡ç­¾è¿˜åœ¨å¼€å‘ä¸­ï¼Œæ•¬è¯·æœŸå¾…ï¼");
+		//tvaboutspeaker.setText("å¸¸è€€ä¿¡ï¼Œåšå£«ï¼Œæ•™æˆï¼Œåšå£«ç”Ÿå¯¼å¸ˆï¼Œç°ä»»æ•™äºå—å¼€å¤§å­¦åŠç¾å›½å…³å²›å¤§å­¦ï¼Œç ”ç©¶æ–¹å‘ä¸ºè‹±ç¾æ–‡å­¦ã€‚1965å¹´æ¯•ä¸šäºå—å¼€å¤§å­¦è‹±æ–‡ç³»ï¼ŒåŒå¹´èµ´è‹±å›½ä¼¦æ•¦ã€å‰‘æ¡¥è¿›ä¿®ã€‚1984å¹´åœ¨ç¾å›½å¦æ™®å°”å¤§å­¦è‹±æ–‡ç³»è·åšå£«å­¦ä½ã€‚è‡ª1986å¹´èµ·ä¸ºç¾å›½ã€Šæ–‡åŒ–ã€‹(Paideuma)æ‚å¿—ç‰¹é‚€ç¼–è¾‘ã€‚1988å¹´å…¥é€‰è‹±å›½å›½é™…ä¼ è®°ä¸­å¿ƒç¼–çº‚çš„ã€Šè¿œä¸œåŠå¤ªå¹³æ´‹åäººå½•ã€‹ï¼Œå¤šæ¬¡å…¥é€‰ã€Šç¾å›½åå¸ˆå½•ã€‹ã€‚è‘—æœ‰ã€Šç¾å›½æ–‡å­¦ç®€å²ã€‹ã€ã€Šè‹±æ–‡å­¦ç®€å²ã€‹ã€ã€Šç¾å›½æ–‡å­¦å²ã€‹ã€ã€Šå¸Œè…Šç½—é©¬ç¥è¯ã€‹ã€ã€Šæ¼«è¯è‹±ç¾æ–‡å­¦ã€‹åŠã€Šç ”ç©¶ä¸å†™ä½œã€‹ç­‰ï¼›ä¸»ç¼–æœ‰ã€Šç¾å›½æ–‡å­¦é€‰è¯»åŠã€Šè‹±å›½æ–‡å­¦é€šå²ã€‹ç­‰ã€‚åœ¨å›½å†…å¤–åˆŠç‰©ä¸Šå‘è¡¨è¿‡å¤šç¯‡è®ºæ–‡ã€‚");
+		//tvmore.setText("äººæ–‡å­¦ç§‘çš„ç ”ç©¶æ–¹æ³•ç³»åˆ—è®²åº§ç¬¬17æœŸ");
+		tvaboutspeaker.setText("ä¸»è®²èµ„æ–™ï¼š" + "ä¸»è®²ä¿¡æ¯åŠ è½½ä¸­...");
+		tvmore.setText("è®²åº§èƒŒæ™¯åŠæ›´å¤šæ¶ˆæ¯ï¼š" + "è®²åº§è¯¦æƒ…åŠ è½½ä¸­...");
 		
-		//»ñÈ¡½²×ù¸ü¶àĞÅÏ¢
+		
+		//ä¸‹é¢å¼€å§‹åˆå§‹åŒ–å››ä¸ªæŒ‰é’®
+		linearBtnShare = (LinearLayout)findViewById(R.id.detail_linearlayout_share);
+		linearBtnComment = (LinearLayout)findViewById(R.id.detail_linearlayout_comment);
+		linearBtnLike = (LinearLayout)findViewById(R.id.detail_linearlayout_like);
+		linearBtnRemind = (LinearLayout)findViewById(R.id.detail_linearlayout_remind);
+		
+		imageViewLike = (ImageView)findViewById(R.id.detail_like_icon);
+		imageViewRemind = (ImageView)findViewById(R.id.detail_remind_icon);
+		
+		textViewLike = (TextView)findViewById(R.id.detail_like_text);
+		textViewRemind = (TextView)findViewById(R.id.detail_remind_text);
+		
+		
+		  if(detail_lectureEvent.isLike()){
+			  imageViewLike.setImageDrawable(getResources().getDrawable(R.drawable.like_red));
+			  textViewLike.setTextColor(getResources().getColor(R.color.main_menu_pressed));
+			  
+		  }
+		  else {
+			  imageViewLike.setImageDrawable(getResources().getDrawable(R.drawable.like));
+			  textViewLike.setTextColor(getResources().getColor(R.color.item_content));
+			  
+		  }
+		  
+		  if(detail_lectureEvent.getLikeCount() > 0){
+			  textViewLike.setText( adaptPlace( String.format("%d",detail_lectureEvent.getLikeCount()) ) );
+			  }
+		  
+		//ä¸‹é¢çš„ä»£ç ä½¿ç”¨äº æ”¶è—æŒ‰é’®
+		  if(detail_lectureEvent.isReminded()){
+			  imageViewRemind.setImageDrawable(getResources().getDrawable(R.drawable.remind_red));
+			  textViewRemind.setTextColor(getResources().getColor(R.color.main_menu_pressed));
+	    		
+		  }
+		  else {
+			  imageViewRemind.setImageDrawable(getResources().getDrawable(R.drawable.remind));
+			  
+		  }
+		  
+		  linearBtnShare.setOnClickListener(new View.OnClickListener() {  
+			    public void onClick(View v) {  
+			     //showInfo1();
+			    	Event event = detail_lectureEvent;
+			    	Intent sendIntent = new Intent();
+					sendIntent.setAction(Intent.ACTION_SEND);
+					//sendIntent.setType("text/plain");
+					sendIntent.setType("image/jpg");
+					sendIntent.putExtra(Intent.EXTRA_TITLE, "åˆ†äº«");
+					sendIntent.putExtra(Intent.EXTRA_TEXT,
+							"Hiï¼Œè·Ÿä½ åˆ†äº«ä¸€ä¸ªæœ‰è¶£çš„è®²åº§ã€‚" + "\n"
+							+ "ä¸»é¢˜ï¼š" + event.getTitle()+ "\n" 
+							+ "æ—¶é—´ï¼š" + event.getTime()+"\n" 
+							+ "åœ°ç‚¹ï¼š" + event.getAddress()+ "\n" 
+							+ "ä¸»è®²ï¼š" + event.getSpeaker() + "\n"
+							+ "ï¼ˆæ¥è‡ªå¦å¤§è®²åº§ç½‘ï¼‰" + "\n"
+							+ event.getLink());
+					//sendIntent.putExtra(Intent.EXTRA_TEXT, event.getAddress());
+					//sendIntent.putExtra(Intent.EXTRA_TEXT, event.getSpeaker());
+					sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+			
+					LectureDetail.this.startActivity(sendIntent);
+			    	
+			    }  
+			   });  
+		
+		  linearBtnComment.setOnClickListener(new View.OnClickListener() {  
+			    public void onClick(View v) {  
+			  //   showInfo2();
+			    	 Event event = detail_lectureEvent;
+					//æŠŠè¯¥åˆ™è®²åº§å¯¹åº”çš„eventä¼ å…¥Bundleï¼Œæ¥è‡ªKunCheng
+					Bundle detail_bundle = new Bundle();
+					detail_bundle.putSerializable("LectureComment", event);
+					Intent intent = new Intent(LectureDetail.this, Comment.class);
+					intent.putExtras(detail_bundle);
+					LectureDetail.this.startActivity(intent);
+			    	
+			    	
+			    }  
+			   });
+		
+		linearBtnLike.setOnClickListener(new View.OnClickListener() {  
+		    public void onClick(View v) {  
+		    // showInfo3();
+		    	Event event = detail_lectureEvent;
+ 
+		    	event.setLike(!event.isLike());
+		    	if (event.isLike())
+		    	{
+		    		imageViewLike.setImageDrawable(getResources().getDrawable(R.drawable.like_red));
+		    		textViewLike.setTextColor(getResources().getColor(R.color.main_menu_pressed));
+		    		//å–œæ¬¢çš„è¯ï¼Œè¿›è¡Œæ•°æ®è¡¨LikeTableæ›´æ–°
+		    		DBCenter.setLike(DBCenter.getStaticDBCenter(LectureDetail.this).getReadableDatabase(), event.getUid(), true);
+		    		event.updateLikeCount(1);//1 è¡¨ç¤ºï¼‹1
+		    		LikeInterface.LikeGo(event.getUid(), "1");
+		    		DBCenter.likeDBSync(DBCenter.getStaticDBCenter(LectureDetail.this).getReadableDatabase(), event.getUid(), "1");
+		    		//ä¸‹é¢ä¸€å¥è§£å†³é©¬ä¸Šå˜Likeæ•°å­—
+		    		textViewLike.setText( adaptPlace( String.format("%d", event.getLikeCount()) ) );
+		    		
+		    	}
+				else
+				{
+					imageViewLike.setImageDrawable(getResources().getDrawable(R.drawable.like));
+					textViewLike.setTextColor(getResources().getColor(R.color.main_menu_normal));
+					//å–œæ¬¢çš„è¯ï¼Œè¿›è¡Œæ•°æ®è¡¨LikeTableæ›´æ–°
+		    		DBCenter.setLike(DBCenter.getStaticDBCenter(LectureDetail.this).getReadableDatabase(), event.getUid(), false);
+		    		event.updateLikeCount(-1);//-1 è¡¨ç¤ºï¼‹ (-1)
+		    		LikeInterface.LikeGo(event.getUid(), "0");
+		    		DBCenter.likeDBSync(DBCenter.getStaticDBCenter(LectureDetail.this).getReadableDatabase(), event.getUid(), "0");
+		    		//ä¸‹é¢ä¸€å¥è§£å†³é©¬ä¸Šå˜Likeæ•°å­—
+		    		textViewLike.setText( adaptPlace( String.format("%d", event.getLikeCount()) ) );
+		    		
+		    		
+				}
+		    }  
+		   });
+		
+		linearBtnRemind.setOnClickListener(new View.OnClickListener() {  
+			    public void onClick(View v) {  
+			     //showInfo4();    
+			    	Event event = detail_lectureEvent;
+			    	event.setReminded(!event.isReminded());
+			    	if (event.isReminded())
+			    	{
+			    		imageViewRemind.setImageDrawable(v.getResources().getDrawable(R.drawable.remind_red));
+			    		textViewRemind.setTextColor(v.getResources().getColor(R.color.main_menu_pressed));
+			    		//æ”¶è—çš„è¯ï¼Œè¿›è¡Œæ•°æ®è¡¨CollectionTableæ›´æ–°
+			    		DBCenter.setRemind(DBCenter.getStaticDBCenter(LectureDetail.this).getReadableDatabase(), event.getUid(), true);
+			    		//æ·»åŠ åˆ°æ—¥å†
+			    		insertIntoCalender();
+			    	}
+			    	else
+			    	{
+			    		imageViewRemind.setImageDrawable(v.getResources().getDrawable(R.drawable.remind));
+			    		textViewRemind.setTextColor(v.getResources().getColor(R.color.main_menu_normal));
+			    		//æ”¶è—çš„è¯ï¼Œè¿›è¡Œæ•°æ®è¡¨CollectionTableæ›´æ–°
+			    		DBCenter.setRemind(DBCenter.getStaticDBCenter(LectureDetail.this).getReadableDatabase(), event.getUid(), false);
+			    		//ä»æ—¥å†åˆ é™¤
+			    		deleteFromCalender();
+			    	}	
+			    }  
+			   });
+		
+	
+		
+		//è·å–è®²åº§æ›´å¤šä¿¡æ¯
 		downloadDetail();
 	}
 	
+	//ä¸‹é¢ç”¨äºç»™æŒ‰èµæ·»åŠ ä¸€ä¸ªç©ºæ ¼å¦‚æœåªæœ‰ä¸ªä½æ•°çš„è¯
+			public String adaptPlace(String s){
+				
+				if(s.length() == 1)
+					return " " + s + "  ";
+				else if(s.length() == 2)
+					return " " + s + " ";
+				else
+					return s;
+				
+				
+			}
+	
+	
 	public void setDetail(DetailInfo detailInfo){
-		tvaboutspeaker.setText( detailInfo.getLec_aboutSpeaker() );
-		tvmore.setText( detailInfo.getLec_about() );
+		tvaboutspeaker.setText( "ä¸»è®²èµ„æ–™ï¼š\nâ˜…â˜" + detailInfo.getLec_aboutSpeaker() );
+		tvmore.setText( "è®²åº§èƒŒæ™¯åŠæ›´å¤šæ¶ˆæ¯ï¼š\nâ˜…" + detailInfo.getLec_about() );
 		
 		
 	}
@@ -122,7 +307,7 @@ public class LectureDetail extends Activity {
 					public void onStart() {
 						Message msg = new Message();
 						msg.what = MESSAGE_DOWNLOAD_START;
-						msg.obj = "ÕıÔÚÏÂÔØÏêÇé...";
+						msg.obj = "æ­£åœ¨ä¸‹è½½è¯¦æƒ…...";
 						detailHandler.sendMessage(msg);
 					}
 
@@ -130,7 +315,7 @@ public class LectureDetail extends Activity {
 					public void onEnd(DetailInfo detailInfo) {
 						
 						
-						Log.i("»ñÈ¡ÏêÏ¸ĞÅÏ¢", "»ñÈ¡½áÊø£¡×¼±¸·¢ËÍMESSAGE_DOWNLOAD_END ÏûÏ¢£¡");
+						Log.i("è·å–è¯¦ç»†ä¿¡æ¯", "è·å–ç»“æŸï¼å‡†å¤‡å‘é€MESSAGE_DOWNLOAD_END æ¶ˆæ¯ï¼");
 						
 						Message msg = new Message();
 						msg.what = MESSAGE_DOWNLOAD_END;
@@ -147,12 +332,78 @@ public class LectureDetail extends Activity {
 					public void onNoInternet() {
 						Message msg = new Message();
 						msg.what = MESSAGE_DOWNLOAD_FAILED;
-						msg.obj = "ÎŞ·¨Á¬½Óµ½ÍøÂç...";
+						msg.obj = "æ— æ³•è¿æ¥åˆ°ç½‘ç»œ...";
 						detailHandler.sendMessage(msg);
 					}
 				});
 		getDetailUtil.getDetail( this, detail_lectureEvent.getUid() );
 		
+	}
+	
+	public void insertIntoCalender() {
+		long calId = 1;
+        Event event = detail_lectureEvent;
+		GregorianCalendar startDate = event.getTimeCalendar();
+		GregorianCalendar endDate = event.getTimeCalendar();
+		
+		startDate.set(Calendar.HOUR_OF_DAY, 8);
+		startDate.set(Calendar.MINUTE, 0);
+
+		ContentResolver cr1 = this.getContentResolver(); // æ·»åŠ æ–°eventï¼Œæ­¥éª¤æ˜¯å›ºå®šçš„
+		ContentValues values = new ContentValues();
+		values.put(Events.DTSTART, startDate.getTime().getTime()); // æ·»åŠ æé†’æ—¶é—´ï¼Œå³è®²åº§çš„æ—¥æœŸ
+		values.put(Events.DTEND, endDate.getTime().getTime());
+		values.put(Events.TITLE, event.getTitle());
+		values.put(Events.DESCRIPTION, event.getSpeaker());
+		values.put(Events.EVENT_LOCATION, event.getAddress());
+		values.put(Events.CALENDAR_ID, calId);
+		values.put(Events.EVENT_TIMEZONE, "GMT+8");
+		Uri uri = cr1.insert(Events.CONTENT_URI, values);
+		Long eventId = Long.parseLong(uri.getLastPathSegment()); // è·å–åˆšæ‰æ·»åŠ çš„eventçš„Id
+
+		ContentResolver cr2 = this.getContentResolver(); // ä¸ºåˆšæ‰æ–°æ·»åŠ çš„eventæ·»åŠ reminder
+		ContentValues values1 = new ContentValues();
+		values1.put(Reminders.MINUTES, 10); // è®¾ç½®æå‰å‡ åˆ†é’Ÿæé†’
+		values1.put(Reminders.EVENT_ID, eventId);
+		values1.put(Reminders.METHOD, Reminders.METHOD_ALERT);  //è®¾ç½®è¯¥äº‹ä»¶ä¸ºæé†’
+		Uri newReminder = cr2.insert(Reminders.CONTENT_URI, values1); // è°ƒç”¨è¿™ä¸ªæ–¹æ³•è¿”å›å€¼æ˜¯ä¸€ä¸ªUri
+		long reminderId = Long.parseLong(newReminder.getLastPathSegment());
+
+		// è®°å½•æ•°æ®
+		event.setReminderInfo(new ReminderInfo(eventId, reminderId));
+
+		// setAlarmDeal(startMillis); //
+		// è®¾ç½®reminderå¼€å§‹çš„æ—¶å€™ï¼Œå¯åŠ¨å¦ä¸€ä¸ªactivity
+		// // è®¾ç½®å…¨å±€å®šæ—¶å™¨
+		// Intent intent = new Intent(this,
+		// AlarmActivity.class);
+		// PendingIntent pi =
+		// PendingIntent.getActivity(this, 0, intent, 0);
+		// AlarmManager aManager = (AlarmManager)
+		// getSystemService(Service.ALARM_SERVICE);
+		// aManager.set(AlarmManager.RTC_WAKEUP, time, pi);
+		// //
+		// å½“ç³»ç»Ÿè°ƒç”¨System.currentTimeMillis()æ–¹æ³•è¿”å›å€¼ä¸timeç›¸åŒæ—¶å¯åŠ¨piå¯¹åº”çš„ç»„ä»¶
+
+		Toast.makeText(this, "æ·»åŠ åˆ° æ”¶è—é¡µé¢&æ—¥å† æˆåŠŸ", Toast.LENGTH_SHORT).show();
+	}
+
+	public void deleteFromCalender() {
+		Event event = detail_lectureEvent;
+		Uri deleteReminderUri = null;
+		Uri deleteEventUri = null;
+		deleteReminderUri = ContentUris.withAppendedId(Reminders.CONTENT_URI,
+				event.getReminderInfo().getReminderId());
+		deleteEventUri = ContentUris.withAppendedId(Events.CONTENT_URI, event
+				.getReminderInfo().getEventId());
+		int rowR = this.getContentResolver().delete(deleteReminderUri,
+				null, null);
+		int rowE = this.getContentResolver().delete(deleteEventUri, null,
+				null);
+		if (rowE > 0 && rowR > 0) {
+			Toast.makeText(this, "ä» æ”¶è—é¡µé¢&æ—¥å† åˆ é™¤æˆåŠŸ", Toast.LENGTH_SHORT).show();
+		} else
+			Toast.makeText(this, "ä» æ”¶è—é¡µé¢&æ—¥å† åˆ é™¤å¤±è´¥", Toast.LENGTH_SHORT).show();
 	}
 
 }

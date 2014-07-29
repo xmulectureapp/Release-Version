@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
-        android:id="@+id/head_textView"
+        android:id="@+id/foot_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -137,28 +136,25 @@
             android:paddingTop="2dp" >
 
             <CheckBox
-                android:id="@+id/siming"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_campus"
-                android:layout_weight="1"
-                
-                android:checked="true"
-                android:text="思明校区"
-                android:textColor="@color/item_content"
-                android:textSize="15dp" />
+            	android:id="@+id/siming"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:layout_below="@+id/tv_campus"
+            	android:layout_weight="1"
+            	android:text="思明校区"
+            	android:textColor="@color/item_content"
+            	android:textSize="15dp" />
 
             <CheckBox
-                android:id="@+id/xiangan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_campus"
-                android:layout_weight="1"
-                
-                android:checked="true"
-                android:text="翔安校区"
-                android:textColor="@color/item_content"
-                android:textSize="15dp" />
+            	android:id="@+id/xiangan"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:layout_below="@+id/tv_campus"
+            	android:layout_weight="1"
+            	android:text="翔安校区"
+            	android:textColor="@color/item_content"
+            	android:textSize="15dp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -170,28 +166,25 @@
             android:paddingTop="2dp" >
 
             <CheckBox
-                android:id="@+id/zhangzhou"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/siming"
-                android:layout_weight="1"
-                
-                android:checked="true"
-                android:text="漳州校区"
-                android:textColor="@color/item_content"
-                android:textSize="15dp" />
+            	android:id="@+id/zhangzhou"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:layout_below="@+id/siming"
+            	android:layout_weight="1"
+            	android:text="漳州校区"
+            	android:textColor="@color/item_content"
+            	android:textSize="15dp" />
 
             <CheckBox
-                android:id="@+id/xiamen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/xiangan"
-                android:layout_weight="1"
-                
-                android:checked="true"
-                android:text="厦门市区"
-                android:textColor="@color/item_content"
-                android:textSize="15dp" />
+            	android:id="@+id/xiamen"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:layout_below="@+id/xiangan"
+            	android:layout_weight="1"
+            	android:text="厦门市区"
+            	android:textColor="@color/item_content"
+            	android:textSize="15dp" />
+
         </LinearLayout>
 
         <TextView
@@ -220,34 +213,29 @@
                 android:paddingTop="2dp" >
 
                 <CheckBox
-                    android:id="@+id/Monday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    
-                    android:checked="true"
-                    android:text="Mon"
-                    android:textColor="@color/item_content" />
+                	android:id="@+id/Monday"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:layout_weight="1"
+                	android:text="Mon"
+                	android:textColor="@color/item_content" />
 
                 <CheckBox
-                    android:id="@+id/Tuesday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    
-                    android:checked="true"
-                    android:text="Tue"
-                    android:textColor="@color/item_content" />
+                	android:id="@+id/Tuesday"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:layout_weight="1"
+                	android:text="Tue"
+                	android:textColor="@color/item_content" />
 
                 <CheckBox
-                    android:id="@+id/Wednesday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    
-                    android:checked="true"
-                    android:text="Wed"
-                    android:textColor="@color/item_content" />
+                	android:id="@+id/Wednesday"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:layout_weight="1"
+                	android:text="Wed"
+                	android:textColor="@color/item_content" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -260,44 +248,37 @@
                 android:paddingTop="2dp" >
 
                 <CheckBox
-                    android:id="@+id/Thursday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                   
-                    android:checked="true"
-                    android:text="Thu"
-                    android:textColor="@color/item_content" />
+                	android:id="@+id/Thursday"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:layout_weight="1"
+                	android:text="Thu"
+                	android:textColor="@color/item_content" />
 
                 <CheckBox
-                    android:id="@+id/Friday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    
-                    android:checked="true"
-                    android:text="Fri"
-                    android:textColor="@color/item_content" />
+                	android:id="@+id/Friday"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:layout_weight="1"
+                	android:text="Fri"
+                	android:textColor="@color/item_content" />
 
                 <CheckBox
-                    android:id="@+id/Saturday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    
-                    android:checked="true"
-                    android:text="Sat"
-                    android:textColor="@color/item_content" />
+                	android:id="@+id/Saturday"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:layout_weight="1"
+                	android:text="Sat"
+                	android:textColor="@color/item_content" />
 
                 <CheckBox
-                    android:id="@+id/Sunday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    
-                    android:checked="true"
-                    android:text="Sun"
-                    android:textColor="@color/item_content" />
+                	android:id="@+id/Sunday"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:layout_weight="1"
+                	android:text="Sun"
+                	android:textColor="@color/item_content" />
+
             </LinearLayout>
         </LinearLayout>
         

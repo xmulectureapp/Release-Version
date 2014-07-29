@@ -49,6 +49,29 @@ public class Appstart extends Activity {
 			// 将登录标志位设置为false，下次登录时不在显示首次登录界面
 			editor.putBoolean("firststart", false);
 			editor.commit();
+			
+			//下面来自YeBin的修改，用于第一次打开App时选中MyCenter中所有checkdbox，KunCheng，你的代码写得很好
+			
+			SharedPreferences preferencesConfig = getSharedPreferences("config", Context.MODE_PRIVATE);
+			// 获取Editor对象
+			Editor editor = preferencesConfig.edit();
+			// 设置校区或时间
+			editor.putString("siming", "思");
+			editor.putString("xiangan", "翔");
+			editor.putString("zhangzhou", "漳");
+			editor.putString("xiamen", "厦");
+			editor.putString("sun", "1");
+			editor.putString("mon", "2");
+			editor.putString("tue", "3");
+			editor.putString("wed", "4");
+			editor.putString("thu", "5");
+			editor.putString("fri", "6");
+			editor.putString("sat", "7");
+			
+			// 提交
+			editor.commit();
+			
+			//我暂时修改这些  2014 07 14 18:09 Yebin Chen
 
 			new Handler().postDelayed(new Runnable() 
 			{

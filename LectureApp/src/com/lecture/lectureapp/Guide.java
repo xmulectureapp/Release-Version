@@ -41,6 +41,8 @@ public class Guide extends Activity implements OnPageChangeListener{
         mPageViews.add(mInflater.inflate(R.layout.guide_item0, null));
         mPageViews.add(mInflater.inflate(R.layout.guide_item1, null));
         mPageViews.add(mInflater.inflate(R.layout.guide_item2, null));
+        mPageViews.add(mInflater.inflate(R.layout.guide_item3, null));
+        mPageViews.add(mInflater.inflate(R.layout.guide_item4, null));
 //        mPageViews.add(mInflater.inflate(R.layout.guide_item3, null));
         
         mMain = (FrameLayout) mInflater.inflate(R.layout.guide, null);

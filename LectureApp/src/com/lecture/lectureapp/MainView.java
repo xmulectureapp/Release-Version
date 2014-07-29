@@ -123,9 +123,13 @@ public class MainView extends Activity
 	public Cursor remindCursor;
 
 	private RefreshableView refreshableView;
+	private RefreshableView refreshableView_remind;
+	private RefreshableView refreshableView_subscribe;
 
 	private View viewHeader;
 	private View viewFooter;
+	//获取foot view的TextView引用进行没有任何讲座时的提醒
+	private TextView foot_TextView;
 	
 	//下面的变量用于获取主菜单的按钮的layout句柄
 	private LinearLayout lBtn1;
@@ -149,6 +153,8 @@ public class MainView extends Activity
 		private CheckBox fri;
 		private CheckBox sat;
 		private CheckBox sun;
+		
+		
 	
 	//代码来自Yang
 	LocalActivityManager manager = null;
@@ -167,7 +173,7 @@ public class MainView extends Activity
 	private static final int MESSAGE_PULL_REFRESH_LISTVIEW = 7;//pull成功，listView开始更新
 	
 	
-		private ProgressDialog mProgressDialog;
+	private ProgressDialog mProgressDialog;
 		
 		//第二个handler
 		private Handler refreshHandler = new Handler() {
@@ -189,10 +195,10 @@ public class MainView extends Activity
 						
 						initHot();
 						initLikeCollection();
-						
+						refreshFoot("hotCenter");
 
 						//下面用于测试subStrign函数
-						Log.i("subString", mDataHot.get(1).getAddress().substring(0, 1));
+						//Log.i("subString", mDataHot.get(1).getAddress().substring(0, 1));
 					
 						
 						myadapter = new HotMyadapter(MainView.this, mDataHot);
@@ -238,9 +244,68 @@ public class MainView extends Activity
 								//refreshableView.finishRefreshing(myadapter);
 							}
 						}, 0);
+						
+						refreshableView_subscribe.setOnRefreshListener(new PullToRefreshListener() {
+							@Override
+							public void onRefresh() {
+								
+								try {
+									/*
+									View view = hotList.getFocusedChild();
+									if(view == null)
+										Log.i("onRefresh", "view is null");
+									( (RelativeLayout)view.findViewById(R.id.itemAll) )
+									.setBackground(getResources().getDrawable(R.color.item_background));
+									*/
+									//pullRefresh();
+									
+									
+									Thread.sleep(3000);
+									refreshableView_subscribe.finishRefreshing();
+									//Thread.sleep(3000);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								
+								//Toast.makeText(MainView.this, "正在刷新……", Toast.LENGTH_LONG).show();
+								//refreshableView.finishRefreshing(myadapter);
+							}
+						}, 0);
+						
+						refreshableView_remind.setOnRefreshListener(new PullToRefreshListener() {
+							@Override
+							public void onRefresh() {
+								
+								try {
+									/*
+									View view = hotList.getFocusedChild();
+									if(view == null)
+										Log.i("onRefresh", "view is null");
+									( (RelativeLayout)view.findViewById(R.id.itemAll) )
+									.setBackground(getResources().getDrawable(R.color.item_background));
+									*/
+									//pullRefresh();
+									
+									
+									Thread.sleep(3000);
+									refreshableView_remind.finishRefreshing();
+									
+									//Thread.sleep(3000);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								
+								//Toast.makeText(MainView.this, "正在刷新……", Toast.LENGTH_LONG).show();
+								//refreshableView.finishRefreshing(myadapter);
+							}
+						}, 0);
 						//下面上对item的默认点击显示颜色进行改变, 把默认点击效果取消
 						hotList.setSelector(getResources().getDrawable(R.drawable.item_none_selector));
 						hotList.setSelected(false);	
+						remindList.setSelector(getResources().getDrawable(R.drawable.item_none_selector));
+						remindList.setSelected(false);
+						subscribeList.setSelector(getResources().getDrawable(R.drawable.item_none_selector));
+						subscribeList.setSelected(false);
 						// ListView 中某项被选中后的逻辑  
 						hotList.setOnItemClickListener(new OnItemClickListener() {  
 					        
@@ -292,8 +357,8 @@ public class MainView extends Activity
 							public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 									long arg3) {
 								// TODO Auto-generated method stub
-								 
-								Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
+								
+								//Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
 								
 								//下面代码来自 KunCheng，用于显示详细信息
 								Bundle detail_bundle = new Bundle();
@@ -342,6 +407,8 @@ public class MainView extends Activity
 				}
 				else if(message.what == MESSAGE_PULL_REFRESH_FAILED){
 					
+					refreshableView.finishRefreshing(myadapter);
+					
 					Toast.makeText(MainView.this, "无法连接到网络，请检查您的网络设置！", Toast.LENGTH_LONG)
 					.show();
 					
@@ -359,7 +426,7 @@ public class MainView extends Activity
 					
 					initHot();
 					refreshHot();
-					
+					refreshFoot("hotCenter");
 					initLikeCollection();
 					refreshLikeCollection();
 					
@@ -394,7 +461,7 @@ public class MainView extends Activity
 							XMLToList xmlToList = new XMLToList();
 							//DBCenter.clearAllData(dbCenter.getReadableDatabase(), DBCenter.LECTURE_TABLE);
 							xmlToList.insertListToDB(MainView.this, dbCenter, DBCenter.LECTURE_TABLE);
-							
+							// 上面可能出现错误
 							Log.i("onEnd", "XMLToList已经将数据存入数据库！");
 							
 							Log.i("onEnd", "开始refresh like 和 收藏");
@@ -433,6 +500,7 @@ public class MainView extends Activity
 					.getInstance(new GetEventsCallback() {
 
 						@Override
+						
 						public void onStart() {
 							Message msg = new Message();
 							msg.what = MESSAGE_PULL_REFRESH_START;
@@ -511,8 +579,9 @@ public class MainView extends Activity
         */
         
         //下面用于测试时间
+        /*
         SettingsCenter testSetting = new SettingsCenter(MainView.this);
-        int weekday = testSetting.stringToTime("2014-6-24 20:20").weekDay;
+      //  int weekday = testSetting.stringToTime("2014-6-24 20:20").weekDay;
         Time time = testSetting.time;
         Log.i("最后测试", String.format("%d", time.weekDay));
         
@@ -525,6 +594,8 @@ public class MainView extends Activity
         t.setToNow();
         Log.i("系统时间", t.toString());
         Log.i("系统时间", String.format("%d", t.weekDay));
+        
+        */
         
         //获取菜单文字句柄
         mText1 = (TextView)findViewById(R.id.mText1);
@@ -572,23 +643,41 @@ public class MainView extends Activity
         
         viewHeader = mLi.inflate(R.layout.head_view, null);
         viewFooter = mLi.inflate(R.layout.foot_view, null);
+      
+        viewFooter.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+				
+				}
+        });
+        viewHeader.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+			
+			}
+        });
+        
+        //下面是来自Yebin的添加，用于解决没有任何讲座时的提醒显示
+        foot_TextView = (TextView)viewFooter.findViewById(R.id.foot_textView);
 
         subscribeList = (ListView)view1.findViewById(R.id.list_view_subscribe);
         hotList = (ListView) view2.findViewById(R.id.list_view);//把hot_ListView转成引用
         remindList = (ListView)view3.findViewById(R.id.list_view_notice);
 
         subscribeList.addHeaderView(viewHeader);
-        //subscribeList.addHeaderView(viewFooter);
+        subscribeList.addFooterView(viewFooter);
         
         hotList.addHeaderView(viewHeader);
         hotList.addFooterView(viewFooter);
         
         remindList.addHeaderView(viewHeader);
-        //remindList.addHeaderView(viewFooter);
+        remindList.addFooterView(viewFooter);
 
-        
+        refreshableView_subscribe = (RefreshableView)view1.findViewById(R.id.refreshable_view_subscribe);
         refreshableView = (RefreshableView)view2.findViewById(R.id.refreshable_view);
-        
+        refreshableView_remind = (RefreshableView)view3.findViewById(R.id.refreshable_view_remind);
         //每个页面的view数据
         final ArrayList<View> views = new ArrayList<View>();
         views.add(view2);
@@ -723,13 +812,15 @@ public class MainView extends Activity
 						}
 					}
 				});
+		
+		//下面代码中 1 代表周日 2 代表周一
 		mon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				// TODO Auto-generated method stub
 				if (isChecked) {
-					saveCampusAndTime(MainView.this, "mon", "1");
+					saveCampusAndTime(MainView.this, "mon", "2");
 				} else {
 					deleteCampusAndTime(MainView.this, "mon");
 				}
@@ -741,7 +832,7 @@ public class MainView extends Activity
 					boolean isChecked) {
 				// TODO Auto-generated method stub
 				if (isChecked) {
-					saveCampusAndTime(MainView.this, "tue", "2");
+					saveCampusAndTime(MainView.this, "tue", "3");
 				} else {
 					deleteCampusAndTime(MainView.this, "tue");
 				}
@@ -753,7 +844,7 @@ public class MainView extends Activity
 					boolean isChecked) {
 				// TODO Auto-generated method stub
 				if (isChecked) {
-					saveCampusAndTime(MainView.this, "wed", "3");
+					saveCampusAndTime(MainView.this, "wed", "4");
 				} else {
 					deleteCampusAndTime(MainView.this, "wed");
 				}
@@ -765,7 +856,7 @@ public class MainView extends Activity
 					boolean isChecked) {
 				// TODO Auto-generated method stub
 				if (isChecked) {
-					saveCampusAndTime(MainView.this, "thu", "4");
+					saveCampusAndTime(MainView.this, "thu", "5");
 				} else {
 					deleteCampusAndTime(MainView.this, "thu");
 				}
@@ -777,7 +868,7 @@ public class MainView extends Activity
 					boolean isChecked) {
 				// TODO Auto-generated method stub
 				if (isChecked) {
-					saveCampusAndTime(MainView.this, "fri", "5");
+					saveCampusAndTime(MainView.this, "fri", "6");
 				} else {
 					deleteCampusAndTime(MainView.this, "fri");
 				}
@@ -789,7 +880,7 @@ public class MainView extends Activity
 					boolean isChecked) {
 				// TODO Auto-generated method stub
 				if (isChecked) {
-					saveCampusAndTime(MainView.this, "sat", "6");
+					saveCampusAndTime(MainView.this, "sat", "7");
 				} else {
 					deleteCampusAndTime(MainView.this, "sat");
 				}
@@ -801,7 +892,7 @@ public class MainView extends Activity
 					boolean isChecked) {
 				// TODO Auto-generated method stub
 				if (isChecked) {
-					saveCampusAndTime(MainView.this, "sun", "7");
+					saveCampusAndTime(MainView.this, "sun", "1");
 				} else {
 					deleteCampusAndTime(MainView.this, "sun");
 				}
@@ -809,6 +900,51 @@ public class MainView extends Activity
 		});
 		
 	}    // end function onCreate()
+	
+	//下面是来自Yebin的添加，用于解决没有任何讲座时的提醒显示
+    public void setFootDisplay(String toDisplay, Boolean isDisplay){
+    	
+    	foot_TextView.setText(toDisplay);
+    	
+    	//设置是否显示
+    	if(isDisplay){
+    		foot_TextView.setTextColor(getResources().getColor(R.color.item_content));
+        	foot_TextView.setPadding(20,120,20,20);	
+    	}
+    	else{
+    		foot_TextView.setTextColor(getResources().getColor(R.color.item_transparent));
+        	foot_TextView.setPadding(20,20,20,20);
+    	}
+    }
+    
+    //下面是来自Yebin的添加，用于解决没有任何讲座时的提醒显示
+    public void refreshFoot(String whichPage){
+    	if(whichPage.equals("hotCenter")){
+    		
+    		if(mDataHot.size() == 0){
+            	setFootDisplay("没有最新热门讲座", true);
+            	
+    		}
+    		
+    	}
+    	else if(whichPage.equals("subscribeCenter")){
+    		
+    		if(mDataSubscribe.size() == 0)
+    			setFootDisplay("没有您订制的讲座", true);
+    	}
+    	else if(whichPage.equals("remindCenter")){
+    		
+    		if(mDataRemind.size() == 0){
+    			setFootDisplay("您没有收藏的讲座", true);
+    			//myadapterRemind.notifyDataSetChanged();
+    		}
+    		
+				
+    	}
+    	else {
+			setFootDisplay("隐藏FootView", false);
+		}
+    }
 	
 	
 	//code来自Yang
@@ -841,6 +977,7 @@ public class MainView extends Activity
 		
 		myadapterRemind.notifyDataSetChanged();
 		myadapterSubscribe.notifyDataSetChanged();
+		
 	}
 	public void initHot(){
 
@@ -853,6 +990,7 @@ public class MainView extends Activity
 	public void refreshHot(){
 		myadapter.setMData(mDataHot);
 		myadapter.notifyDataSetChanged();
+		
 		
 	}
 	
@@ -946,6 +1084,7 @@ public class MainView extends Activity
 				mText1.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				initHot();
 				refreshHot();
+				refreshFoot("hotCenter");
 
 				if (currIndex == 1) {
 					animation = new TranslateAnimation(one, 0, 0, 0);
@@ -974,6 +1113,8 @@ public class MainView extends Activity
 				
 				initLikeCollection();
 				refreshLikeCollection();
+				
+				refreshFoot("subscribeCenter");
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, one, 0, 0);
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
@@ -999,6 +1140,7 @@ public class MainView extends Activity
 				
 				initLikeCollection();
 				refreshLikeCollection();
+				refreshFoot("remindCenter");
 				
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, two, 0, 0);
@@ -1118,16 +1260,18 @@ public class MainView extends Activity
 	// 个人中心的保存设置按钮
 			public void save(View view) {
 
-				String u = ETusername.getText().toString();
+				String u = ETusername.getText().toString().trim();
 				String e = ETemail.getText().toString().trim();
 				
+				/*
 				if(u.equals("") || u.isEmpty())
 				{
 					Toast.makeText(MainView.this, "用户名不能为空", Toast.LENGTH_LONG).show();
 					ETusername.requestFocus();
 				}
+				*/
 				
-				else if (isEmail(e) || e.equals("") || e.isEmpty()) 
+				if (isEmail(e) || e.equals("") || e.isEmpty()) 
 				{
 					Toast.makeText(MainView.this, "保存成功", Toast.LENGTH_LONG).show();
 					saveLoginInfo(MainView.this, u, e);

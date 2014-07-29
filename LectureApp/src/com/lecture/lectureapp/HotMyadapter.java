@@ -188,7 +188,8 @@ public class HotMyadapter extends BaseAdapter
 			  //下面的代码使用于 收藏按钮
 			  if(mData.get(position).isReminded()){
 				  holder.remindIcon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.remind_red));
-				  
+				  remindText_change.setTextColor(convertView.getResources().getColor(R.color.main_menu_pressed));
+		    		
 			  }
 			  else {
 				  holder.remindIcon.setImageDrawable(convertView.getResources().getDrawable(R.drawable.remind));
