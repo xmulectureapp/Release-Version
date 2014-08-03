@@ -1,22 +1,53 @@
 package com.lecture.localdata;
 
 import java.io.Serializable;
+import java.util.Calendar;
+
+import android.util.Log;
 
 public class SubmitLecture implements Serializable {
 
-	String title, speaker, time, campus, address, speaker_information,
+	String title, speaker, timeNormal, campus, address, speaker_information,
 			more_information, information_source;
+	
+	// edited by xianyu 2014 08 03 20:54 to get the user's phone info & number
+	String phoneInfo;  // include phone's Model, SDK & OS
+	String phoneNumber;
 
 	public SubmitLecture() {
 
 		title = "";
 		speaker = "";
-		time = "";
+		timeNormal = "";
 		campus = "";
 		address = "";
 		speaker_information = "";
 		more_information = "";
 		information_source = "";
+	}
+	
+	public void setPhoneInfo(String phoneInfo){
+		this.phoneInfo = phoneInfo;
+		
+	}
+	public String getPhoneInfo(){
+		String infoCopy = phoneInfo.toString();
+		// xml禁止传输的五个字符，进行转换
+		/*
+		infoCopy.replace("&", "&amp");
+		infoCopy.replace("'", "&apos");
+		infoCopy.replace("\"", "&quot");
+		infoCopy.replace(">", "&gt");
+		infoCopy.replace("<", "&lt");
+		*/
+		return infoCopy;
+	}
+	public void setPhoneNumber(String phoneNumber){
+		this.phoneNumber = phoneNumber;
+		
+	}
+	public String getPhoneNumber(){
+		return phoneNumber;
 	}
 	
 	public void setTitle(String title){
@@ -35,14 +66,45 @@ public class SubmitLecture implements Serializable {
 		return speaker;
 	}
 	
-	public void setTime(String time){
-		this.time = time;
+	public void setTimeNormal(String time){
+		this.timeNormal = time;
 	}
 	
-	public String getTime(){
-		return time;
+	public String getTimeNormal(){
+		return timeNormal;
 	}
 	
+	public String getTimeAsLong(){
+		//把时间转换成long型的值，存于wp_postmeta表中
+		String[] strings = null;
+		strings = timeNormal.split("-| |:");
+		for (String string : strings) {
+			Log.i("Split", string);
+		}
+		Calendar calendar = Calendar.getInstance();
+		
+		Log.i("calendar setting", "in SubmitLecture.java");
+		
+		if(Integer.parseInt(strings[3]) < 12){
+			calendar.set(Calendar.AM_PM, 0);
+			calendar.set( Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1,
+					Integer.parseInt(strings[2]), Integer.parseInt(strings[3]), Integer.parseInt(strings[4]), 0 );
+		}
+		else{
+			calendar.set(Calendar.AM_PM, 1);
+			calendar.set( Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1,
+					Integer.parseInt(strings[2]), Integer.parseInt(strings[3]) - 12, Integer.parseInt(strings[4]), 0 );
+		}
+		
+		Log.i("Calendar time", calendar.toString());
+		Log.i("Calendar long", String.format("%d", calendar.getTimeInMillis()) );
+		
+		return String.format("%d", calendar.getTimeInMillis()).substring(0, 10);
+
+		
+		
+		
+	}
 	public void setCampus(String campus){
 		this.campus = campus;
 	}

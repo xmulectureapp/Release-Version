@@ -109,7 +109,7 @@ public class MainView extends Activity
 	private TextView mText3;
 	private TextView mText4;
 	private TextView mText5;
-	private HotMyadapter myadapter;
+	private HotMyadapter myadapterHot;
 	private RemindMyadapter myadapterRemind;
 	private SubscribeMyadapter myadapterSubscribe;
 	public ListView hotList;
@@ -122,7 +122,7 @@ public class MainView extends Activity
 	public Cursor subscribeCursor;
 	public Cursor remindCursor;
 
-	private RefreshableView refreshableView;
+	private RefreshableView refreshableView_hot;
 	private RefreshableView refreshableView_remind;
 	private RefreshableView refreshableView_subscribe;
 
@@ -201,17 +201,17 @@ public class MainView extends Activity
 						//Log.i("subString", mDataHot.get(1).getAddress().substring(0, 1));
 					
 						
-						myadapter = new HotMyadapter(MainView.this, mDataHot);
+						myadapterHot = new HotMyadapter(MainView.this, mDataHot);
 						myadapterRemind = new RemindMyadapter(MainView.this, mDataRemind);
 						myadapterSubscribe= new SubscribeMyadapter(MainView.this, mDataSubscribe);
 					
-						myadapter.setDBCenter(dbCenter);
+						myadapterHot.setDBCenter(dbCenter);
 						myadapterRemind.setDBCenter(dbCenter);
 						myadapterSubscribe.setDBCenter(dbCenter);
 						
 						Log.i("Myadapter", "适配器构建成功！");
 					    
-						hotList.setAdapter(myadapter);
+						hotList.setAdapter(myadapterHot);
 						remindList.setAdapter(myadapterRemind);
 						subscribeList.setAdapter(myadapterSubscribe);
 						
@@ -219,7 +219,7 @@ public class MainView extends Activity
 						refreshLikeCollection();
 						
 						//下拉刷新执行部分
-						refreshableView.setOnRefreshListener(new PullToRefreshListener() {
+						refreshableView_hot.setOnRefreshListener(new PullToRefreshListener() {
 							@Override
 							public void onRefresh() {
 								
@@ -231,7 +231,7 @@ public class MainView extends Activity
 									( (RelativeLayout)view.findViewById(R.id.itemAll) )
 									.setBackground(getResources().getDrawable(R.color.item_background));
 									*/
-									pullRefresh();
+									pullRefresh("hotCenter");
 									
 									
 									Thread.sleep(3000);
@@ -259,10 +259,11 @@ public class MainView extends Activity
 									*/
 									//pullRefresh();
 									
-									
-									Thread.sleep(3000);
-									refreshableView_subscribe.finishRefreshing();
+									//下面将修改下拉刷新，使得前三个Tabs都可以刷新
 									//Thread.sleep(3000);
+									//refreshableView_subscribe.finishRefreshing();
+									pullRefresh("subscribeCenter");
+									
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -287,8 +288,10 @@ public class MainView extends Activity
 									//pullRefresh();
 									
 									
-									Thread.sleep(3000);
-									refreshableView_remind.finishRefreshing();
+									//下面将修改下拉刷新，使得前三个Tabs都可以刷新
+									//Thread.sleep(3000);
+									//refreshableView_remind.finishRefreshing();
+									pullRefresh("remindCenter");
 									
 									//Thread.sleep(3000);
 								} catch (Exception e) {
@@ -401,13 +404,13 @@ public class MainView extends Activity
 				else if(message.what == MESSAGE_PULL_REFRESH_END){
 					msgRepost = Message.obtain();
 					msgRepost.what = MESSAGE_PULL_REFRESH_LISTVIEW;
-					msgRepost.obj = "下拉刷新成功，下一步开始更新 ListView";
+					msgRepost.obj = message.obj;  // store variable called whichCenter
 					refreshHandler.sendMessage(msgRepost);
 					
 				}
 				else if(message.what == MESSAGE_PULL_REFRESH_FAILED){
 					
-					refreshableView.finishRefreshing(myadapter);
+					refreshableView_hot.finishRefreshing(myadapterHot);
 					
 					Toast.makeText(MainView.this, "无法连接到网络，请检查您的网络设置！", Toast.LENGTH_LONG)
 					.show();
@@ -429,9 +432,15 @@ public class MainView extends Activity
 					refreshFoot("hotCenter");
 					initLikeCollection();
 					refreshLikeCollection();
-					
-					refreshableView.finishRefreshing(myadapter);
-					
+					//下面是 Xianyu做的修改，用于实现三个Tabs都能够刷新
+					if(    ( (String)message.obj  ).equals("hotCenter")    )
+						refreshableView_hot.finishRefreshing(myadapterHot);
+					else 
+					if(   ( (String)message.obj  ).equals("subscribeCenter")   )
+						refreshableView_subscribe.finishRefreshing();
+					else
+					if(   ( (String)message.obj  ).equals("remindCenter")   )
+						refreshableView_remind.finishRefreshing();
 					Log.i("ListView刷新", "刷新ListView成功！");
 				}
 
@@ -495,7 +504,7 @@ public class MainView extends Activity
 		
 		//-------------------pull refresh--------------------------
 		
-		public void pullRefresh() {
+		public void pullRefresh(final String whichCenter) {
 			GetEventsHttpUtil getEventsUtil = GetEventsHttpUtil
 					.getInstance(new GetEventsCallback() {
 
@@ -522,6 +531,7 @@ public class MainView extends Activity
 							Log.i("在RefreshCenter进行的操作", "XMLToList已经将数据存入数据库！");
 							Message msg = new Message();
 							msg.what = MESSAGE_PULL_REFRESH_END;
+							msg.obj = whichCenter;
 							refreshHandler.sendMessage(msg);
 							
 							
@@ -676,7 +686,7 @@ public class MainView extends Activity
         remindList.addFooterView(viewFooter);
 
         refreshableView_subscribe = (RefreshableView)view1.findViewById(R.id.refreshable_view_subscribe);
-        refreshableView = (RefreshableView)view2.findViewById(R.id.refreshable_view);
+        refreshableView_hot = (RefreshableView)view2.findViewById(R.id.refreshable_view);
         refreshableView_remind = (RefreshableView)view3.findViewById(R.id.refreshable_view_remind);
         //每个页面的view数据
         final ArrayList<View> views = new ArrayList<View>();
@@ -925,18 +935,27 @@ public class MainView extends Activity
             	setFootDisplay("没有最新热门讲座", true);
             	
     		}
+    		else{
+    			setFootDisplay("隐藏", false);
+    		}
     		
     	}
     	else if(whichPage.equals("subscribeCenter")){
     		
     		if(mDataSubscribe.size() == 0)
     			setFootDisplay("没有您订制的讲座", true);
+    		else{
+    			setFootDisplay("隐藏", false);
+    		}
     	}
     	else if(whichPage.equals("remindCenter")){
     		
     		if(mDataRemind.size() == 0){
-    			setFootDisplay("您没有收藏的讲座", true);
-    			//myadapterRemind.notifyDataSetChanged();
+    			setFootDisplay("没有您收藏的讲座", true);
+    		
+    		}
+    		else{
+    			setFootDisplay("隐藏", false);
     		}
     		
 				
@@ -988,8 +1007,8 @@ public class MainView extends Activity
 		
 	}
 	public void refreshHot(){
-		myadapter.setMData(mDataHot);
-		myadapter.notifyDataSetChanged();
+		myadapterHot.setMData(mDataHot);
+		myadapterHot.notifyDataSetChanged();
 		
 		
 	}

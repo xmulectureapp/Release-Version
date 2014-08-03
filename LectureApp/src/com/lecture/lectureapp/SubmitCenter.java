@@ -2,6 +2,7 @@ package com.lecture.lectureapp;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.lecture.localdata.DetailInfo;
@@ -13,9 +14,12 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
@@ -45,7 +49,9 @@ public class SubmitCenter extends Activity {
 	
 	private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
 	
-	Time mTime;  //用于转换Long型时间
+	//Time mTime;  //用于转换Long型时间，来自Yang 2014 07 19 Night
+	
+	
 
 	
 	//——————————————————————下面是用于handler的消息标记
@@ -77,6 +83,7 @@ public class SubmitCenter extends Activity {
 					
 					Toast.makeText(getApplicationContext(), "提交成功！",Toast.LENGTH_LONG).show();
 					
+					
 					//下面进行输入框的文本清除
 					//clearAllBlanks();
 					
@@ -106,7 +113,7 @@ public class SubmitCenter extends Activity {
 		setContentView(R.layout.submitcenter);
 
 		
-		mTime = new Time();
+	//	mTime = new Time();//，来自Yang 2014 07 19 Night
 		
 		// 绑定控件
 		string_title = (EditText) findViewById(R.id.string_title);
@@ -173,7 +180,7 @@ public class SubmitCenter extends Activity {
 									int hourOfDay, int minute) {
 
 								if (one % 2 == 0) {
-									time += " " + hourOfDay + ":" + minute;
+									time += " " + String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute);
 
 									string_time.setText(time);
 
@@ -196,9 +203,9 @@ public class SubmitCenter extends Activity {
 							public void onDateSet(DatePicker view, int year,
 									int monthOfYear, int dayOfMonth) {
 								if (one % 2 == 0) {
-									time += " " + year + "-"
-											+ (monthOfYear + 1) + "-"
-											+ dayOfMonth;
+									time += year + "-"
+											+ String.format( "%02d", (monthOfYear + 1) ) + "-"
+											+ String.format("%02d", dayOfMonth);
 
 									string_time.setText(time);
 									// Toast.makeText(getApplicationContext(),
@@ -242,11 +249,19 @@ public class SubmitCenter extends Activity {
 				}
 
 				if (!TextUtils.isEmpty(string_time.getText())) {
-					sl.setTime(string_time.getText().toString());
 					
-					//这是转换时间用的
-					mTime.set(0, minute, hourOfDay, dayOfMonth, monthOfYear, year);
-					long a= mTime.toMillis(true);
+					//这是转换时间用的，来自Yang 2014 07 19 Night
+					//mTime.set(0, minute, hourOfDay, dayOfMonth, monthOfYear, year);
+					//long longTime= mTime.toMillis(true);
+					
+					//saved in format like: 2014-08-03 13:53
+					//sl.setTimeNormal( String.format("%d", year) + "-" + String.format("%d", monthOfYear) + "-" + String.format("%d", dayOfMonth) +
+						//	" " + String.format("%d", hourOfDay) + ":" + String.format("%d", minute) );
+					//Log.i("SubmitCenter Time", String.format("%d", year) + "-" + String.format("%d", monthOfYear) + "-" + String.format("%d", dayOfMonth) +
+						//	" " + String.format("%d", hourOfDay) + ":" + String.format("%d", minute) );
+					Log.i( "Yang Time", string_time.getText().toString());
+					sl.setTimeNormal(string_time.getText().toString());
+					
 					
 					
 				} else {
@@ -293,6 +308,17 @@ public class SubmitCenter extends Activity {
 				}
 
 				if (isOK) {
+					
+					//下面是来自xianyu的修改，用于获取手机信息，便于溯源讲座
+					//get phone number
+					 TelephonyManager tm = (TelephonyManager)SubmitCenter.this.getSystemService(Context.TELEPHONY_SERVICE);
+					 String phoneNumber = tm.getLine1Number();
+					 String phoneModel  = Build.MODEL;  
+					 String phoneSDK    = Build.VERSION.SDK;
+					 String phoneOS     = Build.VERSION.RELEASE;
+					 sl.setPhoneInfo("Model:" + phoneModel + " SDK:" + phoneSDK + " OS:" + phoneOS);
+					 sl.setPhoneNumber(phoneNumber);
+					 
 					//开始提交
 					String xml = generateXML(sl) ;
 					submitGo( xml);//开始提交
@@ -326,12 +352,15 @@ public class SubmitCenter extends Activity {
 				"%3CsubmitXML%3E" +
 					"%3Clectitle%3E" + sl.getTitle() + "%3C/lectitle%3E" +
 					"%3Clecspeaker%3E" + sl.getSpeaker() + "%3C/lecspeaker%3E" +
-					"%3Clecwhen%3E" + sl.getTime() + "%3C/lecwhen%3E" +
+					"%3Clecwhen%3E" + sl.getTimeNormal() + "%3C/lecwhen%3E" +
+					"%3Clecwhenlong%3E" + sl.getTimeAsLong() + "%3C/lecwhenlong%3E" +
 					"%3Cleccampus%3E" + sl.getCampus() + "%3C/leccampus%3E" +
 					"%3Clecwhere%3E" + sl.getAddress() + "%3C/lecwhere%3E" +
 					"%3Clecaboutspeaker%3E" + sl.getSpeaker_information() + "%3C/lecaboutspeaker%3E" +
 					"%3Clecabout%3E" + sl.getMore_information() + "%3C/lecabout%3E" +
 					"%3Clecsource%3E" + sl.getInformation_source() + "%3C/lecsource%3E" +
+					"%3Cphoneinfo%3E" + sl.getPhoneInfo() + "%3C/phoneinfo%3E" +
+					"%3Cphonenumber%3E" + sl.getPhoneNumber() + "%3C/phonenumber%3E" +
 				"%3C/submitXML%3E";
 			
 		

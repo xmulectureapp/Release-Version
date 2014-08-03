@@ -57,9 +57,9 @@ public class SubmitInterface {
 					URL url = new URL("http://lecture.xmu.edu.cn/submitCenter.php?xml=" + xml.replace(" ","%20") );
 					connection = (HttpURLConnection) url.openConnection();
 					if(connection.getResponseCode() == HttpURLConnection.HTTP_OK)
-						Log.i("按赞","连接成功！");
+						Log.i("提交","连接成功！");
 					else {
-						Log.i("按赞","连接失败！");
+						Log.i("提交","连接失败！");
 					}
 					
 					mCallback.onEnd();

@@ -288,7 +288,7 @@ public class LectureDetail extends Activity {
 	
 	
 	public void setDetail(DetailInfo detailInfo){
-		tvaboutspeaker.setText( "主讲资料：\n★☞" + detailInfo.getLec_aboutSpeaker() );
+		tvaboutspeaker.setText( "主讲资料：\n★" + detailInfo.getLec_aboutSpeaker() );
 		tvmore.setText( "讲座背景及更多消息：\n★" + detailInfo.getLec_about() );
 		
 		

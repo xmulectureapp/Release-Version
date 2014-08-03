@@ -12,6 +12,12 @@
         android:text="厦大讲座网"
         android:textColor="@color/main_menu_pressed"
         android:textSize="25sp" />
+    
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" >
 
     <RelativeLayout
         android:id="@+id/relativeLayout11"
@@ -116,15 +122,15 @@
             android:background="@color/item_line" />
 
         <TextView
-            android:id="@+id/tv_campus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/my_line3"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="3dp"
-            android:text="校区(可复选):"
-            android:textColor="@color/item_content"
-            android:textSize="15dip" />
+        	android:id="@+id/tv_campus"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_below="@+id/my_line3"
+        	android:layout_gravity="center_horizontal"
+        	android:paddingTop="3dp"
+        	android:text="讲座校区(可复选):"
+        	android:textColor="@color/item_content"
+        	android:textSize="15dip" />
 
         <LinearLayout
             android:id="@+id/my_linearlayout1"
@@ -188,15 +194,15 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_chooseday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/my_linearlayout2"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="3dp"
-            android:text="时间(可复选):"
-            android:textColor="@color/item_content"
-            android:textSize="15sp" />
+        	android:id="@+id/tv_chooseday"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_below="@+id/my_linearlayout2"
+        	android:layout_gravity="center_horizontal"
+        	android:paddingTop="3dp"
+        	android:text="讲座时间(可复选):"
+        	android:textColor="@color/item_content"
+        	android:textSize="15sp" />
 
         <LinearLayout
             android:id="@+id/my_linearlayout3"
@@ -217,7 +223,7 @@
                 	android:layout_width="wrap_content"
                 	android:layout_height="wrap_content"
                 	android:layout_weight="1"
-                	android:text="Mon"
+                	android:text="MON"
                 	android:textColor="@color/item_content" />
 
                 <CheckBox
@@ -225,7 +231,7 @@
                 	android:layout_width="wrap_content"
                 	android:layout_height="wrap_content"
                 	android:layout_weight="1"
-                	android:text="Tue"
+                	android:text="TUE"
                 	android:textColor="@color/item_content" />
 
                 <CheckBox
@@ -233,7 +239,7 @@
                 	android:layout_width="wrap_content"
                 	android:layout_height="wrap_content"
                 	android:layout_weight="1"
-                	android:text="Wed"
+                	android:text="WED"
                 	android:textColor="@color/item_content" />
 
             </LinearLayout>
@@ -252,7 +258,7 @@
                 	android:layout_width="wrap_content"
                 	android:layout_height="wrap_content"
                 	android:layout_weight="1"
-                	android:text="Thu"
+                	android:text="THU"
                 	android:textColor="@color/item_content" />
 
                 <CheckBox
@@ -260,7 +266,7 @@
                 	android:layout_width="wrap_content"
                 	android:layout_height="wrap_content"
                 	android:layout_weight="1"
-                	android:text="Fri"
+                	android:text="FRI"
                 	android:textColor="@color/item_content" />
 
                 <CheckBox
@@ -268,7 +274,7 @@
                 	android:layout_width="wrap_content"
                 	android:layout_height="wrap_content"
                 	android:layout_weight="1"
-                	android:text="Sat"
+                	android:text="SAT"
                 	android:textColor="@color/item_content" />
 
                 <CheckBox
@@ -276,7 +282,7 @@
                 	android:layout_width="wrap_content"
                 	android:layout_height="wrap_content"
                 	android:layout_weight="1"
-                	android:text="Sun"
+                	android:text="SUN"
                 	android:textColor="@color/item_content" />
 
             </LinearLayout>
@@ -307,8 +313,20 @@
             android:text="保存设置"
             android:textColor="@color/item_content"
             android:textSize="20sp" />
+        
 
 		</LinearLayout>
+		
+    <LinearLayout
+    	android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:paddingTop="2dp"
+        android:layout_below="@+id/my_linearlayout6"
+		android:layout_alignParentBottom="true"
+    >
+    </LinearLayout>
     </RelativeLayout>
+    </ScrollView>
+    
 
 </LinearLayout>
