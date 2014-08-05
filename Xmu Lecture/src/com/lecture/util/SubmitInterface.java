@@ -54,10 +54,7 @@ public class SubmitInterface {
 					mCallback.onStart();
 					
 					Log.i("提交","开始提交讲座！");
-				//	URL url = new URL("http://lecture.xmu.edu.cn/submitCenter.php?xml=" + URLEncoder.encode(xml, "GBK"));
-					//URLEncoder.encode(xml, "UTF-8");
-					//URL url = new URL("http://lecture.xmu.edu.cn/submitCenter.php?xml=" + xml.replace(" ","%20") );
-					URL url = new URL("http://lecture.xmu.edu.cn/submitCenter.php?xml=" + URLEncoder.encode(xml.replace(" ","%20"), "UTF-8") );
+					URL url = new URL("http://lecture.xmu.edu.cn/submitCenter.php?xml=" + URLEncoder.encode(xml, "UTF-8") );
 					
 					connection = (HttpURLConnection) url.openConnection();
 					if(connection.getResponseCode() == HttpURLConnection.HTTP_OK)

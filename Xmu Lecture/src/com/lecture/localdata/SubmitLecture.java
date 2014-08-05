@@ -3,6 +3,8 @@ package com.lecture.localdata;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 public class SubmitLecture implements Serializable {
@@ -12,7 +14,7 @@ public class SubmitLecture implements Serializable {
 	
 	// edited by xianyu 2014 08 03 20:54 to get the user's phone info & number
 	String phoneInfo;  // include phone's Model, SDK & OS
-	String phoneNumber;
+	String userEmail;
 
 	public SubmitLecture() {
 
@@ -42,12 +44,16 @@ public class SubmitLecture implements Serializable {
 		*/
 		return infoCopy;
 	}
-	public void setPhoneNumber(String phoneNumber){
-		this.phoneNumber = phoneNumber;
+	public void setUserEmail(Context context){
+		
+		SharedPreferences sharedPre = context.getSharedPreferences("config",
+				context.MODE_PRIVATE);
+		
+		this.userEmail = sharedPre.getString("email", "用户未填写!"); 
 		
 	}
-	public String getPhoneNumber(){
-		return phoneNumber;
+	public String getUserEmail(){
+		return userEmail;
 	}
 	
 	public void setTitle(String title){

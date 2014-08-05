@@ -15,6 +15,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -229,11 +230,12 @@ public class SubmitCenter extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				
 				isOK = true;
 				SubmitLecture sl = new SubmitLecture();
 				if (!TextUtils.isEmpty(string_title.getText())) {
-					sl.setTitle(string_title.getText().toString());
+					sl.setTitle(string_title.getText().toString() );
+					
 				} else {
 					Toast.makeText(getApplicationContext(), "标题不能为空",
 							Toast.LENGTH_SHORT).show();
@@ -308,17 +310,17 @@ public class SubmitCenter extends Activity {
 					isOK = false;
 				}
 
-				if (isOK) {
+				if ( isOK && hasEmail(SubmitCenter.this) ) {
 					
 					//下面是来自xianyu的修改，用于获取手机信息，便于溯源讲座
-					//get phone number
+					//get email and OS SDK Model 
 					 TelephonyManager tm = (TelephonyManager)SubmitCenter.this.getSystemService(Context.TELEPHONY_SERVICE);
-					 String phoneNumber = tm.getLine1Number();
+					// String phoneNumber = tm.getLine1Number();
 					 String phoneModel  = Build.MODEL;  
 					 String phoneSDK    = Build.VERSION.SDK;
 					 String phoneOS     = Build.VERSION.RELEASE;
 					 sl.setPhoneInfo("Model:" + phoneModel + " SDK:" + phoneSDK + " OS:" + phoneOS);
-					 sl.setPhoneNumber(phoneNumber);
+					 sl.setUserEmail(SubmitCenter.this);
 					 
 					//开始提交
 					 Log.i("测试中文编码与网络数据交换问题", sl.getTitle());
@@ -352,21 +354,64 @@ public class SubmitCenter extends Activity {
 		
 		String xmlToSubmit = 
 				"%3CsubmitXML%3E" +
-					"%3Clectitle%3E" + sl.getTitle() + "%3C/lectitle%3E" +
-					"%3Clecspeaker%3E" + sl.getSpeaker() + "%3C/lecspeaker%3E" +
-					"%3Clecwhen%3E" + sl.getTimeNormal() + "%3C/lecwhen%3E" +
-					"%3Clecwhenlong%3E" + sl.getTimeAsLong() + "%3C/lecwhenlong%3E" +
-					"%3Cleccampus%3E" + sl.getCampus() + "%3C/leccampus%3E" +
-					"%3Clecwhere%3E" + sl.getAddress() + "%3C/lecwhere%3E" +
-					"%3Clecaboutspeaker%3E" + sl.getSpeaker_information() + "%3C/lecaboutspeaker%3E" +
-					"%3Clecabout%3E" + sl.getMore_information() + "%3C/lecabout%3E" +
-					"%3Clecsource%3E" + sl.getInformation_source() + "%3C/lecsource%3E" +
-					"%3Cphoneinfo%3E" + sl.getPhoneInfo() + "%3C/phoneinfo%3E" +
-					"%3Cphonenumber%3E" + sl.getPhoneNumber() + "%3C/phonenumber%3E" +
+					"%3Clectitle%3E<![CDATA[" + charConvert(sl.getTitle()) + "]]>%3C/lectitle%3E" +
+					"%3Clecspeaker%3E<![CDATA[" + charConvert(sl.getSpeaker()) + "]]>%3C/lecspeaker%3E" +
+					"%3Clecwhen%3E<![CDATA[" + charConvert(sl.getTimeNormal()) + "]]>%3C/lecwhen%3E" +
+					"%3Clecwhenlong%3E<![CDATA[" + charConvert(sl.getTimeAsLong()) + "]]>%3C/lecwhenlong%3E" +
+					"%3Cleccampus%3E<![CDATA[" + charConvert(sl.getCampus()) + "]]>%3C/leccampus%3E" +
+					"%3Clecwhere%3E<![CDATA[" + charConvert(sl.getAddress()) + "]]>%3C/lecwhere%3E" +
+					"%3Clecaboutspeaker%3E<![CDATA[" + charConvert(sl.getSpeaker_information()) + "]]>%3C/lecaboutspeaker%3E" +
+					"%3Clecabout%3E<![CDATA[" + charConvert(sl.getMore_information()) + "]]>%3C/lecabout%3E" +
+					"%3Clecsource%3E<![CDATA[" + charConvert(sl.getInformation_source()) + "]]>%3C/lecsource%3E" +
+					"%3Cphoneinfo%3E<![CDATA[" + charConvert(sl.getPhoneInfo()) + "]]>%3C/phoneinfo%3E" +
+					"%3Cuseremail%3E<![CDATA[" + charConvert(sl.getUserEmail()) + "]]>%3C/useremail%3E" +
 				"%3C/submitXML%3E";
 			
 		
 		return xmlToSubmit;
+		
+	}
+	
+	//下面函数用于判断用户是否输入了邮箱，没有邮箱则禁止提交讲座！
+	
+	public Boolean hasEmail(Context context){
+		
+		SharedPreferences sharedPre = context.getSharedPreferences("config",
+				context.MODE_PRIVATE);
+		
+		if( sharedPre.getString("email", "").equals("") ){
+			
+			Toast.makeText(getApplicationContext(), "Hi,请先到设置中心\"我\"中设置邮箱后便可提交!",Toast.LENGTH_LONG).show();
+			return false;
+			
+		}
+		return true;
+		
+	}
+	
+	//下面构建字符转换器,解决用户讲座输入中可能存在的复杂字符，主要处理 & < 这两个字符  2014年 8 月 5 日
+	public String charConvert(String toConvertString){
+		
+		/*
+		infoCopy.replace("&", "%26");
+		infoCopy.replace("'", "&apos");
+		infoCopy.replace("\\", "%5c");
+		infoCopy.replace(">", "%3e");
+		infoCopy.replace("<", "%8b");
+		"]", "%5d"
+		"[", "%5b"
+		"+", "%86"
+		
+		
+		*/
+		toConvertString.replace(" ","%20");
+		toConvertString.replace("&", "%26");
+		toConvertString.replace("<", "%8b");
+		toConvertString.replace("]", "%5d");
+		toConvertString.replace("[", "%5b");
+		toConvertString.replace("\\", "%5c");
+		
+		return toConvertString;
 		
 	}
 	

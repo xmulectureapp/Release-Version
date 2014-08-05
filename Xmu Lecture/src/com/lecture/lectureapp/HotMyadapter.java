@@ -229,7 +229,7 @@ public class HotMyadapter extends BaseAdapter
 						//把该则讲座对应的event传入Bundle，来自KunCheng
 						Bundle detail_bundle = new Bundle();
 						detail_bundle.putSerializable("LectureComment", event);
-						Intent intent = new Intent(mContext, Comment.class);
+						Intent intent = new Intent(mContext, CommentView.class);
 						intent.putExtras(detail_bundle);
 						mContext.startActivity(intent);
 				    	

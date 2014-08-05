@@ -1,13 +1,20 @@
 package com.lecture.lectureapp;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import com.lecture.DBCenter.DBCenter;
 import com.lecture.DBCenter.XMLToList;
+import com.lecture.localdata.Comment;
 import com.lecture.localdata.DetailInfo;
 import com.lecture.localdata.Event;
 import com.lecture.localdata.ReminderInfo;
+import com.lecture.pulltorefresh.DetailRefreshableView;
+import com.lecture.pulltorefresh.RefreshableView;
+import com.lecture.pulltorefresh.RefreshableView.PullToRefreshListener;
+import com.lecture.pulltorefresh.DetailRefreshableView.DetailPullToRefreshListener;
 import com.lecture.util.GetDetailUtil;
 import com.lecture.util.LikeInterface;
 import com.lecture.util.GetDetailUtil.GetDetailCallback;
@@ -17,6 +24,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,10 +32,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +65,18 @@ public class LectureDetail extends Activity {
 
 	private TextView textViewLike;
 	private TextView textViewRemind;
+	
+	//下面开始添加评论   edited by 咸鱼   2014年8月5日 晚 20:20
+	private DetailMyadapter detailMyadapter;
+	private List<Comment> mDataComments;
+	private ListView commentListView;
+	private DetailRefreshableView refreshableView_comment;
+	public TextView commentUserNameTextView;
+	public TextView commentDateTextView;
+	public TextView commentContentTextView;
+	public LinearLayout commentsBox;
+	
+	
 	
 	//——————————————————————下面是用于handler的消息标记
 	private static final int MESSAGE_DOWNLOAD_START = 1;//刷新开始
@@ -105,7 +128,7 @@ public class LectureDetail extends Activity {
 		setContentView(R.layout.lecture_detail);
 		
 		tvname = (TextView)findViewById(R.id.detail_lecture_name);
-		tvtime = (TextView)findViewById(R.id.detail_lecture_time);
+		tvtime = (TextView)findViewById(R.id.detail_comment_content);
 		tvaddr = (TextView)findViewById(R.id.detail_lecture_addr);
 		tvspeaker = (TextView)findViewById(R.id.detail_lecture_speaker);
 		tvlabel = (TextView)findViewById(R.id.detail_lecture_label);
@@ -136,6 +159,10 @@ public class LectureDetail extends Activity {
 		
 		textViewLike = (TextView)findViewById(R.id.detail_like_text);
 		textViewRemind = (TextView)findViewById(R.id.detail_remind_text);
+		
+		
+		//下面开始添加评论   edited by 咸鱼   2014年8月5日 晚 20:20
+		
 		
 		
 		  if(detail_lectureEvent.isLike()){
@@ -197,7 +224,7 @@ public class LectureDetail extends Activity {
 					//把该则讲座对应的event传入Bundle，来自KunCheng
 					Bundle detail_bundle = new Bundle();
 					detail_bundle.putSerializable("LectureComment", event);
-					Intent intent = new Intent(LectureDetail.this, Comment.class);
+					Intent intent = new Intent(LectureDetail.this, CommentView.class);
 					intent.putExtras(detail_bundle);
 					LectureDetail.this.startActivity(intent);
 			    	
@@ -271,6 +298,69 @@ public class LectureDetail extends Activity {
 		
 		//获取讲座更多信息
 		downloadDetail();
+		
+		
+		
+		mDataComments = new ArrayList<Comment>();
+		
+		mDataComments.add(new Comment());
+		mDataComments.add(new Comment());
+		mDataComments.add(new Comment());
+		mDataComments.add(new Comment());
+		mDataComments.add(new Comment());
+		mDataComments.add(new Comment());
+		mDataComments.add(new Comment());
+		
+		// data for testing
+		Comment comment = new Comment();
+		comment.setUserName("Xianyu");
+		comment.setCommentDate("2014年8月17日 17:00");
+		comment.setUserComment("这是一则咸鱼的讲座，非常期待！");
+		mDataComments.add(comment);
+		
+		DetailItemLinearLayout detailItemLinearLayout = null;
+		commentsBox = (LinearLayout) findViewById(R.id.comments_box);
+		
+		for (Comment c : mDataComments) {
+			
+		
+		
+			detailItemLinearLayout = new DetailItemLinearLayout(this);
+		
+			commentUserNameTextView = (TextView)detailItemLinearLayout.findViewById(R.id.detail_comment_username);
+			commentDateTextView     = (TextView)detailItemLinearLayout.findViewById(R.id.detail_comment_date);
+			commentContentTextView  = (TextView)detailItemLinearLayout.findViewById(R.id.detail_comment_content);
+		
+			commentUserNameTextView.setText(c.getUserName());
+			commentDateTextView.setText(c.getCommentDate());
+			commentContentTextView.setText(c.getUserComment());
+			
+			commentsBox.addView(detailItemLinearLayout);
+			
+		
+		}
+		
+		/*
+		//下面开始添加评论   edited by 咸鱼   2014年8月5日 晚 20:20
+		detailMyadapter = new DetailMyadapter(LectureDetail.this, mDataComments);
+		
+		
+		commentListView = (ListView)findViewById(R.id.detailList_view);
+		commentListView.setAdapter(detailMyadapter);
+		
+		refreshableView_comment = (DetailRefreshableView)findViewById(R.id.detailRefreshable_view);
+		refreshableView_comment.setOnRefreshListener(new DetailPullToRefreshListener() {
+			
+			@Override
+			public void onRefresh() {
+				// TODO Auto-generated method stub
+				
+				
+			}
+		}, 0);
+		
+		*/
+		
 	}
 	
 	//下面用于给按赞添加一个空格如果只有个位数的话
@@ -406,6 +496,31 @@ public class LectureDetail extends Activity {
 			Toast.makeText(this, "从 收藏页面&日历 删除失败", Toast.LENGTH_SHORT).show();
 	}
 
-}
+	
+
+	public class DetailItemLinearLayout extends LinearLayout {
+
+		public DetailItemLinearLayout(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+			
+			
+			((Activity) getContext()).getLayoutInflater().inflate(R.layout.detail_item, this); 
+		}
+
+		public DetailItemLinearLayout(Context context, AttributeSet attrs) {
+			super(context, attrs);
+			// TODO Auto-generated constructor stub
+		}
+
+		public DetailItemLinearLayout(Context context, AttributeSet attrs,
+				int defStyle) {
+			super(context, attrs, defStyle);
+			// TODO Auto-generated constructor stub
+		}
+
+	}
+
+}// end class
 
 

@@ -579,6 +579,10 @@ public class MainView extends Activity
         mTab4 = (ImageView) findViewById(R.id.img_submit_center);  
         mTab5 = (ImageView) findViewById(R.id.img_my_center);
        
+        
+        //测试全角半角的区别
+        if("&" == "&")
+        	Log.i("全角半角", "相等");
        // mTabImg = (ImageView) findViewById(R.id.img_tab_now);
         /*
         mTab1.setOnClickListener(new MyOnClickListener(0));
@@ -1028,8 +1032,8 @@ public class MainView extends Activity
 		// 获取Editor对象
 		Editor editor = sharedPre.edit();
 		// 设置用户名和邮箱
-		editor.putString("username", username);
-		editor.putString("email", email);
+		editor.putString("username", username.trim());
+		editor.putString("email", email.trim());
 		// 提交
 		editor.commit();
 	}
