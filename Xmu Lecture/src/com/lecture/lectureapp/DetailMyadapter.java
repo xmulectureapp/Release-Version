@@ -75,7 +75,7 @@ public class DetailMyadapter extends BaseAdapter
 			//if (convertView == null)
 			//{
 				holder=new ViewHolder(); 
-				convertView = mInflater.inflate(R.layout.detail_item, null);
+				convertView = mInflater.inflate(R.layout.comment_item, null);
 				holder.commentUserNameTextView = (TextView)convertView.findViewById(R.id.detail_comment_username); 
 				holder.commentDateTextView = (TextView)convertView.findViewById(R.id.detail_comment_date);
 				holder.commentContentTextView = (TextView)convertView.findViewById(R.id.detail_comment_content);

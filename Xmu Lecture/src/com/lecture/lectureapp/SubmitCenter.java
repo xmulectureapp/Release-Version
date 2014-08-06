@@ -7,8 +7,8 @@ import java.util.List;
 
 import com.lecture.localdata.DetailInfo;
 import com.lecture.localdata.SubmitLecture;
-import com.lecture.util.SubmitInterface;
-import com.lecture.util.SubmitInterface.SubmitCallback;
+import com.lecture.util.SubmitLectureInterface;
+import com.lecture.util.SubmitLectureInterface.SubmitCallback;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -241,7 +241,10 @@ public class SubmitCenter extends Activity {
 							Toast.LENGTH_SHORT).show();
 					isOK = false;
 				}
-
+				
+				sl.setSpeaker(string_speaker.getText().toString());
+				
+				/*
 				if (!TextUtils.isEmpty(string_speaker.getText())) {
 					sl.setSpeaker(string_speaker.getText().toString());
 				} else {
@@ -249,7 +252,7 @@ public class SubmitCenter extends Activity {
 							Toast.LENGTH_SHORT).show();
 					isOK = false;
 				}
-
+				*/
 				if (!TextUtils.isEmpty(string_time.getText())) {
 					
 					//这是转换时间用的，来自Yang 2014 07 19 Night
@@ -272,8 +275,11 @@ public class SubmitCenter extends Activity {
 					isOK = false;
 				}
 				
+				
 				sl.setCampus( convertCampus( mSpinner.getSelectedItem().toString() ) );
 
+				
+				
 				if (!TextUtils.isEmpty(string_address.getText())) {
 					sl.setAddress(string_address.getText().toString());
 				} else {
@@ -281,7 +287,16 @@ public class SubmitCenter extends Activity {
 							Toast.LENGTH_SHORT).show();
 					isOK = false;
 				}
-
+				
+				sl.setSpeaker_information(string_speaker_information
+						.getText().toString());
+				sl.setMore_information(string_more_information.getText()
+						.toString());
+				
+				sl.setInformation_source(string_information_source
+						.getText().toString());
+				
+				/*
 				if (!TextUtils.isEmpty(string_speaker_information.getText())) {
 					sl.setSpeaker_information(string_speaker_information
 							.getText().toString());
@@ -300,7 +315,7 @@ public class SubmitCenter extends Activity {
 							Toast.LENGTH_SHORT).show();
 					isOK = false;
 				}
-
+				
 				if (!TextUtils.isEmpty(string_information_source.getText())) {
 					sl.setInformation_source(string_information_source
 							.getText().toString());
@@ -309,7 +324,7 @@ public class SubmitCenter extends Activity {
 							Toast.LENGTH_SHORT).show();
 					isOK = false;
 				}
-
+				*/
 				if ( isOK && hasEmail(SubmitCenter.this) ) {
 					
 					//下面是来自xianyu的修改，用于获取手机信息，便于溯源讲座
@@ -325,7 +340,7 @@ public class SubmitCenter extends Activity {
 					//开始提交
 					 Log.i("测试中文编码与网络数据交换问题", sl.getTitle());
 					String xml = generateXML(sl) ;
-					submitGo( xml);//开始提交
+					submitGo( xml );//开始提交
 					
 					//Toast.makeText(getApplicationContext(), "提交完成",Toast.LENGTH_SHORT).show();
 				}
@@ -353,7 +368,7 @@ public class SubmitCenter extends Activity {
 		*/
 		
 		String xmlToSubmit = 
-				"%3CsubmitXML%3E" +
+				"%3CsubmitLectureXML%3E" +
 					"%3Clectitle%3E<![CDATA[" + charConvert(sl.getTitle()) + "]]>%3C/lectitle%3E" +
 					"%3Clecspeaker%3E<![CDATA[" + charConvert(sl.getSpeaker()) + "]]>%3C/lecspeaker%3E" +
 					"%3Clecwhen%3E<![CDATA[" + charConvert(sl.getTimeNormal()) + "]]>%3C/lecwhen%3E" +
@@ -365,7 +380,7 @@ public class SubmitCenter extends Activity {
 					"%3Clecsource%3E<![CDATA[" + charConvert(sl.getInformation_source()) + "]]>%3C/lecsource%3E" +
 					"%3Cphoneinfo%3E<![CDATA[" + charConvert(sl.getPhoneInfo()) + "]]>%3C/phoneinfo%3E" +
 					"%3Cuseremail%3E<![CDATA[" + charConvert(sl.getUserEmail()) + "]]>%3C/useremail%3E" +
-				"%3C/submitXML%3E";
+				"%3C/submitLectureXML%3E";
 			
 		
 		return xmlToSubmit;
@@ -418,7 +433,7 @@ public class SubmitCenter extends Activity {
 	public void submitGo(String xmlToSubmit){
 		
 
-		SubmitInterface submitInterface = SubmitInterface
+		SubmitLectureInterface submitInterface = SubmitLectureInterface
 				.getInstance(new SubmitCallback() {
 
 					@Override

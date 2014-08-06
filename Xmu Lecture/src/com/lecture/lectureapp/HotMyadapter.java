@@ -22,6 +22,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -224,15 +225,19 @@ public class HotMyadapter extends BaseAdapter
 				   });  
 			 holder.linearlayoutComment.setOnClickListener(new View.OnClickListener() {  
 				    public void onClick(View v) {  
-				  //   showInfo2();
-				    	event = mData.get(position);
-						//把该则讲座对应的event传入Bundle，来自KunCheng
-						Bundle detail_bundle = new Bundle();
-						detail_bundle.putSerializable("LectureComment", event);
-						Intent intent = new Intent(mContext, CommentView.class);
-						intent.putExtras(detail_bundle);
-						mContext.startActivity(intent);
 				    	
+				    	if( hasEmail(mContext) ){
+				    		//有填写邮箱，进入评论
+				    		event = mData.get(position);
+				    		//把该则讲座对应的event传入Bundle，来自KunCheng
+							Bundle detail_bundle = new Bundle();
+							detail_bundle.putSerializable("LectureComment",event);
+							Intent intent = new Intent(mContext,CommentView.class);
+							intent.putExtras(detail_bundle);
+							mContext.startActivity(intent);
+				    	
+						
+				    	}
 				    	
 				    }  
 				   });
@@ -374,6 +379,22 @@ public class HotMyadapter extends BaseAdapter
 				Toast.makeText(mContext, "从 收藏页面&日历 删除成功", Toast.LENGTH_SHORT).show();
 			} else
 				Toast.makeText(mContext, "从 收藏页面&日历 删除失败", Toast.LENGTH_SHORT).show();
+		}
+		
+		//下面是咸鱼的修改，用于添加没有填写邮箱禁止评论的功能  2014年8月6日 23:16
+		public Boolean hasEmail(Context context){
+			
+			SharedPreferences sharedPre = context.getSharedPreferences("config",
+					context.MODE_PRIVATE);
+			
+			if( sharedPre.getString("email", "").equals("") ){
+				
+				Toast.makeText(context, "Hi,请先到设置中心\"我\"中设置邮箱后便可评论!",Toast.LENGTH_LONG).show();
+				return false;
+				
+			}
+			return true;
+			
 		}
 }
 

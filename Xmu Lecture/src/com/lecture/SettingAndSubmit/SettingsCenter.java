@@ -112,12 +112,29 @@ public class SettingsCenter {
 	
 	public Boolean isNeededLecture(Event e){
 		int weekday = stringToTime(e.getTime());
-		if( weekdaySettings.contains(String.format("%d", weekday)) &&
-				placeSettings.contains(e.getAddress().substring(0, 1)) )	
-			return true;//如果weekSettings中存在该数字就返回true
-		return false;
 		
+		//校区没有任何checked的时候
+		if( placeSettings.isEmpty() ){
+			if( weekdaySettings.contains(String.format("%d", weekday))  )	
+				return true;//如果weekSettings中存在该数字就返回true
+			return false;
+			
+		}
+		else if( weekdaySettings.isEmpty() ){
+			
+			if( placeSettings.contains(e.getAddress().substring(0, 1))  )	
+				return true;//如果weekSettings中存在该数字就返回true
+			return false;
+			
+		}
+		else{
 		
+			if( weekdaySettings.contains(String.format("%d", weekday)) &&
+					placeSettings.contains(e.getAddress().substring(0, 1)) )	
+				return true;//如果weekSettings中存在该数字就返回true
+			return false;
+		
+		}
 		
 	}
 	

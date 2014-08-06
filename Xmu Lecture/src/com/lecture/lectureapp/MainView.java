@@ -427,20 +427,38 @@ public class MainView extends Activity
 					Log.i("MESSAGE_XML_TO_LISTDB_SUCCESS", "光标Cursor准备就绪！");
 					
 					
-					initHot();
-					refreshHot();
-					refreshFoot("hotCenter");
-					initLikeCollection();
-					refreshLikeCollection();
 					//下面是 Xianyu做的修改，用于实现三个Tabs都能够刷新
-					if(    ( (String)message.obj  ).equals("hotCenter")    )
+					if(    ( (String)message.obj  ).equals("hotCenter")    ){
 						refreshableView_hot.finishRefreshing(myadapterHot);
+						initHot();
+						refreshHot();
+						refreshFoot("hotCenter");
+						
+						
+					}
 					else 
-					if(   ( (String)message.obj  ).equals("subscribeCenter")   )
+					if(   ( (String)message.obj  ).equals("subscribeCenter")   ){
+						
 						refreshableView_subscribe.finishRefreshing();
+						initLikeCollection();
+						refreshLikeCollection();
+						refreshFoot("subscribeCenter");
+						
+					}
 					else
-					if(   ( (String)message.obj  ).equals("remindCenter")   )
+					if(   ( (String)message.obj  ).equals("remindCenter")   ){
+						
 						refreshableView_remind.finishRefreshing();
+						initLikeCollection();
+						refreshLikeCollection();
+						refreshFoot("remindCenter");
+						
+					}
+					
+					
+					
+					
+					
 					Log.i("ListView刷新", "刷新ListView成功！");
 				}
 
@@ -680,11 +698,13 @@ public class MainView extends Activity
         hotList = (ListView) view2.findViewById(R.id.list_view);//把hot_ListView转成引用
         remindList = (ListView)view3.findViewById(R.id.list_view_notice);
 
-        subscribeList.addHeaderView(viewHeader);
-        subscribeList.addFooterView(viewFooter);
+       
         
         hotList.addHeaderView(viewHeader);
         hotList.addFooterView(viewFooter);
+        
+        subscribeList.addHeaderView(viewHeader);
+        subscribeList.addFooterView(viewFooter);
         
         remindList.addHeaderView(viewHeader);
         remindList.addFooterView(viewFooter);
@@ -933,6 +953,7 @@ public class MainView extends Activity
     
     //下面是来自Yebin的添加，用于解决没有任何讲座时的提醒显示
     public void refreshFoot(String whichPage){
+    	
     	if(whichPage.equals("hotCenter")){
     		
     		if(mDataHot.size() == 0){
@@ -947,7 +968,7 @@ public class MainView extends Activity
     	else if(whichPage.equals("subscribeCenter")){
     		
     		if(mDataSubscribe.size() == 0)
-    			setFootDisplay("没有您订制的讲座", true);
+    			setFootDisplay("没有您订制的讲座，您可以在设置中心\"我\"中进行定制!", true);
     		else{
     			setFootDisplay("隐藏", false);
     		}
@@ -1136,8 +1157,8 @@ public class MainView extends Activity
 				
 				initLikeCollection();
 				refreshLikeCollection();
-				
 				refreshFoot("subscribeCenter");
+				
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, one, 0, 0);
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));

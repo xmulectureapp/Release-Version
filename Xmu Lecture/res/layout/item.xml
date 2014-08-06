@@ -21,15 +21,15 @@
     	android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/lecture_name"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:text="讲座名称"
-            android:textColor="@color/item_content"
-            android:textSize="16dip" />
+        	android:id="@+id/lecture_name"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginTop="2dp"
+        	android:text="讲座名称"
+        	android:textColor="@color/item_content"
+        	android:textSize="16dip" />
 
         <ImageView
             android:id="@+id/line_1"
@@ -40,55 +40,58 @@
             android:background="@color/item_line" />
 
         <TextView
-            android:id="@+id/lecture_time"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/line_1"
-            android:layout_margin="5dp"
-            android:layout_marginTop="30dp"
-            android:text="时间："
-            android:textColor="@color/item_content"
-            android:textSize="15dip" />
+        	android:id="@+id/lecture_time"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_alignParentLeft="true"
+        	android:layout_below="@+id/line_1"
+        	android:layout_marginBottom="1dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginTop="3dp"
+        	android:text="时间："
+        	android:textColor="@color/item_content"
+        	android:textSize="15dip" />
         
         <TextView
-            android:id="@+id/lecture_addr"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/lecture_time"
-            android:layout_margin="5dp"
-            android:layout_marginTop="30dp"
-            android:text="地点："
-            android:textColor="@color/item_content"
-            android:textSize="15dip" />
-
+        	android:id="@+id/lecture_addr"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_alignParentLeft="true"
+        	android:layout_below="@+id/lecture_time"
+        	android:layout_marginBottom="1dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginTop="3dp"
+        	android:text="地点："
+        	android:textColor="@color/item_content"
+        	android:textSize="15dip" />
         
-        <LinearLayout 
-            android:id ="@+id/linearlayout_id"
-            android:orientation="horizontal" 
-            android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:layout_below="@+id/lecture_addr">
+        <LinearLayout
+        	android:id="@+id/linearlayout_id"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_below="@+id/lecture_addr"
+        	android:layout_marginBottom="1dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginTop="3dp"
+        	android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/lecture_speaker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/lecture_addr"
-            android:layout_margin="5dp"
-            android:layout_marginTop="30dp"
-            android:text="主讲："
-            android:textColor="@color/item_content"
-            android:textSize="15dip" />
+        	android:id="@+id/lecture_speaker"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_alignParentLeft="true"
+        	android:layout_below="@+id/lecture_addr"
+        	android:text="主讲："
+        	android:textColor="@color/item_content"
+        	android:textSize="15dip" />
 
         <TextView
         	android:id="@+id/lecture_id"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:layout_margin="5dp"
-        	android:layout_marginTop="30dp"
         	android:text="id"
         	android:textColor="@color/item_transparent"
         	android:textSize="1sp" />
