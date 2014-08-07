@@ -16,5 +16,15 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    
+     <style name="A1_Font">
+        <item name="android:textSize">19.0sp</item>
+        <item name="android:textColor">@color/item_content</item>
+        <item name="android:textStyle">bold</item>
+     <!--   <item name="android:shadowColor">@color/item_background</item>
+        <item name="android:shadowDx">1.0</item>
+        <item name="android:shadowDy">-1.0</item>
+        <item name="android:shadowRadius">1.0</item> -->
+    </style>
 
 </resources>

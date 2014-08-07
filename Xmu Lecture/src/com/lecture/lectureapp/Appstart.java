@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 public class Appstart extends Activity {
 
@@ -82,6 +83,7 @@ public class Appstart extends Activity {
 					Intent intent = new Intent(Appstart.this, Guide.class);
 					startActivity(intent);
 					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					Log.i("Guide","开始转换到Guide.java");
 					Appstart.this.finish();
 				}
 			}, 1500);

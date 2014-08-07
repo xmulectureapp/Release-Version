@@ -12,6 +12,6 @@
     	android:paddingTop="3dp"
     	android:text="厦大讲座网"
     	android:textColor="@color/main_menu_pressed"
-    	android:textSize="25sp" />
+    	android:textSize="17sp" />
 
 </LinearLayout>
