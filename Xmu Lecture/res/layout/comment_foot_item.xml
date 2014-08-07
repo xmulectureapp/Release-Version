@@ -15,6 +15,6 @@
 		android:text="#第一个发表你的观点吧！"
 		android:textColor="@color/item_content"
 		android:textSize="15sp"
-		android:textStyle="italic" />
+		android:textStyle="italic|bold" />
 
 </LinearLayout>

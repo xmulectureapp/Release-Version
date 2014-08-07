@@ -4,22 +4,14 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical" >
 
-	<TextView
-		android:id="@+id/foot_textView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal"
-		android:paddingTop="3dp"
-		android:text="厦大讲座网"
-		android:textColor="@color/main_menu_pressed"
-		android:textSize="25sp" />
+	
 
 	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:scrollbars="vertical" >
 
-		<RelativeLayout
+		<LinearLayout
 			android:id="@+id/relativeLayout11"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
@@ -31,13 +23,23 @@
 			android:layout_weight="0.33"
 			android:longClickable="false"
 			android:orientation="vertical" >
+			
+			<TextView
+		android:id="@+id/top_textView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:paddingTop="3dp"
+		android:text="厦大讲座网"
+		android:textColor="@color/main_menu_pressed"
+		android:textSize="25sp" />
 
 			<TextView
 				android:id="@+id/personal"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_gravity="center_horizontal"
-				android:gravity="center"
+				android:layout_below="@+id/top_textView"
+				android:layout_gravity="left|center_vertical"
 				android:paddingTop="5dp"
 				android:text="个人信息"
 				android:textColor="@color/main_menu_pressed"
@@ -56,7 +58,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_below="@+id/my_line1"
-				android:layout_gravity="center_horizontal"
+				android:layout_gravity="left|center_vertical"
 				android:paddingTop="2dp"
 				android:text="用户名:"
 				android:textColor="@color/item_content"
@@ -83,7 +85,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_below="@+id/username"
-				android:layout_gravity="center_horizontal"
+				android:layout_gravity="left|center_vertical"
 				android:paddingTop="3dp"
 				android:text="邮箱(用于评论):"
 				android:textColor="@color/item_content"
@@ -107,7 +109,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_below="@+id/email"
-				android:layout_gravity="center_horizontal"
+				android:layout_gravity="left|center_vertical"
 				android:paddingTop="5dp"
 				android:text="讲座订制"
 				android:textColor="@color/main_menu_pressed"
@@ -126,7 +128,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_below="@+id/my_line3"
-				android:layout_gravity="center_horizontal"
+				android:layout_gravity="left|center_vertical"
 				android:paddingTop="3dp"
 				android:text="讲座校区(可复选):"
 				android:textColor="@color/item_content"
@@ -319,7 +321,7 @@
 				android:layout_below="@+id/my_linearlayout6"
 				android:paddingTop="2dp" >
 			</LinearLayout>
-		</RelativeLayout>
+		</LinearLayout>
 	</ScrollView>
 
 </LinearLayout>

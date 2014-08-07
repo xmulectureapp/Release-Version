@@ -5,14 +5,15 @@
     android:orientation="vertical" >
 
     <TextView
-    	android:id="@+id/foot_textView"
+    	android:id="@+id/top_textView"
     	android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
     	android:layout_gravity="center"
     	android:gravity="center"
-    	android:padding="8dp"
+    	android:paddingBottom="100dp"
     	android:paddingLeft="10dp"
     	android:paddingRight="10dp"
+    	android:paddingTop="10dp"
     	android:text="厦大讲座网"
     	android:textAlignment="gravity"
     	android:textSize="20sp" />

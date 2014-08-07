@@ -396,6 +396,9 @@ public class HotMyadapter extends BaseAdapter
 			return true;
 			
 		}
+		
+		
+		
 }
 
 

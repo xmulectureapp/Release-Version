@@ -39,7 +39,7 @@
         <activity
             android:name="com.lecture.lectureapp.RefreshCenter"/>
         <activity
-            android:name="com.lecture.lectureapp.LectureDetail"/>
+            android:name="com.lecture.lectureapp.DetailView"/>
         <activity
             android:name="com.lecture.lectureapp.CommentView"/>
         

@@ -42,6 +42,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.format.Time;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -158,6 +159,13 @@ public class MainView extends Activity
 	
 	//代码来自Yang
 	LocalActivityManager manager = null;
+	
+	
+	
+	//下面代码来自 咸鱼  用于解决三个主要Tab之间切换时foot view的显示问题
+	private MainItemFootLinearLayout hotFootItem;
+	private MainItemFootLinearLayout subscribeFootItem;
+	private MainItemFootLinearLayout remindFootItem;
 	
 	
 	
@@ -326,7 +334,7 @@ public class MainView extends Activity
 									detail_bundle.putSerializable("LectureDetail", event);
 								}
 								
-								Intent intent = new  Intent(MainView.this, LectureDetail.class);	
+								Intent intent = new  Intent(MainView.this, DetailView.class);	
 								intent.putExtras(detail_bundle);
 								startActivity(intent);
 							}  
@@ -348,7 +356,7 @@ public class MainView extends Activity
 									detail_bundle.putSerializable("LectureDetail", event);
 								}
 								
-								Intent intent = new  Intent(MainView.this, LectureDetail.class);	
+								Intent intent = new  Intent(MainView.this, DetailView.class);	
 								intent.putExtras(detail_bundle);
 								startActivity(intent);
 							}  
@@ -370,7 +378,7 @@ public class MainView extends Activity
 									detail_bundle.putSerializable("LectureDetail", event);
 								}
 								
-								Intent intent = new  Intent(MainView.this, LectureDetail.class);	
+								Intent intent = new  Intent(MainView.this, DetailView.class);	
 								intent.putExtras(detail_bundle);
 								startActivity(intent);
 							}  
@@ -674,6 +682,14 @@ public class MainView extends Activity
         View view5 = mLi.inflate(R.layout.mycenter, null);
         
         viewHeader = mLi.inflate(R.layout.head_view, null);
+        viewHeader.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+			
+			}
+        });
+        /*
         viewFooter = mLi.inflate(R.layout.foot_view, null);
       
         viewFooter.setOnClickListener(new View.OnClickListener() {
@@ -683,7 +699,26 @@ public class MainView extends Activity
 				
 				}
         });
-        viewHeader.setOnClickListener(new View.OnClickListener() {
+       */
+        hotFootItem       = new MainItemFootLinearLayout(this);
+        subscribeFootItem = new MainItemFootLinearLayout(this);
+        remindFootItem    = new MainItemFootLinearLayout(this);
+       
+        hotFootItem.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+			
+			}
+        });
+        subscribeFootItem.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+			
+			}
+        });
+        remindFootItem.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -691,8 +726,10 @@ public class MainView extends Activity
 			}
         });
         
+        
+        
         //下面是来自Yebin的添加，用于解决没有任何讲座时的提醒显示
-        foot_TextView = (TextView)viewFooter.findViewById(R.id.foot_textView);
+        //foot_TextView = (TextView)viewFooter.findViewById(R.id.foot_textView);
 
         subscribeList = (ListView)view1.findViewById(R.id.list_view_subscribe);
         hotList = (ListView) view2.findViewById(R.id.list_view);//把hot_ListView转成引用
@@ -701,13 +738,16 @@ public class MainView extends Activity
        
         
         hotList.addHeaderView(viewHeader);
-        hotList.addFooterView(viewFooter);
+       // hotList.addFooterView(viewFooter);
+        hotList.addFooterView(hotFootItem);
         
         subscribeList.addHeaderView(viewHeader);
-        subscribeList.addFooterView(viewFooter);
+        //subscribeList.addFooterView(viewFooter);
+        subscribeList.addFooterView(subscribeFootItem);
         
         remindList.addHeaderView(viewHeader);
-        remindList.addFooterView(viewFooter);
+        //remindList.addFooterView(viewFooter);
+        remindList.addFooterView(remindFootItem);
 
         refreshableView_subscribe = (RefreshableView)view1.findViewById(R.id.refreshable_view_subscribe);
         refreshableView_hot = (RefreshableView)view2.findViewById(R.id.refreshable_view);
@@ -938,6 +978,7 @@ public class MainView extends Activity
 	//下面是来自Yebin的添加，用于解决没有任何讲座时的提醒显示
     public void setFootDisplay(String toDisplay, Boolean isDisplay){
     	
+    	
     	foot_TextView.setText(toDisplay);
     	
     	//设置是否显示
@@ -951,7 +992,130 @@ public class MainView extends Activity
     	}
     }
     
+    
+    public void setFootDisplay(String whichPage, String toDisplay, Boolean isDisplay){
+    	
+    	
+    	if(whichPage.equals("hotCenter")){
+    		
+    		if(mDataHot.size() == 0){
+            	(  (TextView)hotFootItem.findViewById(R.id.top_textView)  ).setText( toDisplay );
+            	
+            	if( !isDisplay ){
+            		(  (TextView)hotFootItem.findViewById(R.id.top_textView)  )
+            					.setTextColor( getResources().getColor(R.color.item_transparent) );
+                	(  (TextView)hotFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 10, 10, 100);
+            	}
+            	else{
+            		(  (TextView)hotFootItem.findViewById(R.id.top_textView)  )
+									.setTextColor( getResources().getColor(R.color.item_content) );
+
+                	(  (TextView)hotFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 120, 10, 10);
+            	}
+            	
+    		}
+    		else{
+    			(  (TextView)hotFootItem.findViewById(R.id.top_textView)  )
+						.setTextColor( getResources().getColor(R.color.item_transparent) );
+    		}
+    		
+    	}
+    	else if(whichPage.equals("subscribeCenter")){
+    		
+    		if(mDataSubscribe.size() == 0){
+            	(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  ).setText( toDisplay );
+            	
+            	if( !isDisplay ){
+            		(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  )
+            					.setTextColor( getResources().getColor(R.color.item_transparent) );
+                	(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 10, 10, 100);
+            	}
+            	else{
+            		(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  )
+									.setTextColor( getResources().getColor(R.color.item_content) );
+
+                	(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 120, 10, 10);
+            	}
+            	
+    		}
+    		else{
+    			(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  )
+						.setTextColor( getResources().getColor(R.color.item_transparent) );
+    		}
+    		
+    	}
+    	else if(whichPage.equals("remindCenter")){
+    		
+    		if(mDataRemind.size() == 0){
+            	(  (TextView)remindFootItem.findViewById(R.id.top_textView)  ).setText( toDisplay );
+            	
+            	if( !isDisplay ){
+            		(  (TextView)remindFootItem.findViewById(R.id.top_textView)  )
+            					.setTextColor( getResources().getColor(R.color.item_transparent) );
+                	(  (TextView)remindFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 10, 10, 100);
+            	}
+            	else{
+            		(  (TextView)remindFootItem.findViewById(R.id.top_textView)  )
+									.setTextColor( getResources().getColor(R.color.item_content) );
+
+                	(  (TextView)remindFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 120, 10, 10);
+            	}
+            	
+    		}
+    		else{
+    			(  (TextView)remindFootItem.findViewById(R.id.top_textView)  )
+						.setTextColor( getResources().getColor(R.color.item_transparent) );
+    		}
+    		
+				
+    	}
+    	else {
+			//setFootDisplay("隐藏FootView", false);
+    		Log.i("Which Page", "设置错误!");
+		}
+
+    }
+    
     //下面是来自Yebin的添加，用于解决没有任何讲座时的提醒显示
+    public void refreshFoot(String whichPage){
+    	
+    	if(whichPage.equals("hotCenter")){
+    		
+    		if(mDataHot.size() == 0){
+            	setFootDisplay(whichPage, "没有最新热门讲座", true);
+            	
+    		}
+    		else{
+    			setFootDisplay(whichPage, "隐藏", false);
+    		}
+    		
+    	}
+    	else if(whichPage.equals("subscribeCenter")){
+    		
+    		if(mDataSubscribe.size() == 0)
+    			setFootDisplay(whichPage, "没有您订制的讲座，您可以在设置中心\"我\"中进行定制!", true);
+    		else{
+    			setFootDisplay(whichPage, "隐藏", false);
+    		}
+    	}
+    	else if(whichPage.equals("remindCenter")){
+    		
+    		if(mDataRemind.size() == 0){
+    			setFootDisplay(whichPage, "没有您收藏的讲座", true);
+    		
+    		}
+    		else{
+    			setFootDisplay(whichPage, "隐藏", false);
+    		}
+    		
+				
+    	}
+    	else {
+			//setFootDisplay("隐藏FootView", false);
+    		Log.i("Which Page", "设置错误!");
+		}
+    }
+    /*
     public void refreshFoot(String whichPage){
     	
     	if(whichPage.equals("hotCenter")){
@@ -989,7 +1153,7 @@ public class MainView extends Activity
 			setFootDisplay("隐藏FootView", false);
 		}
     }
-	
+	*/
 	
 	//code来自Yang
 	private View getView(String id, Intent intent) {
@@ -1344,6 +1508,28 @@ public class MainView extends Activity
 			}
 
 
+			public class MainItemFootLinearLayout extends LinearLayout {
+
+				public MainItemFootLinearLayout(Context context) {
+					super(context);
+					// TODO Auto-generated constructor stub
+
+					((Activity) getContext()).getLayoutInflater().inflate(
+							R.layout.foot_view, this);
+				}
+
+				public MainItemFootLinearLayout(Context context, AttributeSet attrs) {
+					super(context, attrs);
+					// TODO Auto-generated constructor stub
+				}
+
+				public MainItemFootLinearLayout(Context context, AttributeSet attrs,
+						int defStyle) {
+					super(context, attrs, defStyle);
+					// TODO Auto-generated constructor stub
+				}
+
+			}
 	
 	//下面的代码先做保留，用于处理android的 三颗 虚拟按键
 	

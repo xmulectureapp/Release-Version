@@ -2,7 +2,8 @@
 <resources>
 	<color name="main_menu_normal">#8899a6</color>
 	<color name="main_menu_pressed">#fc6345</color>	
-	<color name="item_content">#abaeb7</color>	
+	<color name="item_content">#abaeb7</color>
+	<color name="hint_color">#7d7d7d</color>	
 	<color name="item_line">#32abaeb7</color>
 	<color name="item_button_pressed">#32ffffff</color>
 	<color name="item_background">#80000000</color>

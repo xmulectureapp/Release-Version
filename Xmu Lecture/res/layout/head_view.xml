@@ -5,7 +5,7 @@
 	android:orientation="vertical" >
 
     <TextView
-    	android:id="@+id/foot_textView"
+    	android:id="@+id/top_textView"
     	android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
     	android:layout_gravity="center_horizontal"
