@@ -250,6 +250,8 @@ public class RefreshableView extends LinearLayout implements OnTouchListener {
 					// 通过偏移下拉头的topMargin值，来实现下拉效果
 					headerLayoutParams.topMargin = (distance / 2) + hideHeaderHeight;
 					header.setLayoutParams(headerLayoutParams);
+					
+					//XIANYU 下拉旋转箭头
 				}
 				break;
 			case MotionEvent.ACTION_UP:
@@ -360,6 +362,7 @@ public class RefreshableView extends LinearLayout implements OnTouchListener {
 		if (lastStatus != currentStatus) {
 			if (currentStatus == STATUS_PULL_TO_REFRESH) {
 				description.setText(getResources().getString(R.string.pull_to_refresh));
+				updateAt.setTextColor( getResources().getColor(R.color.item_transparent) );
 				arrow.setVisibility(View.VISIBLE);
 				progressBar.setVisibility(View.GONE);
 				rotateArrow();
@@ -371,6 +374,7 @@ public class RefreshableView extends LinearLayout implements OnTouchListener {
 			} else if (currentStatus == STATUS_REFRESHING) {
 				description.setText(getResources().getString(R.string.refreshing));
 				progressBar.setVisibility(View.VISIBLE);
+				updateAt.setTextColor( getResources().getColor(R.color.main_menu_pressed) );
 				arrow.clearAnimation();
 				arrow.setVisibility(View.GONE);
 			}

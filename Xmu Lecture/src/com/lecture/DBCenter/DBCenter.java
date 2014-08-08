@@ -140,6 +140,20 @@ public class DBCenter extends SQLiteOpenHelper {
 			
 			return selectResult;
 		}
+		//like func like select
+				public Cursor hotSelect(SQLiteDatabase db){
+					
+					Log.i("Hot SELECT", "开始查找数据分类");
+					//Cursor selectResult = db.rawQuery("select * from LectureTable where sub like ?",new String[] { "%"+SUBJECT+"%"});
+					Cursor selectResult;
+					//if(time == null)
+						selectResult = db.rawQuery("SELECT * FROM " + LECTURE_TABLE + " where 1 ORDER BY " + LECTURE_LIKECOUNT + " DESC",new String[]{});
+					//else
+						//selectResult = db.rawQuery("select * from " + LECTURE_TABLE + " where 1 LIMIT 0,4",new String[]{});
+					Log.i("Like SELECT", "Select查找结束");
+					
+					return selectResult;
+				}
 		
 		
 		

@@ -4,12 +4,10 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical" >
 
-	
-
 	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:scrollbars="vertical" >
+		android:scrollbars="none" >
 
 		<LinearLayout
 			android:id="@+id/relativeLayout11"
@@ -43,7 +41,8 @@
 				android:paddingTop="5dp"
 				android:text="个人信息"
 				android:textColor="@color/main_menu_pressed"
-				android:textSize="18dip" />
+				android:textSize="18sp"
+				android:textStyle="bold" />
 
 			<ImageView
 				android:id="@+id/my_line1"
@@ -62,7 +61,8 @@
 				android:paddingTop="2dp"
 				android:text="用户名:"
 				android:textColor="@color/item_content"
-				android:textSize="15dip" />
+				android:textSize="15sp"
+				android:textStyle="bold" />
 
 			<EditText
 				android:id="@+id/username"
@@ -89,7 +89,8 @@
 				android:paddingTop="3dp"
 				android:text="邮箱(用于评论):"
 				android:textColor="@color/item_content"
-				android:textSize="15dip" />
+				android:textSize="15sp"
+				android:textStyle="bold" />
 
 			<EditText
 				android:id="@+id/email"
@@ -113,7 +114,8 @@
 				android:paddingTop="5dp"
 				android:text="讲座订制"
 				android:textColor="@color/main_menu_pressed"
-				android:textSize="18dip" />
+				android:textSize="18sp"
+				android:textStyle="bold" />
 
 			<ImageView
 				android:id="@+id/my_line3"
@@ -132,7 +134,8 @@
 				android:paddingTop="3dp"
 				android:text="讲座校区(可复选):"
 				android:textColor="@color/item_content"
-				android:textSize="15dip" />
+				android:textSize="15dip"
+				android:textStyle="bold" />
 
 			<LinearLayout
 				android:id="@+id/my_linearlayout1"
@@ -311,7 +314,9 @@
 					android:paddingTop="3dp"
 					android:text="保存设置"
 					android:textColor="@color/item_content"
-					android:textSize="17sp" />
+					android:textSize="17sp"
+					android:textStyle="bold" />
+				
 			</LinearLayout>
 
 			<LinearLayout

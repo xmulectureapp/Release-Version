@@ -13,10 +13,7 @@ import com.lecture.localdata.Comment;
 import com.lecture.localdata.DetailInfo;
 import com.lecture.localdata.Event;
 import com.lecture.localdata.ReminderInfo;
-import com.lecture.pulltorefresh.DetailRefreshableView;
 import com.lecture.pulltorefresh.RefreshableView;
-import com.lecture.pulltorefresh.RefreshableView.PullToRefreshListener;
-import com.lecture.pulltorefresh.DetailRefreshableView.DetailPullToRefreshListener;
 import com.lecture.util.GetCommentUtil;
 import com.lecture.util.GetCommentUtil.GetCommentCallback;
 import com.lecture.util.GetDetailUtil;
@@ -41,6 +38,7 @@ import android.provider.CalendarContract.Reminders;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -74,14 +72,16 @@ public class DetailView extends Activity {
 	private TextView textViewRemind;
 
 	// 下面开始添加评论 edited by 咸鱼 2014年8月5日 晚 20:20
-	private DetailMyadapter detailMyadapter;
 	private List<Comment> commentsList;
 	private ListView commentListView;
-	private DetailRefreshableView refreshableView_comment;
 	public TextView commentUserNameTextView;
 	public TextView commentDateTextView;
 	public TextView commentContentTextView;
 	public LinearLayout commentsBox;
+	
+	
+	//下面是咸鱼的增加，用于增加返回 主页的header top 左边的按键  2014年8月日  
+	public LinearLayout detailHeaderLeftLinearLayout;
 
 	// ——————————————————————下面是用于handler的消息标记
 	private static final int MESSAGE_DOWNLOAD_DETAIL_START = 1;// Detail刷新开始
@@ -136,6 +136,7 @@ public class DetailView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.lecture_detail);
 
+		
 		tvname = (TextView) findViewById(R.id.detail_lecture_name);
 		tvtime = (TextView) findViewById(R.id.detail_comment_content);
 		tvaddr = (TextView) findViewById(R.id.detail_lecture_addr);
@@ -147,7 +148,7 @@ public class DetailView extends Activity {
 		detail_lectureEvent = (Event) getIntent().getSerializableExtra(
 				"LectureDetail");
 
-		tvname.setText("主题：" + detail_lectureEvent.getTitle());
+		tvname.setText("" + detail_lectureEvent.getTitle());
 		tvtime.setText("时间：" + detail_lectureEvent.getTime());
 		tvaddr.setText("地点：" + detail_lectureEvent.getAddress());
 		tvspeaker.setText("主讲：" + detail_lectureEvent.getSpeaker());
@@ -168,6 +169,9 @@ public class DetailView extends Activity {
 
 		textViewLike = (TextView) findViewById(R.id.detail_like_text);
 		textViewRemind = (TextView) findViewById(R.id.detail_remind_text);
+		
+		
+		
 
 		// 下面开始添加评论 edited by 咸鱼 2014年8月5日 晚 20:20
 
@@ -261,8 +265,11 @@ public class DetailView extends Activity {
 							DBCenter.getStaticDBCenter(DetailView.this)
 									.getReadableDatabase(), event.getUid(), "1");
 					// 下面一句解决马上变Like数字
-					textViewLike.setText(adaptPlace(String.format("%d",
-							event.getLikeCount())));
+					//下面代码由 咸鱼 添加，用于解决按赞数为0 的时候，文字设成 按赞
+		    		if(event.getLikeCount() == 0 )
+		    			textViewLike.setText( "点赞" );
+		    		else
+		    			textViewLike.setText(adaptPlace(String.format("%d", event.getLikeCount())));
 
 				} else {
 					imageViewLike.setImageDrawable(getResources().getDrawable(
@@ -320,6 +327,19 @@ public class DetailView extends Activity {
 			}
 		});
 
+		//下面是咸鱼的增加，用于增加返回 主页的header top 左边的按键  2014年8月日  
+		detailHeaderLeftLinearLayout = (LinearLayout)findViewById(R.id.detail_header_left_linearLayout);
+		detailHeaderLeftLinearLayout.setOnClickListener( new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				finish();
+				overridePendingTransition(R.anim.show_in_left, R.anim.hide_in_right	);
+				
+			}
+		} );
+		
 		// 获取讲座更多信息
 		downloadDetail();
 
@@ -390,10 +410,10 @@ public class DetailView extends Activity {
 	// 下面用于给按赞添加一个空格如果只有个位数的话
 	public String adaptPlace(String s) {
 
-		if (s.length() == 1)
-			return " " + s + "  ";
-		else if (s.length() == 2)
-			return " " + s + " ";
+		if(s.length() == 1)
+			return "  " + s + "    ";
+		else if(s.length() == 2)
+			return "  " + s + "   ";
 		else
 			return s;
 
@@ -707,6 +727,19 @@ public class DetailView extends Activity {
 					
 				}
 				return true;
+				
+			}
+			@Override
+			public boolean onKeyDown( int keyCode, KeyEvent event){
+				
+				if( keyCode == KeyEvent.KEYCODE_BACK){
+					finish();
+					overridePendingTransition(R.anim.show_in_left, R.anim.hide_in_right	);
+					
+				}
+				
+				
+				return false;
 				
 			}
 	

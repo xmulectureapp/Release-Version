@@ -8,7 +8,7 @@
 	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:scrollbars="vertical" >
+		android:scrollbars="none" >
 
 		<LinearLayout
 			android:layout_width="match_parent"
@@ -32,7 +32,8 @@
 				android:layout_margin="@dimen/submit_center_text_margin"
 				android:text="#主题(必填)"
 				android:textColor="@color/submit_center_text_color"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				android:textStyle="bold" />
 
 			<EditText
 				android:id="@+id/string_title"
@@ -52,7 +53,8 @@
 				android:layout_margin="@dimen/submit_center_text_margin"
 				android:text="#主讲"
 				android:textColor="@color/submit_center_text_color"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				android:textStyle="bold" />
 
 			<EditText
 				android:id="@+id/string_speaker"
@@ -73,7 +75,8 @@
 				android:layout_margin="@dimen/submit_center_text_margin"
 				android:text="#时间(必填)"
 				android:textColor="@color/submit_center_text_color"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				android:textStyle="bold" />
 
 			<TextView
 				android:id="@+id/string_time"
@@ -85,7 +88,8 @@
 				android:padding="@dimen/submit_center_edit_padding"
 				android:singleLine="false"
 				android:textColor="@color/item_content"
-				android:textSize="18sp" >
+				android:textSize="18sp"
+				android:textStyle="bold" >
 			</TextView>
 
 			<LinearLayout
@@ -101,15 +105,10 @@
 					android:gravity="center"
 					android:text="#校区(必填)"
 					android:textColor="@color/submit_center_text_color"
-					android:textSize="18sp" />
+					android:textSize="18sp"
+					android:textStyle="bold" />
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_margin="@dimen/submit_center_text_margin"
-					android:gravity="center"
-					android:text="     "
-					android:textSize="18sp" />
+				
 
 				<Spinner
 					android:id="@+id/string_campus"
@@ -126,7 +125,8 @@
 				android:layout_margin="@dimen/submit_center_text_margin"
 				android:text="#详细地点(必填)"
 				android:textColor="@color/submit_center_text_color"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				android:textStyle="bold" />
 
 			<EditText
 				android:id="@+id/string_address"
@@ -147,7 +147,8 @@
 				android:layout_margin="@dimen/submit_center_text_margin"
 				android:text="#主讲人信息"
 				android:textColor="@color/submit_center_text_color"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				android:textStyle="bold" />
 
 			<EditText
 				android:id="@+id/string_speaker_information"
@@ -168,7 +169,8 @@
 				android:layout_margin="@dimen/submit_center_text_margin"
 				android:text="#背景资料或更多信息"
 				android:textColor="@color/submit_center_text_color"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				android:textStyle="bold" />
 
 			<EditText
 				android:id="@+id/string_more_information"
@@ -189,7 +191,8 @@
 				android:layout_margin="@dimen/submit_center_text_margin"
 				android:text="#信息来源"
 				android:textColor="@color/submit_center_text_color"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				android:textStyle="bold" />
 
 			<EditText
 				android:id="@+id/string_information_source"
@@ -224,8 +227,9 @@
 					android:paddingTop="3dp"
 					android:text="提交讲座"
 					android:textColor="@color/item_content"
-					android:textSize="17sp" >
-                     >
+					android:textSize="17sp"
+					android:textStyle="bold" >
+                    
 				</Button>
 			</LinearLayout>
 

@@ -337,6 +337,7 @@ public class MainView extends Activity
 								Intent intent = new  Intent(MainView.this, DetailView.class);	
 								intent.putExtras(detail_bundle);
 								startActivity(intent);
+								overridePendingTransition(R.anim.show_in_right, R.anim.hide_in_left	);
 							}  
 					    });
 						//remind
@@ -1004,13 +1005,13 @@ public class MainView extends Activity
             	if( !isDisplay ){
             		(  (TextView)hotFootItem.findViewById(R.id.top_textView)  )
             					.setTextColor( getResources().getColor(R.color.item_transparent) );
-                	(  (TextView)hotFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 10, 10, 100);
+                	(  (TextView)hotFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 10, 10, 80);
             	}
             	else{
             		(  (TextView)hotFootItem.findViewById(R.id.top_textView)  )
 									.setTextColor( getResources().getColor(R.color.item_content) );
 
-                	(  (TextView)hotFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 120, 10, 10);
+                	(  (TextView)hotFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 80, 10, 10);
             	}
             	
     		}
@@ -1189,7 +1190,7 @@ public class MainView extends Activity
 	}
 	public void initHot(){
 
-		hotCursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null, null);
+		hotCursor = dbCenter.hotSelect( dbCenter.getReadableDatabase() );
 		hotResult = DBCenter.L_convertCursorToListEvent(hotCursor);
 		mDataHot = hotResult;
 		

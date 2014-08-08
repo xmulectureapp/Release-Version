@@ -268,7 +268,11 @@ public class SubscribeMyadapter extends BaseAdapter
 				    		LikeInterface.LikeGo(event.getUid(), "0");
 				    		DBCenter.likeDBSync(dbCenter.getReadableDatabase(), event.getUid(), "0");
 				    		//下面一句解决马上变Like数字
-				    		likeText_change.setText( adaptPlace( String.format("%d", mData.get(position).getLikeCount()) ) );
+				    		//下面代码由 咸鱼 添加，用于解决按赞数为0 的时候，文字设成 按赞
+				    		if(event.getLikeCount() == 0 )
+				    			likeText_change.setText( "点赞" );
+				    		else
+				    			likeText_change.setText( adaptPlace( String.format("%d", mData.get(position).getLikeCount()) ) );
 				    		
 				    		
 						}
@@ -305,9 +309,9 @@ public class SubscribeMyadapter extends BaseAdapter
 		public String adaptPlace(String s){
 			
 			if(s.length() == 1)
-				return " " + s + "  ";
+				return "  " + s + "    ";
 			else if(s.length() == 2)
-				return " " + s + " ";
+				return "  " + s + "   ";
 			else
 				return s;
 			
