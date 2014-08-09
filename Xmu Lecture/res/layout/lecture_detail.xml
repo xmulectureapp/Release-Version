@@ -238,20 +238,20 @@
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentLeft="true"
 			android:animateLayoutChanges="true"
-			android:background="@color/main_top_background_color" >
+			android:background="@drawable/bottom_bar4" >
 
 			<LinearLayout
 				android:id="@+id/detail_linearlayout_share"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_gravity="center|right"
-				android:layout_marginLeft="10dp"
 				android:layout_weight="1"
-				android:background="@drawable/item_selector"
+				android:background="#00000000"
 				android:clickable="true"
 				android:gravity="right|center"
 				android:orientation="horizontal"
-				android:paddingRight="5dp" >
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp" >
 
 				<ImageView
 					android:id="@+id/detail_share_icon"
@@ -282,9 +282,6 @@
 				android:layout_width="1dp"
 				android:layout_height="20dp"
 				android:layout_gravity="center"
-				android:layout_margin="5dp"
-				android:layout_marginLeft="20dp"
-				android:layout_marginRight="20dp"
 				android:background="@color/item_line"
 				android:clickable="false"
 				android:gravity="center_horizontal" />
@@ -294,9 +291,11 @@
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_weight="1"
-				android:background="@drawable/item_selector"
+				android:background="#00000000"
 				android:gravity="center_horizontal"
-				android:orientation="horizontal" >
+				android:orientation="horizontal"
+				android:paddingLeft="5dp"
+				android:paddingRight="5dp" >
 
 				<ImageView
 					android:id="@+id/detail_comment_icon"
@@ -326,9 +325,6 @@
 				android:layout_width="1dp"
 				android:layout_height="20dp"
 				android:layout_gravity="center"
-				android:layout_margin="5dp"
-				android:layout_marginLeft="20dp"
-				android:layout_marginRight="20dp"
 				android:background="@color/item_line"
 				android:clickable="false"
 				android:gravity="center_horizontal" />
@@ -338,9 +334,11 @@
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_weight="1"
-				android:background="@drawable/item_selector"
+				android:background="@drawable/detail_item_selector"
 				android:gravity="center_horizontal"
-				android:orientation="horizontal" >
+				android:orientation="horizontal"
+				android:paddingLeft="5dp"
+				android:paddingRight="5dp" >
 
 				<ImageView
 					android:id="@+id/detail_like_icon"
@@ -369,9 +367,6 @@
 				android:layout_width="1dp"
 				android:layout_height="20dp"
 				android:layout_gravity="center"
-				android:layout_margin="5dp"
-				android:layout_marginLeft="20dp"
-				android:layout_marginRight="17dp"
 				android:background="@color/item_line"
 				android:clickable="false"
 				android:gravity="center_horizontal" />
@@ -381,12 +376,12 @@
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_gravity="center|left"
-				android:layout_marginRight="10dp"
 				android:layout_weight="1"
-				android:background="@drawable/item_selector"
+				android:background="#00000000"
 				android:gravity="left|center"
 				android:orientation="horizontal"
-				android:paddingLeft="5dp" >
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp" >
 
 				<ImageView
 					android:id="@+id/detail_remind_icon"
@@ -453,11 +448,11 @@
 					android:layout_centerVertical="true"
 					android:layout_gravity="center_vertical"
 					android:layout_marginLeft="5dp"
+					android:background="@drawable/back_selector"
 					android:gravity="center"
 					android:includeFontPadding="false"
 					android:paddingRight="16dp"
-					android:scaleType="matrix"
-					android:src="@drawable/back" />
+					android:scaleType="matrix" />
 
 			</LinearLayout>
 

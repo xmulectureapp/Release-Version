@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <com.lecture.pulltorefresh.RefreshableView
+    <com.lecture.layoutUtil.RefreshableView
         android:id="@+id/refreshable_view_subscribe"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -20,7 +20,7 @@
     	android:scrollbars="none" >
 
         </ListView>
-   </com.lecture.pulltorefresh.RefreshableView>
+   </com.lecture.layoutUtil.RefreshableView>
 
 
 </LinearLayout>

@@ -3,7 +3,7 @@
 	android:id="@+id/mainview"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:background="@drawable/main_view_background"
+	android:background="@drawable/fengyu_count"
 	android:orientation="vertical" >
 
 	<LinearLayout
@@ -25,7 +25,7 @@
 		android:id="@+id/main_top"
 		android:layout_width="fill_parent"
 		android:layout_height="47dp"
-		android:background="@drawable/bottom_bar4"
+		android:background="#ef40280b"
 		android:gravity="center_vertical"
 		android:orientation="vertical" >
 
@@ -46,9 +46,8 @@
 			android:gravity="center"
 			android:singleLine="true"
 			android:text="@string/app_name"
-			android:textColor="@color/main_menu_pressed"
-			android:textSize="20sp"
-			android:textStyle="bold" />
+			android:textColor="@color/top_title_color"
+			android:textSize="20sp" />
 
 		<!--
     <ImageView
@@ -106,7 +105,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="55dp"
 		android:layout_alignParentBottom="true"
-		android:background="@drawable/bottom_bar4"
+		android:background="#e9da821a"
 		android:orientation="vertical" >
 
 		<!--

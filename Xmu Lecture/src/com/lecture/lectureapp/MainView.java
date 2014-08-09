@@ -12,16 +12,17 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.lecture.layoutUtil.ExitView;
 import com.lecture.DBCenter.DBCenter;
 import com.lecture.DBCenter.XMLToList;
 import com.lecture.SettingAndSubmit.SettingsCenter;
+import com.lecture.layoutUtil.RefreshableView;
+import com.lecture.layoutUtil.RefreshableView.PullToRefreshListener;
 import com.lecture.lectureapp.R;
 
 
 
 import com.lecture.localdata.Event;
-import com.lecture.pulltorefresh.RefreshableView;
-import com.lecture.pulltorefresh.RefreshableView.PullToRefreshListener;
 import com.lecture.util.GetEventsHttpUtil;
 import com.lecture.util.GetEventsHttpUtil.GetEventsCallback;
 
@@ -48,6 +49,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -96,7 +98,6 @@ public class MainView extends Activity
 	private LinearLayout mClose;
     private LinearLayout mCloseBtn;
     private View layout;	
-	private boolean menu_display = false;
 	private PopupWindow menuWindow;
 	private LayoutInflater inflater;
 	//private Button mRightBtn;
@@ -167,6 +168,9 @@ public class MainView extends Activity
 	private MainItemFootLinearLayout subscribeFootItem;
 	private MainItemFootLinearLayout remindFootItem;
 	
+	
+	//下面是咸鱼的添加的代码，用于构建android的三个物理按键 2014 08 08 21:05   by xianyu
+	private ExitView mainExitView;
 	
 	
 	
@@ -1534,82 +1538,46 @@ public class MainView extends Activity
 	
 	//下面的代码先做保留，用于处理android的 三颗 虚拟按键
 	
-//	@Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//    	if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {  //获取 back键
-//    		
-//        	if(menu_display){         //如果 Menu已经打开 ，先关闭Menu
-//        		menuWindow.dismiss();
-//        		menu_display = false;
-//        		}
-//        	else {
-//        		Intent intent = new Intent();
-//            	intent.setClass(MainWeixin.this,Exit.class);
-//            	startActivity(intent);
-//        	}
-//    	}
-//    	
-//    	else if(keyCode == KeyEvent.KEYCODE_MENU){   //获取 Menu键			
-//			if(!menu_display){
-//				//获取LayoutInflater实例
-//				inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
-//				//这里的main布局是在inflate中加入的哦，以前都是直接this.setContentView()的吧？呵呵
-//				//该方法返回的是一个View的对象，是布局中的根
-//				layout = inflater.inflate(R.layout.main_menu, null);
-//				
-//				//下面我们要考虑了，我怎样将我的layout加入到PopupWindow中呢？？？很简单
-//				menuWindow = new PopupWindow(layout,LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT); //后两个参数是width和height
-//				//menuWindow.showAsDropDown(layout); //设置弹出效果
-//				//menuWindow.showAsDropDown(null, 0, layout.getHeight());
-//				menuWindow.showAtLocation(this.findViewById(R.id.mainweixin), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
-//				//如何获取我们main中的控件呢？也很简单
-//				mClose = (LinearLayout)layout.findViewById(R.id.menu_close);
-//				mCloseBtn = (LinearLayout)layout.findViewById(R.id.menu_close_btn);
-//				
-//				
-//				//下面对每一个Layout进行单击事件的注册吧。。。
-//				//比如单击某个MenuItem的时候，他的背景色改变
-//				//事先准备好一些背景图片或者颜色
-//				mCloseBtn.setOnClickListener (new View.OnClickListener() {					
-//					@Override
-//					public void onClick(View arg0) {						
-//						//Toast.makeText(Main.this, "退出", Toast.LENGTH_LONG).show();
-//						Intent intent = new Intent();
-//			        	intent.setClass(MainWeixin.this,Exit.class);
-//			        	startActivity(intent);
-//			        	menuWindow.dismiss(); //响应点击事件之后关闭Menu
-//					}
-//				});				
-//				menu_display = true;				
-//			}else{
-//				//如果当前已经为显示状态，则隐藏起来
-//				menuWindow.dismiss();
-//				menu_display = false;
-//				}
-//			
-//			return false;
-//		}
-//    	return false;
-//    }
-//	//设置标题栏右侧按钮的作用
-//	public void btnmainright(View v) {  
-//		Intent intent = new Intent (MainWeixin.this,MainTopRightDialog.class);			
-//		startActivity(intent);	
-//		//Toast.makeText(getApplicationContext(), "点击了功能按钮", Toast.LENGTH_LONG).show();
-//      }  	
-//	public void startchat(View v) {      //小黑  对话界面
-//		Intent intent = new Intent (MainWeixin.this,ChatActivity.class);			
-//		startActivity(intent);	
-//		//Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_LONG).show();
-//      }  
-//	public void exit_settings(View v) {                           //退出  伪“对话框”，其实是一个activity
-//		Intent intent = new Intent (MainWeixin.this,ExitFromSettings.class);			
-//		startActivity(intent);	
-//	 }
-//	public void btn_shake(View v) {                                   //手机摇一摇
-//		Intent intent = new Intent (MainWeixin.this,ShakeActivity.class);			
-//		startActivity(intent);	
-//	}
+	@Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if (keyCode == KeyEvent.KEYCODE_BACK ) {  //获取 back键
+    		
+    		
+        	
+    	}
+    	else if(keyCode == KeyEvent.KEYCODE_MENU){   //获取 Menu键			
+    		
+    		//实例化SelectPicPopupWindow
+			mainExitView = new ExitView(MainView.this, itemsOnClick);
+			//显示窗口
+			mainExitView.showAtLocation(MainView.this.findViewById(R.id.mainview), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+			
+    		
+    		
+		}
+    	return false;
+    }
+	
+	//为弹出窗口实现监听类
+    private OnClickListener  itemsOnClick = new OnClickListener(){
+
+		public void onClick(View v) {
+			
+			switch (v.getId()) {
+			case R.id.btn_exit:
+				Toast.makeText(MainView.this, "点击退出", Toast.LENGTH_LONG).show();
+				break;
+			case R.id.btn_cancel:
+				Toast.makeText(MainView.this, "Xianyu!", Toast.LENGTH_LONG).show();
+				break;
+			default:
+				break;
+			}
+		}
+    };
+    
+    
+    
 	
 	
 

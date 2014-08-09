@@ -9,11 +9,11 @@ import java.util.List;
 
 import com.lecture.DBCenter.DBCenter;
 import com.lecture.DBCenter.XMLToList;
+import com.lecture.layoutUtil.RefreshableView;
 import com.lecture.localdata.Comment;
 import com.lecture.localdata.DetailInfo;
 import com.lecture.localdata.Event;
 import com.lecture.localdata.ReminderInfo;
-import com.lecture.pulltorefresh.RefreshableView;
 import com.lecture.util.GetCommentUtil;
 import com.lecture.util.GetCommentUtil.GetCommentCallback;
 import com.lecture.util.GetDetailUtil;
