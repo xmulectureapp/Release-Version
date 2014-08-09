@@ -24,8 +24,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.util.Log;
@@ -45,6 +49,15 @@ public class HotMyadapter extends BaseAdapter
 	  private Event event;
 	  private List<Event> mData; 
 	  private DBCenter dbCenter;
+	  
+	  
+	  //下面是咸鱼的代码，用于解决点赞的bug  2014 - 08 - 09 22:13
+	  ConnectivityManager mConnectivityManager; 
+	  NetworkInfo mNetworkInfo; 
+	  
+	
+	  
+	  	
 	
 
 	
@@ -102,6 +115,12 @@ public class HotMyadapter extends BaseAdapter
 		this.mContext=context;
 		this.mInflater = LayoutInflater.from(context);  
 		mData = list;
+		
+		//下面是咸鱼的代码，用于解决点赞的bug  2014 - 08 - 09 22:13
+		//下面获取网络状态操作的 初始化操作
+		mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE); 
+		mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		
 	}  
 
 		@Override
@@ -246,35 +265,69 @@ public class HotMyadapter extends BaseAdapter
 				    // showInfo3();      
 				    	 event = mData.get(position);
 						 
-				    	event.setLike(!event.isLike());
-				    	if (event.isLike())
+				    	
+				    	if ( !event.isLike() )
 				    	{
-				    		likeIcon_change.setImageDrawable(v.getResources().getDrawable(R.drawable.like_red));
-				    		likeText_change.setTextColor(v.getResources().getColor(R.color.main_menu_pressed));
-				    		//喜欢的话，进行数据表LikeTable更新
-				    		DBCenter.setLike(dbCenter.getReadableDatabase(), event.getUid(), true);
-				    		event.updateLikeCount(1);//1 表示＋1
-				    		LikeInterface.LikeGo(event.getUid(), "1");
-				    		DBCenter.likeDBSync(dbCenter.getReadableDatabase(), event.getUid(), "1");
-				    		//下面一句解决马上变Like数字
-				    		likeText_change.setText( adaptPlace( String.format("%d", mData.get(position).getLikeCount()) ) );
+				    		
+				    		
+				    		//下面是咸鱼的代码，用于解决点赞的bug  2014 - 08 - 09 22:13
+				    		mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+				    		if( mNetworkInfo != null ){
+				    			
+				    			event.setLike(!event.isLike());
+				    			
+				    			likeIcon_change.setImageDrawable(v.getResources().getDrawable(R.drawable.like_red));
+					    		likeText_change.setTextColor(v.getResources().getColor(R.color.main_menu_pressed));
+					    		event.updateLikeCount(1);//1 表示＋1
+				    			//喜欢的话，进行数据表LikeTable更新
+					    		DBCenter.setLike(dbCenter.getReadableDatabase(), event.getUid(), true);
+					    		LikeInterface.LikeGo(event.getUid(), "1");
+				    			DBCenter.likeDBSync(dbCenter.getReadableDatabase(), event.getUid(), "1");
+				    			//下面一句解决马上变Like数字
+					    		likeText_change.setText( adaptPlace( String.format("%d", mData.get(position).getLikeCount()) ) );
+				    		
+				    		}
+				    		else {
+				    			
+				    			Toast.makeText(mContext, "请连接网络后按赞！", Toast.LENGTH_SHORT).show();
+							}
+				    		
 				    		
 				    	}
 						else
 						{
-							likeIcon_change.setImageDrawable(v.getResources().getDrawable(R.drawable.like));
-							likeText_change.setTextColor(v.getResources().getColor(R.color.main_menu_normal));
-							//喜欢的话，进行数据表LikeTable更新
-				    		DBCenter.setLike(dbCenter.getReadableDatabase(), event.getUid(), false);
-				    		event.updateLikeCount(-1);//-1 表示＋ (-1)
-				    		LikeInterface.LikeGo(event.getUid(), "0");// 0 代表不喜欢
-				    		DBCenter.likeDBSync(dbCenter.getReadableDatabase(), event.getUid(), "0");
-				    		//下面一句解决马上变Like数字
-				    		//下面代码由 咸鱼 添加，用于解决按赞数为0 的时候，文字设成 按赞
-				    		if(event.getLikeCount() == 0 )
-				    			likeText_change.setText( "点赞" );
-				    		else
-				    			likeText_change.setText( adaptPlace( String.format("%d", mData.get(position).getLikeCount()) ) );
+							
+							
+							
+				    		//下面是咸鱼的代码，用于解决点赞的bug  2014 - 08 - 09 22:13
+				    		mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+				    		if( mNetworkInfo != null ){
+				    			
+				    			event.setLike(!event.isLike());
+				    			
+				    			likeIcon_change.setImageDrawable(v.getResources().getDrawable(R.drawable.like));
+								likeText_change.setTextColor(v.getResources().getColor(R.color.main_menu_normal));
+								event.updateLikeCount(-1);//-1 表示＋ (-1)
+				    			//喜欢的话，进行数据表LikeTable更新
+					    		DBCenter.setLike(dbCenter.getReadableDatabase(), event.getUid(), false);
+					    		
+					    		LikeInterface.LikeGo(event.getUid(), "0");// 0 代表不喜欢
+					    		DBCenter.likeDBSync(dbCenter.getReadableDatabase(), event.getUid(), "0");
+					    		
+					    		//下面一句解决马上变Like数字
+					    		//下面代码由 咸鱼 添加，用于解决按赞数为0 的时候，文字设成 按赞
+					    		if(event.getLikeCount() == 0 )
+					    			likeText_change.setText( "点赞" );
+					    		else
+					    			likeText_change.setText( adaptPlace( String.format("%d", mData.get(position).getLikeCount()) ) );
+				    			
+				    		}
+				    		else {
+				    			
+				    			Toast.makeText(mContext, "请连接网络后按赞！", Toast.LENGTH_SHORT).show();
+				    			
+							}
+				    		
 				    		
 				    		
 						}

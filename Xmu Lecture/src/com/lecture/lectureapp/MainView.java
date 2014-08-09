@@ -207,8 +207,7 @@ public class MainView extends Activity
 						
 						initHot();
 						initLikeCollection();
-						refreshFoot("hotCenter");
-
+						
 						//下面用于测试subStrign函数
 						//Log.i("subString", mDataHot.get(1).getAddress().substring(0, 1));
 					
@@ -229,6 +228,11 @@ public class MainView extends Activity
 						
 						refreshHot();
 						refreshLikeCollection();
+
+						refreshFoot("hotCenter");
+						refreshFoot("subscrideCenter");
+						
+						
 						
 						//下拉刷新执行部分
 						refreshableView_hot.setOnRefreshListener(new PullToRefreshListener() {
@@ -1023,6 +1027,7 @@ public class MainView extends Activity
     			(  (TextView)hotFootItem.findViewById(R.id.top_textView)  )
 						.setTextColor( getResources().getColor(R.color.item_transparent) );
     		}
+    		myadapterHot.notifyDataSetChanged();
     		
     	}
     	else if(whichPage.equals("subscribeCenter")){
@@ -1033,13 +1038,13 @@ public class MainView extends Activity
             	if( !isDisplay ){
             		(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  )
             					.setTextColor( getResources().getColor(R.color.item_transparent) );
-                	(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 10, 10, 100);
+                	(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 10, 10, 80);
             	}
             	else{
             		(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  )
 									.setTextColor( getResources().getColor(R.color.item_content) );
 
-                	(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 120, 10, 10);
+                	(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 80, 10, 10);
             	}
             	
     		}
@@ -1047,7 +1052,7 @@ public class MainView extends Activity
     			(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  )
 						.setTextColor( getResources().getColor(R.color.item_transparent) );
     		}
-    		
+    		myadapterSubscribe.notifyDataSetChanged();
     	}
     	else if(whichPage.equals("remindCenter")){
     		
@@ -1057,13 +1062,13 @@ public class MainView extends Activity
             	if( !isDisplay ){
             		(  (TextView)remindFootItem.findViewById(R.id.top_textView)  )
             					.setTextColor( getResources().getColor(R.color.item_transparent) );
-                	(  (TextView)remindFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 10, 10, 100);
+                	(  (TextView)remindFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 10, 10, 80);
             	}
             	else{
             		(  (TextView)remindFootItem.findViewById(R.id.top_textView)  )
 									.setTextColor( getResources().getColor(R.color.item_content) );
 
-                	(  (TextView)remindFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 120, 10, 10);
+                	(  (TextView)remindFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 80, 10, 10);
             	}
             	
     		}
@@ -1078,7 +1083,7 @@ public class MainView extends Activity
 			//setFootDisplay("隐藏FootView", false);
     		Log.i("Which Page", "设置错误!");
 		}
-
+    	
     }
     
     //下面是来自Yebin的添加，用于解决没有任何讲座时的提醒显示
@@ -1188,8 +1193,12 @@ public class MainView extends Activity
 		myadapterRemind.setMData(mDataRemind);
 		myadapterSubscribe.setMData(mDataSubscribe);
 		
+		
+		
 		myadapterRemind.notifyDataSetChanged();
 		myadapterSubscribe.notifyDataSetChanged();
+		
+		
 		
 	}
 	public void initHot(){
@@ -1203,6 +1212,7 @@ public class MainView extends Activity
 	public void refreshHot(){
 		myadapterHot.setMData(mDataHot);
 		myadapterHot.notifyDataSetChanged();
+		
 		
 		
 	}
@@ -1295,28 +1305,124 @@ public class MainView extends Activity
 			case 0:
 				mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_pressed));
 				mText1.setTextColor(getResources().getColor(R.color.main_menu_pressed));
-				initHot();
-				refreshHot();
-				refreshFoot("hotCenter");
+				
 
 				if (currIndex == 1) {
 					animation = new TranslateAnimation(one, 0, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据  time：2014 年 8月9日 22:57
+							initHot();
+							refreshHot();
+							refreshFoot("hotCenter");
+							
+						}
+					});
 					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
 					mText2.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 2) {
 					animation = new TranslateAnimation(two, 0, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据  time：2014 年 8月9日 22:57
+							initHot();
+							refreshHot();
+							refreshFoot("hotCenter");
+							
+						}
+					});
 					mTab3.setImageDrawable(getResources().getDrawable(R.drawable.noticecenter_normal));
 					mText3.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 3) {
 					animation = new TranslateAnimation(three, 0, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据  time：2014 年 8月9日 22:57
+							initHot();
+							refreshHot();
+							refreshFoot("hotCenter");
+							
+						}
+					});
 					mTab4.setImageDrawable(getResources().getDrawable(R.drawable.submitcenter_normal));
 					mText4.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}else if (currIndex == 4) {
 					animation = new TranslateAnimation(four, 0, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据  time：2014 年 8月9日 22:57
+							initHot();
+							refreshHot();
+							refreshFoot("hotCenter");
+							
+						}
+					});
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
+				
+				
 				
 				break;
 			case 1:
@@ -1324,55 +1430,262 @@ public class MainView extends Activity
 				mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_pressed));
 				mText2.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				
-				initLikeCollection();
-				refreshLikeCollection();
-				refreshFoot("subscribeCenter");
+				
 				
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, one, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
+							initLikeCollection();
+							refreshLikeCollection();
+							refreshFoot("subscribeCenter");
+							
+						}
+					});
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
 					mText1.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 2) {
 					animation = new TranslateAnimation(two, one, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
+							initLikeCollection();
+							refreshLikeCollection();
+							refreshFoot("subscribeCenter");
+							
+						}
+					});
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
+							initLikeCollection();
+							refreshLikeCollection();
+							refreshFoot("subscribeCenter");
+							
+						}
+					});
 					mTab3.setImageDrawable(getResources().getDrawable(R.drawable.noticecenter_normal));
 					mText3.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 3) {
 					animation = new TranslateAnimation(three, one, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
+							initLikeCollection();
+							refreshLikeCollection();
+							refreshFoot("subscribeCenter");
+							
+						}
+					});
 					mTab4.setImageDrawable(getResources().getDrawable(R.drawable.submitcenter_normal));
 					mText4.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}else if (currIndex == 4) {
 					animation = new TranslateAnimation(four, one, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
+							initLikeCollection();
+							refreshLikeCollection();
+							refreshFoot("subscribeCenter");
+							
+						}
+					});
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
+				
+				
 				break;
 			case 2:
 				mTab3.setImageDrawable(getResources().getDrawable(R.drawable.noticecenter_pressed));
 				mText3.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				
-				initLikeCollection();
-				refreshLikeCollection();
-				refreshFoot("remindCenter");
 				
 				if (currIndex == 0) {
 					animation = new TranslateAnimation(zero, two, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
+							initLikeCollection();
+							refreshLikeCollection();
+							refreshFoot("remindCenter");
+							
+						}
+					});
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
 					mText1.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 1) {
 					animation = new TranslateAnimation(one, two, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
+							initLikeCollection();
+							refreshLikeCollection();
+							refreshFoot("remindCenter");
+							
+						}
+					});
 					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
 					mText2.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 3) {
 					animation = new TranslateAnimation(three, two, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+					});
 					mTab4.setImageDrawable(getResources().getDrawable(R.drawable.submitcenter_normal));
 					mText4.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}else if (currIndex == 4) {
 					animation = new TranslateAnimation(four, two, 0, 0);
+					animation.setAnimationListener(new Animation.AnimationListener() {
+						
+						@Override
+						public void onAnimationStart(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							// TODO Auto-generated method stub
+							
+						}
+					});
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
+				
+				
 				
 				break;
 			case 3:
@@ -1394,6 +1707,7 @@ public class MainView extends Activity
 				}
 				else if (currIndex == 4) {
 					animation = new TranslateAnimation(four, three, 0, 0);
+					
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}

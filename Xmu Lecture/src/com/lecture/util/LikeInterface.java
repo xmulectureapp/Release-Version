@@ -15,6 +15,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 public class LikeInterface {
+	
+	
 
 	public LikeInterface() {
 		// TODO Auto-generated constructor stub
@@ -57,6 +59,9 @@ public class LikeInterface {
 			}
 		}).start();
 	}
+	
+	
+	
 	
 	
 	

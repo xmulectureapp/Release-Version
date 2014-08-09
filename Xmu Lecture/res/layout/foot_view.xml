@@ -16,6 +16,7 @@
     	android:paddingTop="10dp"
     	android:text="厦大讲座网"
     	android:textAlignment="gravity"
+    	android:textColor="#000000"
     	android:textSize="20sp"
     	android:textStyle="bold" />
 
