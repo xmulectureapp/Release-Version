@@ -10,9 +10,8 @@
     	android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
     	android:layout_gravity="center_horizontal"
-    	android:paddingTop="3dp"
     	android:text="厦大讲座网"
     	android:textColor="@color/main_menu_pressed"
-    	android:textSize="20sp" />
+    	android:textSize="15sp" />
 
 </LinearLayout>

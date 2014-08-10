@@ -18,6 +18,10 @@
 	<color name="top_background_color">#fc58aef0</color>
 	<color name="top_title_color">#ffffff</color>
 	<color name="detail_menu_pressed">#50abaeb7</color>
+	<color name="item_title_blue">#7ba7ff</color>
+	<color name="item_title_green">#9ad013</color>
+	<color name="item_title_yellow">#ffd625</color>
+	<color name="item_title_orange">#ff7339</color>
 	
 			
 </resources>

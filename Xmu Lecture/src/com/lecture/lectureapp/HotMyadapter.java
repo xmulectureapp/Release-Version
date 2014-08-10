@@ -323,7 +323,7 @@ public class HotMyadapter extends BaseAdapter
 				    			
 				    		}
 				    		else {
-				    			
+
 				    			Toast.makeText(mContext, "请连接网络后按赞！", Toast.LENGTH_SHORT).show();
 				    			
 							}

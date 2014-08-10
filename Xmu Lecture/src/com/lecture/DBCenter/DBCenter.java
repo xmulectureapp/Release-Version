@@ -249,16 +249,12 @@ public class DBCenter extends SQLiteOpenHelper {
 
 
 		//-----------------------------LectureTable的选择语句，返回结果的Cursor-----------------
-		public Cursor select(SQLiteDatabase db, String time, String place, String subject){
+		public Cursor select(SQLiteDatabase db){
 			
-			Log.i("SELECT", "开始查找数据分类");
-			String[] selectString = new String[]{time, place, subject};
-			//Cursor selectResult = db.rawQuery("select * from LectureTable where sub like ?",new String[] { "%"+SUBJECT+"%"});
+			
 			Cursor selectResult;
-			//if(time == null)
-				selectResult = db.rawQuery("select * from " + LECTURE_TABLE + " where 1",new String[]{});
-			//else
-				//selectResult = db.rawQuery("select * from " + LECTURE_TABLE + " where 1 LIMIT 0,4",new String[]{});
+			selectResult = db.rawQuery("select * from " + LECTURE_TABLE + " where 1",new String[]{});
+
 			Log.i("SELECT", "Select查找结束");
 			
 			return selectResult;

@@ -29,6 +29,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -82,7 +84,12 @@ public class DetailView extends Activity {
 	
 	//下面是咸鱼的增加，用于增加返回 主页的header top 左边的按键  2014年8月日  
 	public LinearLayout detailHeaderLeftLinearLayout;
-
+	
+	//下面是咸鱼的代码，用于解决点赞的bug  2014 - 08 - 10 13:22
+	ConnectivityManager mConnectivityManager; 
+	NetworkInfo mNetworkInfo; 
+	
+	
 	// ——————————————————————下面是用于handler的消息标记
 	private static final int MESSAGE_DOWNLOAD_DETAIL_START = 1;// Detail刷新开始
 	private static final int MESSAGE_DOWNLOAD_DETAIL_END = 2;// Detail刷新结束
@@ -147,6 +154,7 @@ public class DetailView extends Activity {
 
 		detail_lectureEvent = (Event) getIntent().getSerializableExtra(
 				"LectureDetail");
+		
 
 		tvname.setText("" + detail_lectureEvent.getTitle());
 		tvtime.setText("时间：" + detail_lectureEvent.getTime());
@@ -169,6 +177,11 @@ public class DetailView extends Activity {
 
 		textViewLike = (TextView) findViewById(R.id.detail_like_text);
 		textViewRemind = (TextView) findViewById(R.id.detail_remind_text);
+		
+		//下面是咸鱼的代码，用于解决点赞的bug  2014 - 08 - 10 13:22
+		//下面获取网络状态操作的 初始化操作
+		mConnectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE); 
+		mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 		
 		
 		
@@ -247,50 +260,95 @@ public class DetailView extends Activity {
 			public void onClick(View v) {
 				// showInfo3();
 				Event event = detail_lectureEvent;
+				
+				////////
+				if ( !event.isLike() )
+		    	{
+		    		
+		    		
+		    		//下面是咸鱼的代码，用于解决点赞的bug  2014 - 08 - 09 22:13
+		    		mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		    		if( mNetworkInfo != null ){
+		    			
+		    			event.setLike(!event.isLike());
+		    			
+		    			imageViewLike.setImageDrawable(getResources().getDrawable(
+								R.drawable.like_red));
+						textViewLike.setTextColor(getResources().getColor(
+								R.color.main_menu_pressed));
+						// 喜欢的话，进行数据表LikeTable更新
+						DBCenter.setLike(
+								DBCenter.getStaticDBCenter(DetailView.this)
+										.getReadableDatabase(), event.getUid(),
+								true);
+						event.updateLikeCount(1);// 1 表示＋1
+						LikeInterface.LikeGo(event.getUid(), "1");
+						DBCenter.likeDBSync(
+								DBCenter.getStaticDBCenter(DetailView.this)
+										.getReadableDatabase(), event.getUid(), "1");
+						// 下面一句解决马上变Like数字
+						//下面代码由 咸鱼 添加，用于解决按赞数为0 的时候，文字设成 按赞
+			    		if(event.getLikeCount() == 0 )
+			    			textViewLike.setText( "点赞" );
+			    		else
+			    			textViewLike.setText(adaptPlace(String.format("%d", event.getLikeCount())));
+			    		
+			    		// x下面代码来自咸鱼的增加，用于点赞后返回时刷新相应listView 2014 08 10   13:59
+						setResult(2,   getIntent().putExtra("whichCenter", getIntent().getStringExtra("whichCenter"))  );
+		    		
+		    		}
+		    		else {
+		    			
+		    			Toast.makeText(DetailView.this, "请连接网络后按赞！", Toast.LENGTH_SHORT).show();
+					}
+		    		
+		    		
+		    	}
+				else
+				{
+					
+					
+					
+		    		//下面是咸鱼的代码，用于解决点赞的bug  2014 - 08 - 09 22:13
+		    		mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		    		if( mNetworkInfo != null ){
+		    			
+		    			event.setLike(!event.isLike());
+		    			
 
-				event.setLike(!event.isLike());
-				if (event.isLike()) {
-					imageViewLike.setImageDrawable(getResources().getDrawable(
-							R.drawable.like_red));
-					textViewLike.setTextColor(getResources().getColor(
-							R.color.main_menu_pressed));
-					// 喜欢的话，进行数据表LikeTable更新
-					DBCenter.setLike(
-							DBCenter.getStaticDBCenter(DetailView.this)
-									.getReadableDatabase(), event.getUid(),
-							true);
-					event.updateLikeCount(1);// 1 表示＋1
-					LikeInterface.LikeGo(event.getUid(), "1");
-					DBCenter.likeDBSync(
-							DBCenter.getStaticDBCenter(DetailView.this)
-									.getReadableDatabase(), event.getUid(), "1");
-					// 下面一句解决马上变Like数字
-					//下面代码由 咸鱼 添加，用于解决按赞数为0 的时候，文字设成 按赞
-		    		if(event.getLikeCount() == 0 )
-		    			textViewLike.setText( "点赞" );
-		    		else
-		    			textViewLike.setText(adaptPlace(String.format("%d", event.getLikeCount())));
+						imageViewLike.setImageDrawable(getResources().getDrawable(
+								R.drawable.like));
+						textViewLike.setTextColor(getResources().getColor(
+								R.color.main_menu_normal));
+						// 喜欢的话，进行数据表LikeTable更新
+						DBCenter.setLike(
+								DBCenter.getStaticDBCenter(DetailView.this)
+										.getReadableDatabase(), event.getUid(),
+								false);
+						event.updateLikeCount(-1);// -1 表示＋ (-1)
+						LikeInterface.LikeGo(event.getUid(), "0");
+						DBCenter.likeDBSync(
+								DBCenter.getStaticDBCenter(DetailView.this)
+										.getReadableDatabase(), event.getUid(), "0");
+						// 下面一句解决马上变Like数字
+						textViewLike.setText(adaptPlace(String.format("%d",
+								event.getLikeCount())));
+		    			
+		    		}
+		    		else {
 
-				} else {
-					imageViewLike.setImageDrawable(getResources().getDrawable(
-							R.drawable.like));
-					textViewLike.setTextColor(getResources().getColor(
-							R.color.main_menu_normal));
-					// 喜欢的话，进行数据表LikeTable更新
-					DBCenter.setLike(
-							DBCenter.getStaticDBCenter(DetailView.this)
-									.getReadableDatabase(), event.getUid(),
-							false);
-					event.updateLikeCount(-1);// -1 表示＋ (-1)
-					LikeInterface.LikeGo(event.getUid(), "0");
-					DBCenter.likeDBSync(
-							DBCenter.getStaticDBCenter(DetailView.this)
-									.getReadableDatabase(), event.getUid(), "0");
-					// 下面一句解决马上变Like数字
-					textViewLike.setText(adaptPlace(String.format("%d",
-							event.getLikeCount())));
-
+		    			Toast.makeText(DetailView.this, "请连接网络后按赞！", Toast.LENGTH_SHORT).show();
+		    			
+					}
+		    		
+		    		// x下面代码来自咸鱼的增加，用于点赞后返回时刷新相应listView 2014 08 10   13:59
+					setResult(2,   getIntent().putExtra("whichCenter", getIntent().getStringExtra("whichCenter"))  );
+		    		
 				}
+				
+				///////
+
+				
 			}
 		});
 
@@ -324,6 +382,10 @@ public class DetailView extends Activity {
 					// 从日历删除
 					deleteFromCalender();
 				}
+				
+				// x下面代码来自咸鱼的增加，用于点赞后返回时刷新相应listView 2014 08 10   13:59
+				setResult(2,   getIntent().putExtra("whichCenter", getIntent().getStringExtra("whichCenter"))  );
+				
 			}
 		});
 

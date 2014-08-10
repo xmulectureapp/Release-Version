@@ -209,6 +209,7 @@ public class RefreshableView extends LinearLayout implements OnTouchListener {
 			hideHeaderHeight = -header.getHeight();
 			headerLayoutParams = (MarginLayoutParams) header.getLayoutParams();
 			headerLayoutParams.topMargin = hideHeaderHeight;
+			headerLayoutParams.bottomMargin = 0;
 			listView = (ListView) getChildAt(1);
 			listView.setOnTouchListener(this);
 			loadOnce = true;
@@ -317,14 +318,7 @@ public class RefreshableView extends LinearLayout implements OnTouchListener {
 		preferences.edit().putLong(UPDATED_AT + mId, System.currentTimeMillis()).commit();
 		new HideHeaderTask().execute();
 	}
-	public void finishRefreshing(HotMyadapter myadapter) {
-		currentStatus = STATUS_REFRESH_FINISHED;
-		preferences.edit().putLong(UPDATED_AT + mId, System.currentTimeMillis()).commit();
-		new HideHeaderTask().execute();
-		
-		Log.i("下拉刷新","开始myadapter.notifyDataSetChanged()");
-		
-	}
+	
 
 	/**
 	 * 根据当前ListView的滚动状态来设定 {@link #ableToPull}
@@ -473,6 +467,7 @@ public class RefreshableView extends LinearLayout implements OnTouchListener {
 		protected void onProgressUpdate(Integer... topMargin) {
 			updateHeaderView();
 			headerLayoutParams.topMargin = topMargin[0];
+			//xianyu edit
 			header.setLayoutParams(headerLayoutParams);
 		
 		}

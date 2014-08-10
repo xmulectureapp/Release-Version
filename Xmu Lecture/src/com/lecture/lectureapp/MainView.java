@@ -22,6 +22,7 @@ import com.lecture.lectureapp.R;
 
 
 
+import com.lecture.localdata.Comment;
 import com.lecture.localdata.Event;
 import com.lecture.util.GetEventsHttpUtil;
 import com.lecture.util.GetEventsHttpUtil.GetEventsCallback;
@@ -74,8 +75,7 @@ import android.widget.Toast;
 public class MainView extends Activity 
 {
 	
-	
-	
+
 	public static MainView instance = null;
 	
 	//数据库
@@ -202,15 +202,14 @@ public class MainView extends Activity
 						mProgressDialog = null;
 					}	
 						
-						Log.i("SELECT", "Cursor游标采取数据开始！");
+						Log.i("开始数据初始化", "开始执行init");
 
 						
 						initHot();
-						initLikeCollection();
+						initSubscribe();
+						initRemind();
 						
-						//下面用于测试subStrign函数
-						//Log.i("subString", mDataHot.get(1).getAddress().substring(0, 1));
-					
+						
 						
 						myadapterHot = new HotMyadapter(MainView.this, mDataHot);
 						myadapterRemind = new RemindMyadapter(MainView.this, mDataRemind);
@@ -220,17 +219,18 @@ public class MainView extends Activity
 						myadapterRemind.setDBCenter(dbCenter);
 						myadapterSubscribe.setDBCenter(dbCenter);
 						
-						Log.i("Myadapter", "适配器构建成功！");
-					    
+						
 						hotList.setAdapter(myadapterHot);
 						remindList.setAdapter(myadapterRemind);
 						subscribeList.setAdapter(myadapterSubscribe);
 						
 						refreshHot();
-						refreshLikeCollection();
+						refreshSubscribe();
+						refreshRemind();
 
 						refreshFoot("hotCenter");
 						refreshFoot("subscrideCenter");
+						refreshFoot("remindCenter");
 						
 						
 						
@@ -240,24 +240,15 @@ public class MainView extends Activity
 							public void onRefresh() {
 								
 								try {
-									/*
-									View view = hotList.getFocusedChild();
-									if(view == null)
-										Log.i("onRefresh", "view is null");
-									( (RelativeLayout)view.findViewById(R.id.itemAll) )
-									.setBackground(getResources().getDrawable(R.color.item_background));
-									*/
+								
 									pullRefresh("hotCenter");
 									
 									
-									Thread.sleep(3000);
-									//Thread.sleep(3000);
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
 								
-								//Toast.makeText(MainView.this, "正在刷新……", Toast.LENGTH_LONG).show();
-								//refreshableView.finishRefreshing(myadapter);
+								
 							}
 						}, 0);
 						
@@ -266,26 +257,15 @@ public class MainView extends Activity
 							public void onRefresh() {
 								
 								try {
-									/*
-									View view = hotList.getFocusedChild();
-									if(view == null)
-										Log.i("onRefresh", "view is null");
-									( (RelativeLayout)view.findViewById(R.id.itemAll) )
-									.setBackground(getResources().getDrawable(R.color.item_background));
-									*/
-									//pullRefresh();
 									
-									//下面将修改下拉刷新，使得前三个Tabs都可以刷新
-									//Thread.sleep(3000);
-									//refreshableView_subscribe.finishRefreshing();
+
 									pullRefresh("subscribeCenter");
 									
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
 								
-								//Toast.makeText(MainView.this, "正在刷新……", Toast.LENGTH_LONG).show();
-								//refreshableView.finishRefreshing(myadapter);
+								
 							}
 						}, 0);
 						
@@ -294,30 +274,18 @@ public class MainView extends Activity
 							public void onRefresh() {
 								
 								try {
-									/*
-									View view = hotList.getFocusedChild();
-									if(view == null)
-										Log.i("onRefresh", "view is null");
-									( (RelativeLayout)view.findViewById(R.id.itemAll) )
-									.setBackground(getResources().getDrawable(R.color.item_background));
-									*/
-									//pullRefresh();
 									
-									
-									//下面将修改下拉刷新，使得前三个Tabs都可以刷新
-									//Thread.sleep(3000);
-									//refreshableView_remind.finishRefreshing();
+
 									pullRefresh("remindCenter");
 									
-									//Thread.sleep(3000);
+									
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-								
-								//Toast.makeText(MainView.this, "正在刷新……", Toast.LENGTH_LONG).show();
-								//refreshableView.finishRefreshing(myadapter);
+
 							}
 						}, 0);
+						
 						//下面上对item的默认点击显示颜色进行改变, 把默认点击效果取消
 						hotList.setSelector(getResources().getDrawable(R.drawable.item_none_selector));
 						hotList.setSelected(false);	
@@ -325,13 +293,13 @@ public class MainView extends Activity
 						remindList.setSelected(false);
 						subscribeList.setSelector(getResources().getDrawable(R.drawable.item_none_selector));
 						subscribeList.setSelected(false);
+						
 						// ListView 中某项被选中后的逻辑  
 						hotList.setOnItemClickListener(new OnItemClickListener() {  
 					        
 							@Override
 							public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 									long arg3) {
-								// TODO Auto-generated method stub
 								
 								Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
 								
@@ -344,7 +312,8 @@ public class MainView extends Activity
 								
 								Intent intent = new  Intent(MainView.this, DetailView.class);	
 								intent.putExtras(detail_bundle);
-								startActivity(intent);
+								intent.putExtra("whichCenter", "hotCenter");
+								startActivityForResult(intent, 2);
 								overridePendingTransition(R.anim.show_in_right, R.anim.hide_in_left	);
 							}  
 					    });
@@ -354,9 +323,7 @@ public class MainView extends Activity
 							@Override
 							public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 									long arg3) {
-								// TODO Auto-generated method stub
 								 
-								Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
 								
 								//下面代码来自 KunCheng，用于显示详细信息
 								Bundle detail_bundle = new Bundle();
@@ -367,18 +334,19 @@ public class MainView extends Activity
 								
 								Intent intent = new  Intent(MainView.this, DetailView.class);	
 								intent.putExtras(detail_bundle);
-								startActivity(intent);
+								intent.putExtra("whichCenter", "remindCenter");
+								startActivityForResult(intent, 2);
+								overridePendingTransition(R.anim.show_in_right, R.anim.hide_in_left	);
+								
 							}  
 					    });
+						
 						//subscribe
 						subscribeList.setOnItemClickListener(new OnItemClickListener() {  
 					        
 							@Override
 							public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 									long arg3) {
-								// TODO Auto-generated method stub
-								
-								//Toast.makeText(MainView.this,"您选择了讲座：" + ((TextView)arg1.findViewById(R.id.lecture_id)).getText(),Toast.LENGTH_LONG ).show();
 								
 								//下面代码来自 KunCheng，用于显示详细信息
 								Bundle detail_bundle = new Bundle();
@@ -389,21 +357,16 @@ public class MainView extends Activity
 								
 								Intent intent = new  Intent(MainView.this, DetailView.class);	
 								intent.putExtras(detail_bundle);
-								startActivity(intent);
+								intent.putExtra("whichCenter", "subscribeCenter");
+								startActivityForResult(intent, 2);
+								overridePendingTransition(R.anim.show_in_right, R.anim.hide_in_left	);
 							}  
 					    });
-				/*	// 这里是为了解决没有网络数据时的显示
-					}
-					else{
-						
-						
-					}  // end else in MESSAGE_REFRESH_END
-					*/
+				
 				} else if (message.what == MESSAGE_REFRESH_FAILED) {
 					if (mProgressDialog != null)
 						mProgressDialog.dismiss();
-					//mProgressDialog = null;
-					//mProgressDialog = ProgressDialog.show(MainView.this,"加载上次数据数据", "", true, false);
+					
 					Toast.makeText(MainView.this, msg, Toast.LENGTH_LONG)
 							.show();
 					//无法连接到网络，所以下面直接从原本数据库调用已有数据进行适配器的初始化
@@ -427,7 +390,7 @@ public class MainView extends Activity
 				}
 				else if(message.what == MESSAGE_PULL_REFRESH_FAILED){
 					
-					refreshableView_hot.finishRefreshing(myadapterHot);
+					refreshableView_hot.finishRefreshing();
 					
 					Toast.makeText(MainView.this, "无法连接到网络，请检查您的网络设置！", Toast.LENGTH_LONG)
 					.show();
@@ -441,12 +404,11 @@ public class MainView extends Activity
 					DBCenter.refreshLike(dbCenter.getReadableDatabase());
 					DBCenter.refreshCollection(dbCenter.getReadableDatabase());
 					
-					Log.i("MESSAGE_XML_TO_LISTDB_SUCCESS", "光标Cursor准备就绪！");
-					
+				
 					
 					//下面是 Xianyu做的修改，用于实现三个Tabs都能够刷新
 					if(    ( (String)message.obj  ).equals("hotCenter")    ){
-						refreshableView_hot.finishRefreshing(myadapterHot);
+						refreshableView_hot.finishRefreshing();
 						initHot();
 						refreshHot();
 						refreshFoot("hotCenter");
@@ -457,8 +419,8 @@ public class MainView extends Activity
 					if(   ( (String)message.obj  ).equals("subscribeCenter")   ){
 						
 						refreshableView_subscribe.finishRefreshing();
-						initLikeCollection();
-						refreshLikeCollection();
+						initSubscribe();
+						refreshSubscribe();
 						refreshFoot("subscribeCenter");
 						
 					}
@@ -466,8 +428,8 @@ public class MainView extends Activity
 					if(   ( (String)message.obj  ).equals("remindCenter")   ){
 						
 						refreshableView_remind.finishRefreshing();
-						initLikeCollection();
-						refreshLikeCollection();
+						initRemind();
+						refreshRemind();
 						refreshFoot("remindCenter");
 						
 					}
@@ -501,15 +463,13 @@ public class MainView extends Activity
 						public void onEnd() {
 							
 							//XML TO List, then to db
-							
 							XMLToList xmlToList = new XMLToList();
-							//DBCenter.clearAllData(dbCenter.getReadableDatabase(), DBCenter.LECTURE_TABLE);
+							
 							xmlToList.insertListToDB(MainView.this, dbCenter, DBCenter.LECTURE_TABLE);
 							// 上面可能出现错误
 							Log.i("onEnd", "XMLToList已经将数据存入数据库！");
 							
-							Log.i("onEnd", "开始refresh like 和 收藏");
-							
+							//刷新like 和 remind数据表
 							DBCenter.refreshLike(dbCenter.getReadableDatabase());
 							DBCenter.refreshCollection(dbCenter.getReadableDatabase());
 							
@@ -588,10 +548,7 @@ public class MainView extends Activity
 		//-------------------pull refresh end--------------------------
 
 
-/*
- * onCreate	(non-Javadoc)
- * @see android.app.Activity#onCreate(android.os.Bundle)
- */
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -615,36 +572,7 @@ public class MainView extends Activity
         mTab5 = (ImageView) findViewById(R.id.img_my_center);
        
         
-        //测试全角半角的区别
-        if("&" == "&")
-        	Log.i("全角半角", "相等");
-       // mTabImg = (ImageView) findViewById(R.id.img_tab_now);
-        /*
-        mTab1.setOnClickListener(new MyOnClickListener(0));
-        mTab2.setOnClickListener(new MyOnClickListener(1));      
-        mTab3.setOnClickListener(new MyOnClickListener(2));
-        mTab4.setOnClickListener(new MyOnClickListener(3));      
-        mTab5.setOnClickListener(new MyOnClickListener(4));
-        */
-        
-        //下面用于测试时间
-        /*
-        SettingsCenter testSetting = new SettingsCenter(MainView.this);
-      //  int weekday = testSetting.stringToTime("2014-6-24 20:20").weekDay;
-        Time time = testSetting.time;
-        Log.i("最后测试", String.format("%d", time.weekDay));
-        
-        Log.i("WEEKDAY", String.format("%d", weekday));
-        String week = testSetting.weekdaySettings;
-        String place = testSetting.placeSettings;
-        
-        Time t = new Time();
-        Log.i("系统时间", String.format("%d", t.weekDay));
-        t.setToNow();
-        Log.i("系统时间", t.toString());
-        Log.i("系统时间", String.format("%d", t.weekDay));
-        
-        */
+      
         
         //获取菜单文字句柄
         mText1 = (TextView)findViewById(R.id.mText1);
@@ -686,7 +614,7 @@ public class MainView extends Activity
         LayoutInflater mLi = LayoutInflater.from(this);
         View view1 = mLi.inflate(R.layout.subscribecenter, null);
         View view2 = mLi.inflate(R.layout.hotlecturecenter, null);
-        View view3 = mLi.inflate(R.layout.noticecenter, null);
+        View view3 = mLi.inflate(R.layout.remindcenter, null);
         View view4 = mLi.inflate(R.layout.submitcenter, null);
         View view5 = mLi.inflate(R.layout.mycenter, null);
         
@@ -698,17 +626,7 @@ public class MainView extends Activity
 			
 			}
         });
-        /*
-        viewFooter = mLi.inflate(R.layout.foot_view, null);
-      
-        viewFooter.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-				
-				}
-        });
-       */
+       
         hotFootItem       = new MainItemFootLinearLayout(this);
         subscribeFootItem = new MainItemFootLinearLayout(this);
         remindFootItem    = new MainItemFootLinearLayout(this);
@@ -737,9 +655,7 @@ public class MainView extends Activity
         
         
         
-        //下面是来自Yebin的添加，用于解决没有任何讲座时的提醒显示
-        //foot_TextView = (TextView)viewFooter.findViewById(R.id.foot_textView);
-
+        
         subscribeList = (ListView)view1.findViewById(R.id.list_view_subscribe);
         hotList = (ListView) view2.findViewById(R.id.list_view);//把hot_ListView转成引用
         remindList = (ListView)view3.findViewById(R.id.list_view_notice);
@@ -747,26 +663,24 @@ public class MainView extends Activity
        
         
         hotList.addHeaderView(viewHeader);
-       // hotList.addFooterView(viewFooter);
         hotList.addFooterView(hotFootItem);
         
         subscribeList.addHeaderView(viewHeader);
-        //subscribeList.addFooterView(viewFooter);
         subscribeList.addFooterView(subscribeFootItem);
         
         remindList.addHeaderView(viewHeader);
-        //remindList.addFooterView(viewFooter);
         remindList.addFooterView(remindFootItem);
+        
 
         refreshableView_subscribe = (RefreshableView)view1.findViewById(R.id.refreshable_view_subscribe);
         refreshableView_hot = (RefreshableView)view2.findViewById(R.id.refreshable_view);
         refreshableView_remind = (RefreshableView)view3.findViewById(R.id.refreshable_view_remind);
+        
         //每个页面的view数据
         final ArrayList<View> views = new ArrayList<View>();
         views.add(view2);
         views.add(view1);
         views.add(view3);
-       // views.add(view4);
         //code来自Yang
         manager = new LocalActivityManager(this , true);
         manager.dispatchCreate(savedInstanceState);
@@ -774,8 +688,6 @@ public class MainView extends Activity
         views.add(getView("SubmitCenter", intent));
         
         views.add(view5);
-        
-     
         
        
         
@@ -797,10 +709,6 @@ public class MainView extends Activity
 				((ViewPager)container).removeView(views.get(position));
 			}
 			
-			//@Override
-			//public CharSequence getPageTitle(int position) {
-				//return titles.get(position);
-			//}
 			
 			@Override
 			public Object instantiateItem(View container, int position) {
@@ -832,19 +740,7 @@ public class MainView extends Activity
 		sat = (CheckBox) view5.findViewById(R.id.Saturday);
 		sun = (CheckBox) view5.findViewById(R.id.Sunday);
 
-		// 只能输入邮箱格式
-		/*
-		 * ETemail.addTextChangedListener(new TextWatcher() { public void
-		 * afterTextChanged(Editable s) { if
-		 * (ETemail.getText().toString().matches
-		 * ("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+") && s.length() > 0) {
-		 * Toast.makeText(MainView.this, "有效的邮箱地址", Toast.LENGTH_LONG).show(); }
-		 * else { Toast.makeText(MainView.this, "无效的邮箱地址",
-		 * Toast.LENGTH_LONG).show(); ETemail.requestFocus(); } } public void
-		 * beforeTextChanged(CharSequence s, int start, int count, int after) {}
-		 * public void onTextChanged(CharSequence s, int start, int before, int
-		 * count) {} });
-		 */
+		
 
 		siming.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
@@ -985,30 +881,13 @@ public class MainView extends Activity
 	}    // end function onCreate()
 	
 	//下面是来自Yebin的添加，用于解决没有任何讲座时的提醒显示
-    public void setFootDisplay(String toDisplay, Boolean isDisplay){
-    	
-    	
-    	foot_TextView.setText(toDisplay);
-    	
-    	//设置是否显示
-    	if(isDisplay){
-    		foot_TextView.setTextColor(getResources().getColor(R.color.item_content));
-        	foot_TextView.setPadding(20,120,20,20);	
-    	}
-    	else{
-    		foot_TextView.setTextColor(getResources().getColor(R.color.item_transparent));
-        	foot_TextView.setPadding(20,20,20,20);
-    	}
-    }
-    
     
     public void setFootDisplay(String whichPage, String toDisplay, Boolean isDisplay){
     	
     	
     	if(whichPage.equals("hotCenter")){
     		
-    		if(mDataHot.size() == 0){
-            	(  (TextView)hotFootItem.findViewById(R.id.top_textView)  ).setText( toDisplay );
+    			(  (TextView)hotFootItem.findViewById(R.id.top_textView)  ).setText( toDisplay );
             	
             	if( !isDisplay ){
             		(  (TextView)hotFootItem.findViewById(R.id.top_textView)  )
@@ -1022,18 +901,14 @@ public class MainView extends Activity
                 	(  (TextView)hotFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 80, 10, 10);
             	}
             	
-    		}
-    		else{
-    			(  (TextView)hotFootItem.findViewById(R.id.top_textView)  )
-						.setTextColor( getResources().getColor(R.color.item_transparent) );
-    		}
+    		
     		myadapterHot.notifyDataSetChanged();
     		
     	}
     	else if(whichPage.equals("subscribeCenter")){
     		
-    		if(mDataSubscribe.size() == 0){
-            	(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  ).setText( toDisplay );
+    		
+    			(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  ).setText( toDisplay );
             	
             	if( !isDisplay ){
             		(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  )
@@ -1047,17 +922,12 @@ public class MainView extends Activity
                 	(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 80, 10, 10);
             	}
             	
-    		}
-    		else{
-    			(  (TextView)subscribeFootItem.findViewById(R.id.top_textView)  )
-						.setTextColor( getResources().getColor(R.color.item_transparent) );
-    		}
+    		
     		myadapterSubscribe.notifyDataSetChanged();
     	}
     	else if(whichPage.equals("remindCenter")){
     		
-    		if(mDataRemind.size() == 0){
-            	(  (TextView)remindFootItem.findViewById(R.id.top_textView)  ).setText( toDisplay );
+    			(  (TextView)remindFootItem.findViewById(R.id.top_textView)  ).setText( toDisplay );
             	
             	if( !isDisplay ){
             		(  (TextView)remindFootItem.findViewById(R.id.top_textView)  )
@@ -1071,16 +941,11 @@ public class MainView extends Activity
                 	(  (TextView)remindFootItem.findViewById(R.id.top_textView)  ).setPadding(10, 80, 10, 10);
             	}
             	
-    		}
-    		else{
-    			(  (TextView)remindFootItem.findViewById(R.id.top_textView)  )
-						.setTextColor( getResources().getColor(R.color.item_transparent) );
-    		}
+    		myadapterRemind.notifyDataSetChanged();  
     		
-				
     	}
     	else {
-			//setFootDisplay("隐藏FootView", false);
+			
     		Log.i("Which Page", "设置错误!");
 		}
     	
@@ -1125,82 +990,47 @@ public class MainView extends Activity
     		Log.i("Which Page", "设置错误!");
 		}
     }
-    /*
-    public void refreshFoot(String whichPage){
-    	
-    	if(whichPage.equals("hotCenter")){
-    		
-    		if(mDataHot.size() == 0){
-            	setFootDisplay("没有最新热门讲座", true);
-            	
-    		}
-    		else{
-    			setFootDisplay("隐藏", false);
-    		}
-    		
-    	}
-    	else if(whichPage.equals("subscribeCenter")){
-    		
-    		if(mDataSubscribe.size() == 0)
-    			setFootDisplay("没有您订制的讲座，您可以在设置中心\"我\"中进行定制!", true);
-    		else{
-    			setFootDisplay("隐藏", false);
-    		}
-    	}
-    	else if(whichPage.equals("remindCenter")){
-    		
-    		if(mDataRemind.size() == 0){
-    			setFootDisplay("没有您收藏的讲座", true);
-    		
-    		}
-    		else{
-    			setFootDisplay("隐藏", false);
-    		}
-    		
-				
-    	}
-    	else {
-			setFootDisplay("隐藏FootView", false);
-		}
-    }
-	*/
+    
 	
 	//code来自Yang
 	private View getView(String id, Intent intent) {
         return manager.startActivity(id, intent).getDecorView();
     }
 	//初始化like和收藏数据
-	public void initLikeCollection(){
+	public void initSubscribe(){
 		
 		Log.i("initLikeCollection", "开始");
-		subscribeCursor = dbCenter.select(dbCenter.getReadableDatabase(), null, null,null);//使用全部的讲座建立光标，然后再筛选
-		remindCursor = dbCenter.collectionSelect(dbCenter.getReadableDatabase());
+		subscribeCursor = dbCenter.select(dbCenter.getReadableDatabase());//使用全部的讲座建立光标，然后再筛选
 		
 		//实现订阅  2014年 7月23 Typhoon today
 		subscribeResult = DBCenter.L_convertCursorToListEventSubscribe(subscribeCursor,MainView.this);
-		remindResult = DBCenter.L_convertCursorToListEvent(remindCursor);
-		
-		mDataRemind = remindResult;
 		mDataSubscribe = subscribeResult;
-		
 		
 	}
 	//刷新Like和收藏界面
-	public void refreshLikeCollection(){
-		
-		Log.i("refreshLikeCollection", "开始");
-		
-		myadapterRemind.setMData(mDataRemind);
+	public void refreshSubscribe(){
+	
 		myadapterSubscribe.setMData(mDataSubscribe);
-		
-		
-		
-		myadapterRemind.notifyDataSetChanged();
 		myadapterSubscribe.notifyDataSetChanged();
 		
+	}
+	
+	
+	
+	public void initRemind(){
 		
+		remindCursor = dbCenter.collectionSelect(dbCenter.getReadableDatabase());
+		remindResult = DBCenter.L_convertCursorToListEvent(remindCursor);
+		mDataRemind = remindResult;
 		
 	}
+	public void refreshRemind(){
+		
+		myadapterRemind.setMData(mDataRemind);
+		myadapterRemind.notifyDataSetChanged();
+		
+	}
+	
 	public void initHot(){
 
 		hotCursor = dbCenter.hotSelect( dbCenter.getReadableDatabase() );
@@ -1266,22 +1096,7 @@ public class MainView extends Activity
 		}
 	}
 	
-	/**
-	 * 头标点击监听
-	 */
-	/*
-	public class MyOnClickListener implements View.OnClickListener {
-		private int index = 0;
-
-		public MyOnClickListener(int i) {
-			index = i;
-		}
-		@Override
-		public void onClick(View v) {
-			mTabPager.setCurrentItem(index);
-		}
-	};
-	*/
+	
 	// 下面解决主菜单点击灵敏度问题
 	public class LayoutOnClickListener implements View.OnClickListener {
 		private int index = 0;
@@ -1306,118 +1121,78 @@ public class MainView extends Activity
 				mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_pressed));
 				mText1.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				
+				
 
 				if (currIndex == 1) {
-					animation = new TranslateAnimation(one, 0, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+					
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据  time：2014 年 8月9日 22:57
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
 							initHot();
 							refreshHot();
 							refreshFoot("hotCenter");
-							
 						}
-					});
+					}, 300);
+					
+					
 					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
 					mText2.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 2) {
-					animation = new TranslateAnimation(two, 0, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+					
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据  time：2014 年 8月9日 22:57
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
 							initHot();
 							refreshHot();
 							refreshFoot("hotCenter");
-							
 						}
-					});
+					}, 300);
+					
 					mTab3.setImageDrawable(getResources().getDrawable(R.drawable.noticecenter_normal));
 					mText3.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 3) {
-					animation = new TranslateAnimation(three, 0, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据  time：2014 年 8月9日 22:57
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
 							initHot();
 							refreshHot();
 							refreshFoot("hotCenter");
-							
 						}
-					});
+					}, 300);
+					
 					mTab4.setImageDrawable(getResources().getDrawable(R.drawable.submitcenter_normal));
 					mText4.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}else if (currIndex == 4) {
-					animation = new TranslateAnimation(four, 0, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据  time：2014 年 8月9日 22:57
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
 							initHot();
 							refreshHot();
 							refreshFoot("hotCenter");
-							
 						}
-					});
+					}, 300);
+					
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
@@ -1433,140 +1208,82 @@ public class MainView extends Activity
 				
 				
 				if (currIndex == 0) {
-					animation = new TranslateAnimation(zero, one, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+					
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
-							initLikeCollection();
-							refreshLikeCollection();
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
+							initSubscribe();
+							refreshSubscribe();
 							refreshFoot("subscribeCenter");
-							
+					
 						}
-					});
+					}, 300);
+					
+					
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
 					mText1.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 2) {
-					animation = new TranslateAnimation(two, one, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
-							initLikeCollection();
-							refreshLikeCollection();
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
+							initSubscribe();
+							refreshSubscribe();
 							refreshFoot("subscribeCenter");
-							
+					
 						}
-					});
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
-						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
-							initLikeCollection();
-							refreshLikeCollection();
-							refreshFoot("subscribeCenter");
-							
-						}
-					});
+					}, 300);
+
+					
 					mTab3.setImageDrawable(getResources().getDrawable(R.drawable.noticecenter_normal));
 					mText3.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 3) {
-					animation = new TranslateAnimation(three, one, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
-							initLikeCollection();
-							refreshLikeCollection();
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
+							initSubscribe();
+							refreshSubscribe();
 							refreshFoot("subscribeCenter");
-							
+					
 						}
-					});
+					}, 300);
+
+					
 					mTab4.setImageDrawable(getResources().getDrawable(R.drawable.submitcenter_normal));
 					mText4.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}else if (currIndex == 4) {
-					animation = new TranslateAnimation(four, one, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+					
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
-							initLikeCollection();
-							refreshLikeCollection();
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
+							initSubscribe();
+							refreshSubscribe();
 							refreshFoot("subscribeCenter");
-							
+					
 						}
-					});
+					}, 300);
+
+					
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
@@ -1579,108 +1296,83 @@ public class MainView extends Activity
 				
 				
 				if (currIndex == 0) {
-					animation = new TranslateAnimation(zero, two, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
-							initLikeCollection();
-							refreshLikeCollection();
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
+							initRemind();
+							refreshRemind();
 							refreshFoot("remindCenter");
-							
+					
 						}
-					});
+					}, 300);
+
+					
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
 					mText1.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 1) {
-					animation = new TranslateAnimation(one, two, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+					
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							//来自咸鱼的修改，把下面三个句子放在后面，解决切换时不流畅，先切换再刷新数据 time：2014 年 8月9日 22:57
-							initLikeCollection();
-							refreshLikeCollection();
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
+							initRemind();
+							refreshRemind();
 							refreshFoot("remindCenter");
-							
+					
 						}
-					});
+					}, 300);
+					
 					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
 					mText2.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 3) {
-					animation = new TranslateAnimation(three, two, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+
+
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
+							initRemind();
+							refreshRemind();
+							refreshFoot("remindCenter");
+					
 						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-					});
+					}, 300);
+					
 					mTab4.setImageDrawable(getResources().getDrawable(R.drawable.submitcenter_normal));
 					mText4.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}else if (currIndex == 4) {
-					animation = new TranslateAnimation(four, two, 0, 0);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						
+
+
+					//下面是咸鱼的修改，用于解决tab切换的卡顿！昨晚花了几小时，早上又是一早上，终于解决了   2014年8月10日 11:33
+					new Handler().postDelayed(new Runnable() 
+					{
+
 						@Override
-						public void onAnimationStart(Animation animation) {
-							// TODO Auto-generated method stub
-							
+						public void run() 
+						{
+							Log.i("使用线程延迟", "咸鱼要加油！");
+							initRemind();
+							refreshRemind();
+							refreshFoot("remindCenter");
+					
 						}
-						
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							// TODO Auto-generated method stub
-							
-						}
-					});
+					}, 300);
+					
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
@@ -1692,21 +1384,20 @@ public class MainView extends Activity
 				mTab4.setImageDrawable(getResources().getDrawable(R.drawable.submitcenter_pressed));
 				mText4.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				if (currIndex == 0) {
-					animation = new TranslateAnimation(zero, three, 0, 0);
+
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
 					mText1.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 1) {
-					animation = new TranslateAnimation(one, three, 0, 0);
+
 					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
 					mText2.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 2) {
-					animation = new TranslateAnimation(two, three, 0, 0);
+
 					mTab3.setImageDrawable(getResources().getDrawable(R.drawable.noticecenter_normal));
 					mText3.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 4) {
-					animation = new TranslateAnimation(four, three, 0, 0);
 					
 					mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_normal));
 					mText5.setTextColor(getResources().getColor(R.color.main_menu_normal));
@@ -1717,20 +1408,20 @@ public class MainView extends Activity
 				mTab5.setImageDrawable(getResources().getDrawable(R.drawable.mycenter_pressed));
 				mText5.setTextColor(getResources().getColor(R.color.main_menu_pressed));
 				if (currIndex == 0) {
-					animation = new TranslateAnimation(zero, four, 0, 0);
+
 					mTab1.setImageDrawable(getResources().getDrawable(R.drawable.hotlecturecenter_normal));
 					mText1.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				} else if (currIndex == 1) {
-					animation = new TranslateAnimation(one, four, 0, 0);
+
 					mTab2.setImageDrawable(getResources().getDrawable(R.drawable.subscribecenter_normal));
 					mText2.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
 				else if (currIndex == 2) {
-					animation = new TranslateAnimation(two, four, 0, 0);
+
 					mTab3.setImageDrawable(getResources().getDrawable(R.drawable.noticecenter_normal));
 					mText3.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}else if (currIndex == 3) {
-					animation = new TranslateAnimation(three, four, 0, 0);
+
 					mTab4.setImageDrawable(getResources().getDrawable(R.drawable.submitcenter_normal));
 					mText4.setTextColor(getResources().getColor(R.color.main_menu_normal));
 				}
@@ -1769,9 +1460,8 @@ public class MainView extends Activity
 				break;
 			}
 			currIndex = arg0;
-			animation.setFillAfter(true);// True:图片停在动画结束位置
-			animation.setDuration(150);
-			//mTabImg.startAnimation(animation);
+			
+			
 		}
 		
 		@Override
@@ -1813,9 +1503,7 @@ public class MainView extends Activity
 
 			// 邮箱判断正则表达式
 			public static boolean isEmail(String email) {
-				//String emailPattern = "[a-zA-Z0-9][a-zA-Z0-9._-]{2,16}[a-zA-Z0-9]@[a-zA-Z0-9]+.[a-zA-Z0-9]+";
-				//boolean result = Pattern.matches(emailPattern, email);
-				//return result;
+				
 				Pattern pattern = Pattern.compile(".+@.+\\.[a-z]+");
 		        Matcher matcher = pattern.matcher(email);
 
@@ -1892,7 +1580,69 @@ public class MainView extends Activity
     
     
     
+	// 下面的增加来自咸鱼，用于详情中点赞、收藏后的刷新操作！ 2014年8月10日 13:43
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (data != null && resultCode == 2) {
+			// 数据存在，进行获取
+			String whichCenter = data.getStringExtra("whichCenter");
+
+			if (whichCenter == null) {
+				whichCenter = "";
+				Log.i("出现错误", "请通知开发者！");
+
+			}
+
+			if (whichCenter.equals("hotCeter")) {
+
+				new Handler().postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						initHot();
+						refreshHot();
+						refreshFoot("hotCenter");
+
+					}
+				}, 200);
+
+			} else if (whichCenter.equals("subscribeCenter")) {
+
+				new Handler().postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						initSubscribe();
+						refreshSubscribe();
+						refreshFoot("subscribeCenter");
+
+					}
+				}, 200);
+
+			} else if (whichCenter.equals("remindCenter")) {
+
+				new Handler().postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						initRemind();
+						refreshRemind();
+						refreshFoot("remindCenter");
+
+					}
+				}, 200);
+
+			}  // end remindCenter if
+
+		}  // data != null
+
+	}   // end onActivityResult
+    
+    
 	
 	
 
-}
+}//  end class MainView

@@ -38,6 +38,10 @@ public final class R {
         public static final int item_content=0x7f050003;
         public static final int item_content_=0x7f050002;
         public static final int item_line=0x7f050005;
+        public static final int item_title_blue=0x7f050012;
+        public static final int item_title_green=0x7f050013;
+        public static final int item_title_orange=0x7f050015;
+        public static final int item_title_yellow=0x7f050014;
         public static final int item_transparent=0x7f050008;
         public static final int main_menu_background=0x7f050009;
         public static final int main_menu_normal=0x7f050000;
@@ -133,7 +137,7 @@ public final class R {
         public static final int Wednesday=0x7f0a007e;
         public static final int about_speaker=0x7f0a0036;
         public static final int action_settings=0x7f0a0099;
-        public static final int arrow=0x7f0a0089;
+        public static final int arrow=0x7f0a0087;
         public static final int btn_cancel=0x7f0a000e;
         public static final int btn_exit=0x7f0a000d;
         public static final int btn_submit=0x7f0a0096;
@@ -145,7 +149,7 @@ public final class R {
         public static final int comment_view_head=0x7f0a0007;
         public static final int comments_box=0x7f0a003b;
         public static final int container=0x7f0a0000;
-        public static final int description=0x7f0a008b;
+        public static final int description=0x7f0a0089;
         public static final int detail_comment_content=0x7f0a0006;
         public static final int detail_comment_date=0x7f0a0005;
         public static final int detail_comment_icon=0x7f0a0041;
@@ -215,7 +219,7 @@ public final class R {
         public static final int linearlayout_remind=0x7f0a002a;
         public static final int linearlayout_share=0x7f0a001e;
         public static final int list_view=0x7f0a0014;
-        public static final int list_view_notice=0x7f0a0087;
+        public static final int list_view_notice=0x7f0a008c;
         public static final int list_view_subscribe=0x7f0a0098;
         public static final int mText1=0x7f0a005c;
         public static final int mText2=0x7f0a005f;
@@ -238,10 +242,10 @@ public final class R {
         public static final int my_linearlayout6=0x7f0a0084;
         public static final int personal=0x7f0a006a;
         public static final int pop_layout=0x7f0a000c;
-        public static final int progress_bar=0x7f0a008a;
-        public static final int pull_to_refresh_head=0x7f0a0088;
+        public static final int progress_bar=0x7f0a0088;
+        public static final int pull_to_refresh_head=0x7f0a0086;
         public static final int refreshable_view=0x7f0a0013;
-        public static final int refreshable_view_remind=0x7f0a0086;
+        public static final int refreshable_view_remind=0x7f0a008b;
         public static final int refreshable_view_subscribe=0x7f0a0097;
         public static final int relativeLayout1=0x7f0a0016;
         public static final int relativeLayout11=0x7f0a0069;
@@ -272,7 +276,7 @@ public final class R {
         public static final int tv_email=0x7f0a006e;
         public static final int tv_username=0x7f0a006c;
         public static final int txtName=0x7f0a008d;
-        public static final int updated_at=0x7f0a008c;
+        public static final int updated_at=0x7f0a008a;
         public static final int username=0x7f0a006d;
         public static final int viewGroup=0x7f0a0011;
         public static final int xiamen=0x7f0a0078;
@@ -300,8 +304,8 @@ public final class R {
         public static final int lecture_detail=0x7f030011;
         public static final int mainview=0x7f030012;
         public static final int mycenter=0x7f030013;
-        public static final int noticecenter=0x7f030014;
-        public static final int pull_to_refresh=0x7f030015;
+        public static final int pull_to_refresh=0x7f030014;
+        public static final int remindcenter=0x7f030015;
         public static final int spinner_item=0x7f030016;
         public static final int submitcenter=0x7f030017;
         public static final int subscribecenter=0x7f030018;

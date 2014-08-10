@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="#00000000"
 	android:orientation="vertical" >
 
 	<ScrollView
@@ -88,19 +87,21 @@
 				android:padding="@dimen/submit_center_edit_padding"
 				android:singleLine="false"
 				android:textColor="@color/item_content"
-				android:textSize="18sp"
-				android:textStyle="bold" >
+				android:textSize="18sp" >
+
 			</TextView>
 
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:gravity="left"
-				android:orientation="horizontal" >
+				android:orientation="horizontal"
+				android:paddingTop="3dp" >
 
 				<TextView
 					android:layout_width="wrap_content"
-					android:layout_height="@dimen/submit_center_edit_height"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
 					android:layout_margin="@dimen/submit_center_text_margin"
 					android:gravity="center"
 					android:text="#校区(必填)"
@@ -108,15 +109,15 @@
 					android:textSize="18sp"
 					android:textStyle="bold" />
 
-				
-
 				<Spinner
 					android:id="@+id/string_campus"
-					android:layout_width="140dp"
-					android:layout_height="@dimen/submit_center_edit_height"
+					android:layout_width="120dp"
+					android:layout_height="34dp"
+					android:layout_gravity="center"
 					android:layout_margin="@dimen/submit_center_text_margin"
 					android:background="@color/submit_center_edit_color"
 					android:spinnerMode="dropdown" />
+
 			</LinearLayout>
 
 			<TextView
