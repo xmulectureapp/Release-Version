@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.lecture.DBCenter.DBCenter;
+import com.lecture.layoutUtil.PopMenuView;
+import com.lecture.layoutUtil.PopShareView;
 import com.lecture.lectureapp.R;
 import com.lecture.lectureapp.HotMyadapter.ViewHolder;
 import com.lecture.localdata.Event;
@@ -33,9 +35,11 @@ import android.os.Message;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,6 +58,10 @@ public class HotMyadapter extends BaseAdapter
 	  //下面是咸鱼的代码，用于解决点赞的bug  2014 - 08 - 09 22:13
 	  ConnectivityManager mConnectivityManager; 
 	  NetworkInfo mNetworkInfo; 
+	  
+	  
+	  //下面是咸鱼的增加，用于实现分享  2014-08-11 20:34
+	  private PopShareView popShareMenu;
 	  
 	
 	  
@@ -244,7 +252,15 @@ public class HotMyadapter extends BaseAdapter
 		
 			 holder.linearlayoutShare.setOnClickListener(new View.OnClickListener() {  
 				    public void onClick(View v) {  
-				     //showInfo1();
+				    	
+				    	 //下面是咸鱼的增加，用于实现分享  2014-08-11 20:34
+				    	//实例化
+		    			popShareMenu = new PopShareView( ((Activity)mContext), shareItemsOnClick);
+		    			//显示窗口
+		    			popShareMenu.showAtLocation( ( (Activity)mContext ).findViewById(R.id.mainview) , Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+		    			
+		    			/****************************************************
+		    			
 				    	event = mData.get(position);
 				    	Intent sendIntent = new Intent();
 						sendIntent.setAction(Intent.ACTION_SEND);
@@ -264,6 +280,8 @@ public class HotMyadapter extends BaseAdapter
 						sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
 				
 						mContext.startActivity(sendIntent);
+						
+		    			 	****************************************************/
 				    	
 				    }  
 				   });  
@@ -479,9 +497,28 @@ public class HotMyadapter extends BaseAdapter
 			
 		}
 		
+		//为弹出窗口popShareMenu实现监听类
+	    private OnClickListener  shareItemsOnClick = new OnClickListener(){
+
+			public void onClick(View v) {
+				
+				switch (v.getId()) {
+				case R.id.wechat_share:
+					Toast.makeText(mContext, "微信分享", Toast.LENGTH_LONG).show();
+					break;
+				case R.id.wechat_circle_share:
+					Toast.makeText(mContext, "微信朋友圈", Toast.LENGTH_LONG).show();
+					break;
+				case R.id.weibo_share:
+					Toast.makeText(mContext, "新浪微博", Toast.LENGTH_LONG).show();
+					break;
+				default:
+					break;
+				}
+			}
+	    };
 		
 		
-		
-}
+}// end adapter
 
 

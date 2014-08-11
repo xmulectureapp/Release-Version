@@ -51,7 +51,7 @@
             	android:gravity="bottom|left"
             	android:text="@string/pull_to_refresh"
             	android:textColor="@color/main_menu_pressed"
-            	android:textSize="14sp"
+            	android:textSize="13sp"
             	android:textStyle="bold" />
 
             <TextView

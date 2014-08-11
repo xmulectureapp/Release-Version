@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.lecture.layoutUtil.ExitView;
+import com.lecture.layoutUtil.PopMenuView;
 import com.lecture.DBCenter.DBCenter;
 import com.lecture.DBCenter.XMLToList;
 import com.lecture.SettingAndSubmit.SettingsCenter;
@@ -36,6 +36,8 @@ import android.app.Activity;
 import android.app.LocalActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -95,6 +97,7 @@ public class MainView extends Activity
 	private int one;//单个水平动画位移
 	private int two;
 	private int three;
+	private int popMenuPushTime = 0;
 	private LinearLayout mClose;
     private LinearLayout mCloseBtn;
     private View layout;	
@@ -170,7 +173,7 @@ public class MainView extends Activity
 	
 	
 	//下面是咸鱼的添加的代码，用于构建android的三个物理按键 2014 08 08 21:05   by xianyu
-	private ExitView mainExitView;
+	private PopMenuView popMenu;
 	
 	
 	
@@ -275,7 +278,7 @@ public class MainView extends Activity
 								
 								try {
 									
-
+									
 									pullRefresh("remindCenter");
 									
 									
@@ -1547,36 +1550,45 @@ public class MainView extends Activity
     		
         	
     	}
-    	else if(keyCode == KeyEvent.KEYCODE_MENU){   //获取 Menu键			
+    	else if( keyCode == KeyEvent.KEYCODE_MENU ){   //获取 Menu键			
+    				
+    			//实例化
+    			popMenu = new PopMenuView(MainView.this, itemsOnClick);
+    			//显示窗口
+    			popMenu.showAtLocation( MainView.this.findViewById(R.id.mainview) , Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
+    			
+    			
+    			
     		
-    		//实例化SelectPicPopupWindow
-			mainExitView = new ExitView(MainView.this, itemsOnClick);
-			//显示窗口
-			mainExitView.showAtLocation(MainView.this.findViewById(R.id.mainview), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
-			
     		
     		
 		}
     	return false;
     }
-	
-	//为弹出窗口实现监听类
+
+	//为弹出窗口popMenu实现监听类
     private OnClickListener  itemsOnClick = new OnClickListener(){
 
 		public void onClick(View v) {
 			
 			switch (v.getId()) {
-			case 1:
-				Toast.makeText(MainView.this, "点击退出", Toast.LENGTH_LONG).show();
+			case R.id.about_author:
+				Toast.makeText(MainView.this, "关于作者", Toast.LENGTH_LONG).show();
 				break;
-			case 2:
-				Toast.makeText(MainView.this, "Xianyu!", Toast.LENGTH_LONG).show();
+			case R.id.about_xmu_lecture:
+				Toast.makeText(MainView.this, "关于讲座网", Toast.LENGTH_LONG).show();
+				break;
+			case R.id.about_app:
+				Toast.makeText(MainView.this, "关于应用", Toast.LENGTH_LONG).show();
 				break;
 			default:
 				break;
 			}
 		}
     };
+	
+    
+    
     
     
     
