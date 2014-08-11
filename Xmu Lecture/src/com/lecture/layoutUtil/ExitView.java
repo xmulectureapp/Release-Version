@@ -25,25 +25,16 @@ public class ExitView extends PopupWindow  {
 		super(context);
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mMenuView = inflater.inflate(R.layout.exit_dialog, null);
-		btn_seting_exit = (Button) mMenuView.findViewById(R.id.btn_exit);
+		mMenuView = inflater.inflate(R.layout.pop_menu, null);
 		
-		btn_cancel = (Button) mMenuView.findViewById(R.id.btn_cancel);
-		btn_cancel.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				dismiss();
-				
-			}
-		});
-		btn_seting_exit.setOnClickListener(itemsOnClick);
+		//
 		
 		this.setContentView(mMenuView);
 		this.setWidth(LayoutParams.FILL_PARENT);
 		this.setHeight(LayoutParams.WRAP_CONTENT);
 		this.setFocusable(true);
 		
-		ColorDrawable dw = new ColorDrawable(0xb0000000);
+		ColorDrawable dw = new ColorDrawable(0x80000000);
 		this.setBackgroundDrawable(dw);
 		mMenuView.setOnTouchListener(new OnTouchListener() {
 			

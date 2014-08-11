@@ -29,7 +29,8 @@
         	android:layout_marginTop="2dp"
         	android:text="讲座名称"
         	android:textColor="@color/item_content"
-        	android:textSize="16dip" />
+        	android:textSize="16dip"
+        	android:textStyle="bold|italic" />
 
         <ImageView
             android:id="@+id/line_1"

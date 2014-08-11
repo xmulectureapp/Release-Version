@@ -175,6 +175,31 @@ public class HotMyadapter extends BaseAdapter
 			//{
 				holder = (ViewHolder)convertView.getTag(); 
 			//}
+				
+			  //下面是来自咸鱼的增加，用于实现不同校区的讲座标题显示为不同的颜色  2014 08 10  22:02
+		switch (mData.get(position).getAddress().substring(0, 1)) {
+			case "思":
+				holder.lectureName.setTextColor( convertView.getResources().getColor(R.color.item_title_blue));
+				break;
+
+			case "漳":
+				holder.lectureName.setTextColor( convertView.getResources().getColor(R.color.item_title_green));
+				break;
+
+			case "翔":
+				holder.lectureName.setTextColor( convertView.getResources().getColor(R.color.item_title_yellow));
+				break;
+
+			case "厦":
+				holder.lectureName.setTextColor( convertView.getResources().getColor(R.color.item_title_orange));
+				break;
+
+			default:
+				Log.i("标题颜色设置出错", "请联系开发者!");
+				break;
+		}
+				
+				
 			  holder.lectureName.setText(mData.get(position).getTitle());  
 			  holder.lectureTime.setText("时间: " + mData.get(position).getTime()); 
 			  holder.lectureAddr.setText("地点: " + mData.get(position).getAddress());  
@@ -453,6 +478,7 @@ public class HotMyadapter extends BaseAdapter
 			return true;
 			
 		}
+		
 		
 		
 		

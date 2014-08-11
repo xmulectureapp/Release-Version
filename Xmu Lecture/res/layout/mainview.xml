@@ -25,7 +25,7 @@
 		android:id="@+id/main_top"
 		android:layout_width="fill_parent"
 		android:layout_height="47dp"
-		android:background="#ef40280b"
+		android:background="#c7312a1f"
 		android:gravity="center_vertical"
 		android:orientation="vertical" >
 
@@ -105,7 +105,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="55dp"
 		android:layout_alignParentBottom="true"
-		android:background="#e9da821a"
+		android:background="#ef312a1f"
 		android:orientation="vertical" >
 
 		<!--

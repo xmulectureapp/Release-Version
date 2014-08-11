@@ -1566,10 +1566,10 @@ public class MainView extends Activity
 		public void onClick(View v) {
 			
 			switch (v.getId()) {
-			case R.id.btn_exit:
+			case 1:
 				Toast.makeText(MainView.this, "点击退出", Toast.LENGTH_LONG).show();
 				break;
-			case R.id.btn_cancel:
+			case 2:
 				Toast.makeText(MainView.this, "Xianyu!", Toast.LENGTH_LONG).show();
 				break;
 			default:
