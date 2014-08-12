@@ -12,12 +12,14 @@ import com.lecture.layoutUtil.PopMenuView;
 import com.lecture.layoutUtil.PopShareView;
 import com.lecture.lectureapp.R;
 import com.lecture.lectureapp.HotMyadapter.ViewHolder;
+import com.lecture.lectureapp.wxapi.WXEntryActivity;
 import com.lecture.localdata.Event;
 import com.lecture.localdata.ReminderInfo;
 import com.lecture.util.LikeInterface;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -505,9 +507,23 @@ public class HotMyadapter extends BaseAdapter
 				switch (v.getId()) {
 				case R.id.wechat_share:
 					Toast.makeText(mContext, "微信分享", Toast.LENGTH_LONG).show();
+					//
+					
+					Intent intent = new  Intent(mContext, WXEntryActivity.class);	
+					
+					mContext.startActivity(intent);
+					
+					//intent.putExtras(detail_bundle);
+					//intent.putExtra("whichCenter", "remindCenter");
+					//startActivityForResult(intent, 2);
+					//overridePendingTransition(R.anim.show_in_right, R.anim.hide_in_left	);
+					
+					
 					break;
 				case R.id.wechat_circle_share:
 					Toast.makeText(mContext, "微信朋友圈", Toast.LENGTH_LONG).show();
+					shareToFriend();
+					
 					break;
 				case R.id.weibo_share:
 					Toast.makeText(mContext, "新浪微博", Toast.LENGTH_LONG).show();
@@ -517,6 +533,17 @@ public class HotMyadapter extends BaseAdapter
 				}
 			}
 	    };
+	    
+	    private void shareToFriend() {  
+	        Intent intent = new Intent();  
+	        ComponentName componentName = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareImgUI");  
+	        intent.setComponent(componentName);  
+	        intent.setAction(Intent.ACTION_SEND);  
+	        intent.setType("image/*");  
+	        intent.putExtra(Intent.EXTRA_TEXT, "测试微信");
+	        //intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));  
+	        mContext.startActivity(intent);  
+	    }  
 		
 		
 }// end adapter

@@ -1581,6 +1581,11 @@ public class MainView extends Activity
 			case R.id.about_app:
 				Toast.makeText(MainView.this, "关于应用", Toast.LENGTH_LONG).show();
 				break;
+			case R.id.pop_exitImageView:
+				Toast.makeText(MainView.this, "已退出！", Toast.LENGTH_LONG).show();
+				MainView.this.finish();
+				break;
+				
 			default:
 				break;
 			}

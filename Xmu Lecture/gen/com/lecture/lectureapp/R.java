@@ -133,7 +133,8 @@ public final class R {
         public static final int subscribecenter_pressed=0x7f02003c;
         public static final int wechat_circle_ico=0x7f02003d;
         public static final int wechat_ico=0x7f02003e;
-        public static final int weibo_ico=0x7f02003f;
+        public static final int wechatshare=0x7f02003f;
+        public static final int weibo_ico=0x7f020040;
     }
     public static final class id {
         public static final int Friday=0x7f0a007d;

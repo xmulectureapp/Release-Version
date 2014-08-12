@@ -48,6 +48,13 @@
         <activity
             android:name="com.lecture.lectureapp.SubmitCenter"/>
         
+    <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:label="厦大讲座Android App微信分享"
+            android:exported="true" />
+    
+        
     </application>
+    
 
 </manifest>

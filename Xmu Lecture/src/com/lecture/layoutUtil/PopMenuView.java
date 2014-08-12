@@ -59,14 +59,18 @@ public class PopMenuView extends PopupWindow  {
 		// end edited by xianyu   2014-08-11  20:23
 		 
 		popExitImageView = (ImageView) mMenuView.findViewById(R.id.pop_exitImageView);
+		
+		/*
 		popExitImageView.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				dismiss();
 				
+				
 			}
 		});
-		
+		*/
+		popExitImageView.setOnClickListener(itemsOnClick);
 		(  (RelativeLayout)mMenuView.findViewById(R.id.about_app)  ).setOnClickListener( itemsOnClick );
 		(  (RelativeLayout)mMenuView.findViewById(R.id.about_xmu_lecture)  ).setOnClickListener( itemsOnClick );
 		(  (RelativeLayout)mMenuView.findViewById(R.id.about_author)  ).setOnClickListener( itemsOnClick );

@@ -42,7 +42,7 @@
 					android:layout_height="match_parent"
 					android:layout_above="@+id/textView1"
 					android:scaleType="center"
-					android:src="@drawable/about_author" />
+					android:src="@drawable/about_app" />
 
 				<TextView
 					android:id="@+id/textView1"
@@ -92,7 +92,7 @@
 					android:layout_height="match_parent"
 					android:layout_above="@+id/textView3"
 					android:scaleType="center"
-					android:src="@drawable/about_app" />
+					android:src="@drawable/about_author" />
 				
 				<TextView
 					android:id="@+id/textView3"
