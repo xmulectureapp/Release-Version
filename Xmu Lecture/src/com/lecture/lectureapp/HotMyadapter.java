@@ -12,6 +12,7 @@ import com.lecture.layoutUtil.PopMenuView;
 import com.lecture.layoutUtil.PopShareView;
 import com.lecture.lectureapp.R;
 import com.lecture.lectureapp.HotMyadapter.ViewHolder;
+import com.lecture.lectureapp.R.string;
 import com.lecture.lectureapp.wxapi.WXEntryActivity;
 import com.lecture.localdata.Event;
 import com.lecture.localdata.ReminderInfo;
@@ -255,9 +256,11 @@ public class HotMyadapter extends BaseAdapter
 			 holder.linearlayoutShare.setOnClickListener(new View.OnClickListener() {  
 				    public void onClick(View v) {  
 				    	
+				    	event = mData.get(position);// 用于保存event信息，再popShareMenu中使用
 				    	 //下面是咸鱼的增加，用于实现分享  2014-08-11 20:34
+				    	
 				    	//实例化
-		    			popShareMenu = new PopShareView( ((Activity)mContext), shareItemsOnClick);
+				    	popShareMenu = new PopShareView( ((Activity)mContext), shareItemsOnClick);
 		    			//显示窗口
 		    			popShareMenu.showAtLocation( ( (Activity)mContext ).findViewById(R.id.mainview) , Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0); //设置layout在PopupWindow中显示的位置
 		    			
@@ -511,7 +514,11 @@ public class HotMyadapter extends BaseAdapter
 					
 					Intent intent = new  Intent(mContext, WXEntryActivity.class);	
 					
+					intent.putExtra("shareEvent", event);
+					
 					mContext.startActivity(intent);
+					if(popShareMenu != null)
+						popShareMenu.dismiss();
 					
 					//intent.putExtras(detail_bundle);
 					//intent.putExtra("whichCenter", "remindCenter");
@@ -524,9 +531,53 @@ public class HotMyadapter extends BaseAdapter
 					Toast.makeText(mContext, "微信朋友圈", Toast.LENGTH_LONG).show();
 					shareToFriend();
 					
+					if(popShareMenu != null)
+						popShareMenu.dismiss();
+					
+					
 					break;
 				case R.id.weibo_share:
 					Toast.makeText(mContext, "新浪微博", Toast.LENGTH_LONG).show();
+					
+					Intent sendIntent = new Intent();
+					
+					ComponentName comp = new ComponentName("com.sina.weibo", "com.sina.weibo.EditActivity");  
+	                sendIntent.setComponent(comp);
+	                
+	                //event = mData.get(position);
+	                if( event != null){
+	                	try { 
+	                	sendIntent.setAction(Intent.ACTION_SEND);
+	                	//sendIntent.setType("text/plain");
+	                	sendIntent.setType("image/jpg");
+	                	sendIntent.putExtra(Intent.EXTRA_TITLE, "分享");
+	                	
+	                	sendIntent.putExtra(Intent.EXTRA_TEXT,
+	                			"#" + event.getAddress().substring(0, 4) + "讲座#"
+									+ "【" + event.getTitle()+ "】" + " " 
+									+ "时间: " + event.getCustomTime() +" | " 
+									+ "地点: " + "#" + event.getAddress().substring(0, 4) + "#" + event.getAddress().substring(4) + " | " 
+									+ "主讲: " + event.getSpeaker() + " | "
+									+ "获取详情: "
+									+ event.getLink()  + " From:#厦大讲座App Especially#" );
+	                	//sendIntent.putExtra(Intent.EXTRA_TEXT, event.getAddress());
+	                	//sendIntent.putExtra(Intent.EXTRA_TEXT, event.getSpeaker());
+	                	sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+			
+	                	mContext.startActivity(sendIntent);
+	                	
+	                	}
+	                	catch (Exception e) {  
+	                        Toast.makeText(mContext, "您没有装Sina Weibo 或者 版本过低，未能够分享！", Toast.LENGTH_LONG).show();  
+	                    } 
+					
+	                }
+	                
+	                if(popShareMenu != null)
+						popShareMenu.dismiss();
+					
+					
+					
 					break;
 				default:
 					break;

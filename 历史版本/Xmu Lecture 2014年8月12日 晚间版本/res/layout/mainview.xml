@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/mainview"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/fengyu_count"
+	android:orientation="vertical" >
+
+	<LinearLayout
+		android:id="@+id/mainview_middle"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical" >
+
+		<android.support.v4.view.ViewPager
+			android:id="@+id/tabpager"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_gravity="center"
+			android:background="@color/item_background" >
+		</android.support.v4.view.ViewPager>
+	</LinearLayout>
+
+	<RelativeLayout
+		android:id="@+id/main_top"
+		android:layout_width="fill_parent"
+		android:layout_height="36dp"
+		android:background="#c7312a1f"
+		android:gravity="center_vertical"
+		android:orientation="vertical" >
+
+		<!-- 添加主界面的 -->
+
+		<ImageView
+			android:id="@+id/rlCommenTitleBG"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent" />
+
+		<TextView
+			android:id="@+id/ivTitleName"
+			style="@style/A1_Font"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:layout_centerInParent="true"
+			android:ellipsize="end"
+			android:gravity="center"
+			android:singleLine="true"
+			android:text="@string/app_name"
+			android:textColor="@color/top_title_color"
+			android:textSize="18sp" />
+
+		<!--
+    <ImageView
+                	android:id="@+id/ivTitleBtnLeft"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:clickable="false"
+                	android:scaleType="matrix"
+                	android:src="@drawable/subscribecenter_normal" />
+		-->
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent" >
+
+			<ImageView
+				android:id="@+id/ivTitleBtnLeft"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:layout_centerVertical="true"
+				android:layout_gravity="center_vertical"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:gravity="center"
+				android:includeFontPadding="false"
+				android:scaleType="matrix"
+				android:src="@drawable/back_none" />
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:layout_alignParentRight="true" >
+
+			<ImageView
+				android:id="@+id/ivTitleBtnRigh"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+				android:layout_gravity="center"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:gravity="center"
+				android:includeFontPadding="false"
+				android:scaleType="matrix"
+				android:src="@drawable/back_none" />
+
+		</LinearLayout>
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:id="@+id/main_bottom"
+		android:layout_width="match_parent"
+		android:layout_height="55dp"
+		android:layout_alignParentBottom="true"
+		android:background="#ef312a1f"
+		android:orientation="vertical" >
+
+		<!--
+        <ImageView
+        	android:id="@+id/img_tab_now"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"        	     	
+        	android:scaleType="matrix"
+        	android:layout_gravity="bottom"            	
+            android:layout_alignParentBottom="true"
+        	android:src="#000" />              
+		-->
+
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:paddingBottom="2dp" >
+
+			<LinearLayout
+				android:id="@+id/hot_btn_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="center_horizontal"
+				android:orientation="vertical" >
+
+				<ImageView
+					android:id="@+id/img_hot_center"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="false"
+					android:scaleType="matrix"
+					android:src="@drawable/hotlecturecenter_pressed" />
+
+				<TextView
+					android:id="@+id/mText1"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="false"
+					android:text="热门"
+					android:textColor="@color/main_menu_pressed"
+					android:textSize="12sp" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/subscribe_btn_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="center_horizontal"
+				android:orientation="vertical" >
+
+				<ImageView
+					android:id="@+id/img_subscribe_center"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="false"
+					android:scaleType="matrix"
+					android:src="@drawable/subscribecenter_normal" />
+
+				<TextView
+					android:id="@+id/mText2"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="false"
+					android:text="订制"
+					android:textColor="@color/main_menu_normal"
+					android:textSize="12sp" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/remind_btn_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="center_horizontal"
+				android:orientation="vertical" >
+
+				<ImageView
+					android:id="@+id/img_remind_center"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="false"
+					android:scaleType="matrix"
+					android:src="@drawable/noticecenter_normal" />
+
+				<TextView
+					android:id="@+id/mText3"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="false"
+					android:text="收藏"
+					android:textColor="@color/main_menu_normal"
+					android:textSize="12sp" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/submit_btn_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="center_horizontal"
+				android:orientation="vertical" >
+
+				<ImageView
+					android:id="@+id/img_submit_center"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="false"
+					android:scaleType="matrix"
+					android:src="@drawable/submitcenter_normal" />
+
+				<TextView
+					android:id="@+id/mText4"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="false"
+					android:text="提交"
+					android:textColor="@color/main_menu_normal"
+					android:textSize="12sp" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/my_btn_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="center_horizontal"
+				android:orientation="vertical" >
+
+				<ImageView
+					android:id="@+id/img_my_center"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="false"
+					android:scaleType="matrix"
+					android:src="@drawable/mycenter_normal" />
+
+				<TextView
+					android:id="@+id/mText5"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:clickable="false"
+					android:text="我"
+					android:textColor="@color/main_menu_normal"
+					android:textSize="12sp" />
+			</LinearLayout>
+		</LinearLayout>
+	</RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="main_menu_normal">#8899a6</color>
+	<color name="main_menu_pressed">#fc6345</color>	
+	<color name="item_content_">#abaeb7</color>	
+	<color name="item_content">#cccccc</color>
+	<color name="hint_color">#7d7d7d</color>	
+	<color name="item_line">#32abaeb7</color>
+	<color name="item_button_pressed">#32ffffff</color>
+	<color name="item_background">#4c000000</color>
+	<color name="item_transparent">#00000000</color>
+	<color name="main_menu_background">#d2000000</color>
+	<color name="menu_background_color">#9e000000</color>
+	<color name="menu_twiter_color">#eeebe8eb</color>
+	<color name="submit_center_text_color">#fc6345</color>
+	<color name="submit_center_edit_color">#80000000</color>
+	<color name="main_top_background_color">#d2000000</color>
+	<color name="top_background_color">#fc58aef0</color>
+	<color name="top_title_color">#ffffff</color>
+	<color name="detail_menu_pressed">#50abaeb7</color>
+	<color name="item_title_blue">#7ba7ff</color>
+	<color name="item_title_green">#9ad013</color>
+	<color name="item_title_yellow">#ffd625</color>
+	<color name="item_title_orange">#ff7339</color>
+	
+	<color name="test1">#efc5beb2</color>
+			
+</resources>

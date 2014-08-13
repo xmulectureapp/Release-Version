@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler  {
 	String shareDirection;
 	Boolean isReopen = false;
 	private final int THUMB_SIZE = 40;
+	private Event event;
 	
 	
 	
@@ -47,20 +49,37 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler  {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		
+		
+		
+		
+		setContentView(R.layout.wechat_share);
+		
+		event = (Event) getIntent().getSerializableExtra("shareEvent");
+		if(event == null){
+			finish();
+			// error
+			Log.i("微信分享错误", "event为NULL！");
+		}
+		
 		// 通过WXAPIFactory工厂，获取IWXAPI的实例
 		api = WXAPIFactory.createWXAPI(WXEntryActivity.this, APP_ID, true);
 		api.registerApp(APP_ID);
-		api.handleIntent(getParentActivityIntent(), WXEntryActivity.this);
+		api.handleIntent(getIntent(), WXEntryActivity.this);
 		
-		
-		
-		setContentView(R.layout.head_view);
-		
+	/*	
 		isReopen = new Bundle().getBoolean("isReturn");
 		
 		if(isReopen == true)
 			finish();
 		
+		*/
+		Log.i("顺序", " onCreate");
+		
+		if(isReopen){
+			Log.i("顺序", " 重新打开!");
+			finish();
+		}
 		
 
 		//finish();
@@ -75,8 +94,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler  {
 	public void onReq(BaseReq req) {
 		// TODO Auto-generated method stub
 		
-		if(isReopen)
-			finishAffinity();
 		
 	}
 
@@ -84,10 +101,14 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler  {
 	public void onResp(BaseResp resp) {
 		// TODO Auto-generated method stub
 		
+		
+		
 		String result = "";
 		switch (resp.errCode) {
 		case BaseResp.ErrCode.ERR_OK:
-			finish();
+			Log.i("顺序", " onResp");
+			isReopen = true;
+			
 			result = "发送成功";
 			break;
 		case BaseResp.ErrCode.ERR_USER_CANCEL:
@@ -106,13 +127,13 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler  {
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
+		Log.i("顺序", " onNewIntent");
 		super.onNewIntent(intent);
 
+		
 		setIntent(intent);
 		api.handleIntent(intent, this);
-		if(isReopen)
-			finishAffinity();
-		//finish();
+		
 	}
 	
 	/**
@@ -144,8 +165,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler  {
 
 		// 调用api接口发送数据到微信
 		api.sendReq(req);
-		Bundle bundle = new Bundle();
-		bundle.putBoolean("isReturn", true);
 		
 		finish();
 	}

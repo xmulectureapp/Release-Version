@@ -232,7 +232,7 @@ public class MainView extends Activity
 						refreshRemind();
 
 						refreshFoot("hotCenter");
-						refreshFoot("subscrideCenter");
+						refreshFoot("subscribeCenter");
 						refreshFoot("remindCenter");
 						
 						

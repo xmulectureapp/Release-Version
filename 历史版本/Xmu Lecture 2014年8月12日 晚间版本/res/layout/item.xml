@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemAll"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="right|center"
+    android:background="@color/item_background"
+    android:orientation="vertical"
+    android:textAlignment="center" >
+
+    <RelativeLayout
+    	android:id="@+id/relativeLayout1"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentLeft="true"
+    	android:layout_marginBottom="1dp"
+    	android:layout_marginLeft="10dp"
+    	android:layout_marginRight="10dp"
+    	android:layout_marginTop="5dp"
+    	android:longClickable="false"
+    	android:orientation="vertical" >
+
+        <TextView
+        	android:id="@+id/lecture_name"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginTop="2dp"
+        	android:text="讲座名称"
+        	android:textColor="@color/item_content"
+        	android:textSize="16dip"
+        	android:textStyle="bold|italic" />
+
+        <ImageView
+            android:id="@+id/line_1"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="3dp"
+            android:layout_below="@+id/lecture_name"
+            android:background="@color/item_line" />
+
+        <TextView
+        	android:id="@+id/lecture_time"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_alignParentLeft="true"
+        	android:layout_below="@+id/line_1"
+        	android:layout_marginBottom="1dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginTop="3dp"
+        	android:text="时间："
+        	android:textColor="@color/item_content"
+        	android:textSize="15dip" />
+        
+        <TextView
+        	android:id="@+id/lecture_addr"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_alignParentLeft="true"
+        	android:layout_below="@+id/lecture_time"
+        	android:layout_marginBottom="1dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginTop="3dp"
+        	android:text="地点："
+        	android:textColor="@color/item_content"
+        	android:textSize="15dip" />
+        
+        <LinearLayout
+        	android:id="@+id/linearlayout_id"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_below="@+id/lecture_addr"
+        	android:layout_marginBottom="1dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginTop="3dp"
+        	android:orientation="horizontal" >
+
+        <TextView
+        	android:id="@+id/lecture_speaker"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_alignParentLeft="true"
+        	android:layout_below="@+id/lecture_addr"
+        	android:text="主讲："
+        	android:textColor="@color/item_content"
+        	android:textSize="15dip" />
+
+        <TextView
+        	android:id="@+id/lecture_id"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="id"
+        	android:textColor="@color/item_transparent"
+        	android:textSize="1sp" />
+
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/line_2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/linearlayout_id"
+            android:background="@color/item_line" />
+    </RelativeLayout>
+
+    <LinearLayout
+    	android:layout_width="fill_parent"
+    	android:layout_height="36dp"
+    	android:layout_below="@+id/relativeLayout1"
+    	android:animateLayoutChanges="true"
+    	android:gravity="top|center_horizontal" >
+
+        <LinearLayout
+        	android:id="@+id/linearlayout_share"
+        	android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:layout_gravity="center|right"
+        	android:layout_weight="1"
+        	android:background="@drawable/selector"
+        	android:clickable="true"
+        	android:gravity="right|center"
+        	android:orientation="horizontal"
+        	android:paddingLeft="10dp"
+        	android:paddingRight="15dp" >
+
+            <ImageView
+                android:id="@+id/share_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/share"
+                android:clickable="true"
+                android:gravity="center_horizontal"
+                android:paddingTop="10dp" />
+
+        		<TextView
+        		    android:id="@+id/share_text"
+        		    android:layout_width="wrap_content"
+        		    android:layout_height="match_parent"
+        		    android:layout_gravity="center"
+        		    android:gravity="center"
+        		    android:text="分享"
+        		    android:textAlignment="gravity"
+        		    android:textColor="@color/item_content"
+        		    android:textSize="12sp" />
+
+        </LinearLayout>
+        
+        <ImageView
+        	android:id="@+id/line_3"
+        	android:layout_width="1dp"
+        	android:layout_height="20dp"
+        	android:layout_gravity="center"
+        	android:background="@color/item_line"
+        	android:clickable="false"
+        	android:gravity="center_horizontal" />
+
+        <LinearLayout
+        	android:id="@+id/linearlayout_comment"
+        	android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:layout_weight="1"
+        	android:background="@drawable/selector"
+        	android:gravity="center_horizontal"
+        	android:orientation="horizontal"
+        	android:paddingLeft="5dp"
+        	android:paddingRight="5dp" >
+
+     	  	 <ImageView
+     	  	     android:id="@+id/comment_icon"
+     	  	     android:layout_width="wrap_content"
+     	  	     android:layout_height="wrap_content"
+     	  	     android:layout_gravity="center"
+     	  	     android:layout_margin="1dp"
+     	  	     android:layout_marginLeft="5dp"
+     	  	     android:layout_marginRight="10dp"
+     	  	     android:background="@drawable/comment"
+     	  	     android:clickable="true"
+     	  	     android:gravity="center_horizontal" />
+
+             <TextView
+                 android:id="@+id/comment_text"
+                 android:layout_width="wrap_content"
+                 android:layout_height="match_parent"
+                 android:layout_gravity="center"
+                 android:gravity="center"
+                 android:text="评论"
+                 android:textColor="@color/item_content"
+                 android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <ImageView
+        	android:id="@+id/line_4"
+        	android:layout_width="1dp"
+        	android:layout_height="20dp"
+        	android:layout_gravity="center"
+        	android:background="@color/item_line"
+        	android:clickable="false"
+        	android:gravity="center_horizontal" />
+
+        <LinearLayout
+        	android:id="@+id/linearlayout_like"
+        	android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:layout_weight="1"
+        	android:background="@drawable/selector"
+        	android:gravity="center_horizontal"
+        	android:orientation="horizontal"
+        	android:paddingLeft="5dp"
+        	android:paddingRight="5dp" >
+
+       	    <ImageView
+       	        android:id="@+id/like_icon"
+       	        android:layout_width="wrap_content"
+       	        android:layout_height="wrap_content"
+       	        android:layout_gravity="center"
+       	        android:layout_margin="1dp"
+       	        android:layout_marginLeft="10dp"
+       	        android:layout_marginRight="10dp"
+       	        android:background="@drawable/like"
+       	        android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/like_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="点赞"
+                android:textColor="@color/item_content"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <ImageView
+        	android:id="@+id/line_5"
+        	android:layout_width="1dp"
+        	android:layout_height="20dp"
+        	android:layout_gravity="center"
+        	android:background="@color/item_line"
+        	android:clickable="false"
+        	android:gravity="center_horizontal" />
+        
+        <LinearLayout
+        	android:id="@+id/linearlayout_remind"
+        	android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:layout_gravity="center|left"
+        	android:layout_weight="1"
+        	android:background="@drawable/selector"
+        	android:gravity="left|center"
+        	android:orientation="horizontal"
+        	android:paddingLeft="15dp"
+        	android:paddingRight="10dp" >
+
+       		 <ImageView
+       		     android:id="@+id/remind_icon"
+       		     android:layout_width="wrap_content"
+       		     android:layout_height="wrap_content"
+       		     android:layout_gravity="center"
+       		     android:layout_margin="1dp"
+       		     android:layout_marginRight="10dp"
+       		     android:background="@drawable/remind"
+       		     android:gravity="center_horizontal" />
+
+             <TextView
+                 android:id="@+id/remind_text"
+                 android:layout_width="wrap_content"
+                 android:layout_height="match_parent"
+                 android:layout_gravity="center"
+                 android:gravity="center"
+                 android:text="收藏"
+                 android:textColor="@color/item_content"
+                 android:textSize="12sp" />
+
+         </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

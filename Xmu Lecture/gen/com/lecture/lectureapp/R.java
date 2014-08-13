@@ -328,6 +328,7 @@ public final class R {
         public static final int spinner_item=0x7f030017;
         public static final int submitcenter=0x7f030018;
         public static final int subscribecenter=0x7f030019;
+        public static final int wechat_share=0x7f03001a;
     }
     public static final class menu {
         public static final int main=0x7f090000;
